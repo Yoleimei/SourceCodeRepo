@@ -1,0 +1,33 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+		vector<vector<int> > matrix(numCourses);
+		vector<int> indegree(numCourses);
+		fill(indegree.begin(), indegree.end(), 0);
+		for (int i = 0; i < prerequisites.size(); i++) {
+			int ready = prerequisites[i].first;
+			int pre = prerequisites[i].second;
+			if (find(matrix[pre].begin(), matrix[pre].end(), ready) == matrix[pre].end())
+				indegree[ready]++;
+			matrix[pre].push_back(ready);
+		}
+		int count = 0;
+		queue<int> que;
+		for (int i = 0; i < numCourses; i++) {
+			if (indegree[i] == 0)
+				que.push(i);
+		}
+		while (!que.empty()) {
+			int pre = que.front();
+			que.pop();
+			count++;
+			for (int i = 0; i < numCourses; i++) {
+				if (find(matrix[pre].begin(), matrix[pre].end(), i) != matrix[pre].end()) {
+					if (--indegree[i] == 0)
+						que.push(i);
+				}
+			}
+		}
+		return count == numCourses;
+	}
+};

@@ -1,0 +1,33 @@
+9
+0 1 0 1 0 0 0 0 0
+0 0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 0
+0 0 0 1 0 0 0 1 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 1 0
+
+vertex = [
+	'shirt',
+	'tie',
+	'jacket',
+	'belt',
+	'watch',
+	'undershorts',
+	'pants',
+	'shoes',
+	'socks'
+]
+adjacentList = [
+	[1,3], # shirt
+	[2], # tie
+	[], # jacket
+	[2], # belt
+	[], # watch
+	[6,7], # undershorts
+	[3,7], # pants
+	[], # shoes
+	[7] # socks
+]
