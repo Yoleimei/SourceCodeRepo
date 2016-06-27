@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+PROJECT(cmake_test)
+SET(SRC_LIST CMakeTest.cpp)
+INCLUDE_DIRECTORIES(/usr/include/glib)
+MESSAGE(STATUS "This is BINARY dir "${HELLO_BINARY_DIR})
+MESSAGE(STATUS "This is SOURCE dir "${HELLO_SOURCE_DIR})
+ADD_EXECUTABLE(CMakeTest ${SRC_LIST})
