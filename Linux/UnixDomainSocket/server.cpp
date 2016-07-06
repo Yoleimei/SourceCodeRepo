@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define  BUF_SIZE  256
-#define  SOCK_PATH  ("test")
+#define  SOCK_PATH  ("test_sock")
 
 int main()
 {
@@ -24,6 +24,7 @@ int main()
 	memset(&addr, 0, sizeof(struct sockaddr_un));
 	addr.sun_family = AF_UNIX;
 	strncpy(addr.sun_path, SOCK_PATH, sizeof(addr.sun_path) - 1);
+	unlink(SOCK_PATH);
 	if (bind(sfd, (struct sockaddr *)&addr, sizeof(struct sockaddr_un)) < 0) {
 		printf("bind error:%s\n", strerror(errno));
 		return -1;
