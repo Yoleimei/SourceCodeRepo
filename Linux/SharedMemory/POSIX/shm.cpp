@@ -7,11 +7,13 @@
 #include <sys/stat.h>
 #include <string.h>
 
+#define  SHM_NAME  ("yoleimei.shm")
+
 int main()
 {
 	pid_t pid;
 	if ((pid = fork()) > 0) {
-		int fd = shm_open("yoleimei.test", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+		int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 		if (fd < 0) {
 			printf("child process open shm fail\n");
 			return 0;
@@ -26,10 +28,11 @@ int main()
 		strncpy(ptr, str, sizeof(str));
 		printf("*ptr: %s\n", ptr);
 		sleep(3);
+		shm_unlink(SHM_NAME);
 	}
 	else if(0 == pid) {
 		sleep(2);
-		int fd = shm_open("yoleimei.test", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+		int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 		if (fd < 0) {
 			printf("main process open shm fail\n");
 			return 0;
@@ -43,5 +46,6 @@ int main()
 		char str[32];
 		strncpy(str, ptr, 32);
 		printf("%s\n", ptr);
+		shm_unlink(SHM_NAME);
 	}
 }
