@@ -10,8 +10,8 @@
 #define  MIN_NUM  0
 
 static int iGlobal = 100;
-static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
-static pthread_cond_t cond_plus = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t mtx       = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t cond_plus  = PTHREAD_COND_INITIALIZER;
 static pthread_cond_t cond_minus = PTHREAD_COND_INITIALIZER;
 
 void * threadFunc_plus(void *arg)
