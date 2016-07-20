@@ -15,13 +15,13 @@ int main()
 	if ((pid = fork()) > 0) {
 		int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 		if (fd < 0) {
-			printf("child process open shm fail\n");
+			printf("parent process open shm fail\n");
 			return 0;
 		}
 		ftruncate(fd, 4096);
 		char *ptr = reinterpret_cast<char*>(mmap(NULL, 32, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 		if (MAP_FAILED == ptr) {
-			printf("child process mmap error\n");
+			printf("parent process mmap error\n");
 			return 0;
 		}
 		const char str[] = "Hello world!";
@@ -34,13 +34,13 @@ int main()
 		sleep(2);
 		int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 		if (fd < 0) {
-			printf("main process open shm fail\n");
+			printf("child process open shm fail\n");
 			return 0;
 		}
 		ftruncate(fd, 4096);
 		char *ptr = reinterpret_cast<char*>(mmap(NULL, 32, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0));
 		if (MAP_FAILED == ptr) {
-			printf("main process mmap error\n");
+			printf("child process mmap error\n");
 			return 0;
 		}
 		char str[32];
