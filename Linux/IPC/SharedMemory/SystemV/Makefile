@@ -1,4 +1,6 @@
-.PHONY all: shm_reader shm_writer
+TARGETS = shm_reader shm_writer shm
+
+.PHONY all: $(TARGETS)
 
 shm_reader: systemv_shm_reader.o binary_sems.o
 	g++ $^ -o $@ 
@@ -6,7 +8,14 @@ shm_reader: systemv_shm_reader.o binary_sems.o
 shm_writer: systemv_shm_writer.o binary_sems.o
 	g++ $^ -o $@ 
 
-binary_sems.o: binary_sems.h
+binary_sems.o: binary_sems.cpp
+	g++ -c $<
 
+shm: shm.o
+	g++ $^ -o $@ 
+	
+shm.o: shm.cpp
+	g++ -c $<
+	
 .PHONY clean:
-	rm -f shm_reader shm_writer *.o
+	rm -f $(TARGETS) *.o
