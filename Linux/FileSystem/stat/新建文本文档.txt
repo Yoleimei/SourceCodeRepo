@@ -1,0 +1,26 @@
+#include <sys/statvfs.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+
+int main()
+{
+    struct statvfs st;
+
+    if (statvfs(".", &st) == -1) {
+		printf("statvfs error: %s", strerror(errno));
+		return -1;
+	}
+
+    printf("Block size                       %lu\n", st.f_bsize);
+    printf("Fundamental block size           %lu\n", st.f_frsize);
+    printf("Total blocks (in above units)    %lu\n", (unsigned long) st.f_blocks);
+    printf("Free blocks for priv. proc.      %lu\n", (unsigned long) st.f_bfree);
+    printf("Free blocks for unpriv. proc.    %lu\n", (unsigned long) st.f_bavail);
+    printf("Total number of i-nodes          %lu\n", (unsigned long) st.f_files);
+    printf("Free i-nodes for priv. proc.     %lu\n", (unsigned long) st.f_ffree);
+    printf("Free i-nodes for nonpriv. proc.  %lu\n", (unsigned long) st.f_favail);
+    printf("File system ID                   %#lx\n", st.f_fsid);
+    printf("Flags                            %#lx\n", st.f_flag);
+    printf("Maximum filename length          %lu\n", st.f_namemax);
+}
