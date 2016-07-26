@@ -8,11 +8,13 @@
 int main()
 {
 	int fd = -1;
-	char buf[32] = { 0 };
+	char buf[32] = "Hello world!";
 	
-	fd = open ("test.txt", O_RDWR);
+	fd = open ("test.txt", O_RDWR | O_TRUNC);
+	write(fd, buf, strlen(buf));
+	fsync(fd);
 	memset(buf, 0, sizeof(buf));
-	read(fd, buf, sizeof(buf));
+	pread(fd, buf, sizeof(buf), 0);
 	printf("%s\n", buf);
 	
 	if (ftruncate(fd, 8) < 0)
@@ -30,5 +32,9 @@ int main()
 	memset(buf, 0, sizeof(buf));
 	read(fd, buf, sizeof(buf));
 	printf("%s\n", buf);
+	
+	if (ftruncate(fd, 12) < 0)
+		printf("ftruncate error: %s\n", strerror(errno));
+	
 	close(fd);
 }
