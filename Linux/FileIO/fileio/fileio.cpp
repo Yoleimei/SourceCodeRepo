@@ -4,7 +4,7 @@
 
 int main()
 {
-	int fd = open("text.txt", O_RDWR|O_APPEND);
+	int fd = open("text.txt", O_RDWR | O_APPEND);
 	if (fd < 0)
 		std::cout << "error" << std::endl;
 	lseek(fd, 0, SEEK_CUR);
