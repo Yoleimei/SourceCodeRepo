@@ -28,7 +28,7 @@ void error_exit(const char *str, bool flag)
 int main()
 {
 	struct sockaddr_in servaddr;
-	fd_set rdset;
+	fd_set allset, rdset;
 	char buf[BUF_SIZE] = { 0 };
 	
 	for (int i = 0; i < MAX_CLIENT; i++) 
@@ -50,12 +50,13 @@ int main()
 		error_exit("listen", true);
 	}
 
-	FD_ZERO(&rdset);
-	FD_SET(servfd, &rdset);
+	FD_ZERO(&allset);
+	FD_SET(servfd, &allset);
 	
 	int maxfd = servfd;
 	while (true) {
 		int readyfds = 0;
+		rdset = allset;
 		printf("start selecting\n");
 		if ((readyfds = select(maxfd + 1, &rdset, NULL, NULL, NULL)) < 0) {
 			close(servfd);
@@ -65,7 +66,7 @@ int main()
 		
 		if (FD_ISSET(servfd, &rdset)) {
 			struct sockaddr_in clieaddr;
-			socklen_t addrlen;
+			socklen_t addrlen = sizeof(clieaddr);
 			char str_addr_src[32] = {0};
 			char str_addr_dst[32] = {0};
 			
@@ -85,7 +86,7 @@ int main()
 			if (MAX_CLIENT == i)
 				error_exit("too many clients", true);
 			
-			FD_SET(clientfd, &rdset);
+			FD_SET(clientfd, &allset);
 			if (clientfd > maxfd)
 				maxfd = clientfd;
 			
@@ -101,7 +102,7 @@ int main()
 				int iRet = read(clientfds[i], buf, BUF_SIZE);
 				if (0 == iRet) {
 					close(clientfds[i]);
-					FD_CLR(clientfds[i], &rdset);
+					FD_CLR(clientfds[i], &allset);
 					clientfds[i] = -1;
 				}
 				else
