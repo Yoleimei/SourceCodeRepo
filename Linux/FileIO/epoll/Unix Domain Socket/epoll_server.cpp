@@ -42,7 +42,7 @@ int main()
 		return -1;
 	}
 	
-	epfd = epoll_create(1);
+	epfd = epoll_create(1); // Since Linux 2.6.8, the size argument is ignored, but must be greater than zero
 	if (0 > epfd) {
 		printf("epoll_create error\n");
 		return -1;

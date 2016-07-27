@@ -1,33 +1,39 @@
-#include <sys/socket.h>
-#include <sys/un.h>
 #include <stdio.h>
-#include <unistd.h>
-#include <errno.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <arpa/inet.h>
 
-#define  SOCK_PATH  ("test_sock")
+#define  PORT      6789
+
+void error_exit(const char *str, bool flag)
+{
+	printf("%s error: %s\n", str, strerror(errno));
+	if (flag)
+		exit(-1);
+}
 
 int main()
 {
-	struct sockaddr_un addr;
-	int cfd;
-	ssize_t numWrite;
+	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	struct sockaddr_in addr;
 	
-	cfd = socket(AF_UNIX, SOCK_STREAM, 0);
-	if (0 > cfd) {
-		printf("socket error:%s\n", strerror(errno));
-		return -1;
+	memset(&addr, 0, sizeof(addr));
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(PORT);
+	addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	if (connect(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+		error_exit("connect", true);
 	}
-	
-	memset(&addr, 0, sizeof(struct sockaddr_un));
-	addr.sun_family = AF_UNIX;
-	strncpy(addr.sun_path, SOCK_PATH, sizeof(addr.sun_path) - 1);
-	if (connect(cfd, (struct sockaddr *)&addr, sizeof(struct sockaddr_un)) < 0) {
-		printf("connect error:%s\n", strerror(errno));
-		return -1;
+	printf("[client] connected\n");
+
+	while (true) {
+		char send_buf[64] = "";
+		fgets(send_buf, 63, stdin);
+		write(sockfd, send_buf, sizeof(send_buf));
+		printf("Send: %s", send_buf);
 	}
-	
-	numWrite = write(cfd, "Hello world!", sizeof("Hello world!"));
-		
-	close(cfd);
 }

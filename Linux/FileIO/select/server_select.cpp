@@ -58,6 +58,7 @@ int main()
 		int readyfds = 0;
 		rdset = allset;
 		printf("start selecting\n");
+		// On exit, the sets are modified in place to indicate which file descriptors actually changed status.
 		if ((readyfds = select(maxfd + 1, &rdset, NULL, NULL, NULL)) < 0) {
 			close(servfd);
 			error_exit("select", true);

@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <sys/poll.h>
 #include <errno.h>
-#include <sys/select.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
 
@@ -43,12 +42,10 @@ int main()
 	servaddr.sin_port = htons(PORT);
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	if (bind(servfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
-		close(servfd);
 		error_exit("bind", true);
 	}
 
 	if (listen(servfd, MAX_CLIENT) < 0) {
-		close(servfd);
 		error_exit("listen", true);
 	}
 
@@ -58,12 +55,11 @@ int main()
 	
 	while (true) {
 		int readyfds = 0;
-		printf("start selecting\n");
+		printf("start polling\n");
 		if ((readyfds = poll(pfd, max_index, -1)) < 0) {
-			close(servfd);
-			error_exit("select", true);
+			error_exit("poll", true);
 		}
-		printf("select over, %d selected\n", readyfds);
+		printf("poll over, %d polled\n", readyfds);
 		
 		if (pfd[0].revents & POLLIN != 0) {
 			struct sockaddr_in clieaddr;
