@@ -1,4 +1,4 @@
-(gdb) file <filename>        - ╪сть©иж╢ппЁлпР
+(gdb) file <filename>        - Е┼═Х╫╫Е▐╞Ф┴╖Х║▄Г╗▀Е╨▐
 (gdb) r                      - Run
 (gdb) c                      - Continue
 (gdb) b <line-num>           - BreakPoint
