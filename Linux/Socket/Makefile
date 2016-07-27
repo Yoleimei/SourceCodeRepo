@@ -9,10 +9,10 @@ server_select.o: server_select.cpp
 	g++ -c $<
 	
 client: client.o
-	g++ $^ -o $@
+	g++ $^ -o $@ -g
 	
 client.o: client.cpp
-	g++ -c $<
+	g++ -c $< -g
 	
 .PHONY clean:
 	rm -f $(TARGETS) *.o
