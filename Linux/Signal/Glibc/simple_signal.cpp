@@ -1,10 +1,11 @@
 #include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
-void sig_usr(int) 
+void sig_usr(int signum) 
 {
-	printf("receive user signal\n");
+	printf("receive signal: %s\n", strsignal(signum)); 
 }
 
 int main()
@@ -14,6 +15,8 @@ int main()
 	sa.sa_flags = 0;
 	sa.sa_handler = sig_usr;
 	sigaction(SIGUSR1, &sa, NULL);
-
-	sleep(1000);
+	sigaction(SIGUSR2, &sa, NULL);
+	
+	while (true)
+		sleep(1);
 }
