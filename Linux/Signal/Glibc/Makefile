@@ -1,4 +1,4 @@
-TARGETS = simple_signal  sigprocmask
+TARGETS = simple_signal  signal
 
 .PHONY all: $(TARGETS)
 
@@ -8,10 +8,10 @@ simple_signal: simple_signal.o
 simple_signal.o: simple_signal.cpp
 	g++ -c $<
 	
-sigprocmask: sigprocmask.o
+signal: signal.o
 	g++ $^ -o $@
 	
-sigprocmask.o: sigprocmask.cpp
+signal.o: signal.cpp
 	g++ -c $<
 	
 .PHONY clean:
