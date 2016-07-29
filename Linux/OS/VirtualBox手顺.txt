@@ -1,0 +1,3 @@
+01. 新建  Type: Other  Version: Other/Unknown  不添加虚拟硬盘
+02. 设置 -> 存储 -> 添加软盘控制器 -> 加载内核镜像
+03. 启动
