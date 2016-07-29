@@ -72,14 +72,10 @@ int main()
 			else if (evlist[i].data.fd == servfd) {
 				struct sockaddr_in clieaddr;
 				socklen_t addrlen = sizeof(clieaddr);
-				char str_addr_src[32] = {0};
-				char str_addr_dst[32] = {0};
 				
 				int clientfd = accept(servfd, (struct sockaddr *)&clieaddr, &addrlen);
-				uint32_t s_addr = clieaddr.sin_addr.s_addr;
-				sprintf(str_addr_src, "%u", s_addr);
-				inet_ntop(AF_INET, str_addr_src, str_addr_dst, 31);
-				printf("%s connected\n", str_addr_dst);
+				// getpeername(clientfd, (struct sockaddr *)&clieaddr, &addrlen);
+				printf("[%s:%d] connected\n", inet_ntoa(clieaddr.sin_addr), ntohs(clieaddr.sin_port));
 				
 				ev.data.fd = clientfd;
 				ev.events = EPOLLIN | EPOLLET;
