@@ -30,6 +30,17 @@ LABEL_BEGIN:
 	mov ss, ax  ; move cs to ss
 	mov sp, 0100h  
 	
+	; -----INT 10 display start
+	mov ax, TestMessage
+	mov bp, ax  ; move BootMessage's address to bp, [ES:BP] indicates the address of the string
+	mov cx, 16  ; length of string to be displayed
+	mov ax, 01301h  ; 10h Int: ah=13h(display string) al(display mode)
+	mov bx, 000ch   ; 
+	mov dx, 0       ; dh=start raw; dl=start column
+	int 10h
+	jmp $
+	; -----INT 10 display end
+	
 	xor eax, eax  
 	mov ax, cs
 	shl eax, 4
