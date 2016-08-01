@@ -3,7 +3,29 @@
 
 [SECTION .boot]  ; boot sector
 org 07c00h       ; tell the compiler to load from 7c00h
-	jmp LABEL_BEGIN
+	mov ax, cs
+	mov es, ax
+	mov dx, 0x0000 ; drive 0, head 0
+	mov cx, 0x0002 ; sector 2, track 0
+	mov bx, 0x7e00 ; address=512
+	mov ax, 0x0200+3
+	int 0x13
+	jnc go
+	
+	; -----INT 10 display start
+	mov ax, TestMessage
+	mov bp, ax  ; move BootMessage's address to bp, [ES:BP] indicates the address of the string
+	mov cx, 16  ; length of string to be displayed
+	mov ax, 01301h  ; 10h Int: ah=13h(display string) al(display mode)
+	mov bx, 000ch   ; 
+	mov dx, 0       ; dh=start raw; dl=start column
+	int 10h
+	jmp $
+	; -----INT 10 display end
+	
+go:
+	jmp dword 0x0000:8000h
+TestMessage db 'Hello world'
 times 510-($-$$) db 0
 dw 0xaa55
 	
@@ -29,17 +51,6 @@ LABEL_BEGIN:
 	mov es, ax  ; move cs to es
 	mov ss, ax  ; move cs to ss
 	mov sp, 0100h  
-	
-	; -----INT 10 display start
-	mov ax, TestMessage
-	mov bp, ax  ; move BootMessage's address to bp, [ES:BP] indicates the address of the string
-	mov cx, 16  ; length of string to be displayed
-	mov ax, 01301h  ; 10h Int: ah=13h(display string) al(display mode)
-	mov bx, 000ch   ; 
-	mov dx, 0       ; dh=start raw; dl=start column
-	int 10h
-	jmp $
-	; -----INT 10 display end
 	
 	xor eax, eax  
 	mov ax, cs
