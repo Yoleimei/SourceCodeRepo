@@ -25,7 +25,7 @@ org 07c00h       ; tell the compiler to load from 7c00h
 	
 go:
 	jmp dword 0x0000:8000h
-TestMessage db 'Hello world'
+TestMessage db 'failed'
 times 510-($-$$) db 0
 dw 0xaa55
 	
