@@ -1,5 +1,5 @@
 ;nasm protectmode.asm -o protectmode.img
-%include "protectmode_asm.inc"
+%include "protectmode.inc"
 
 [SECTION .boot]  ; boot sector
 org 07c00h       ; tell the compiler to load from 7c00h

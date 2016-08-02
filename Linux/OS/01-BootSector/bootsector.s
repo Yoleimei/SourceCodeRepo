@@ -3,7 +3,6 @@
 #.code16
 
 _start:
-	#.org 0x7c00       # tell the compiler to load from 7c00h
 	mov %cs, %ax
 	mov %ax, %ds  # move cs to ds
 	mov %ax, %es  # move cs to es
@@ -24,5 +23,5 @@ DispStr:
 BootMessage:     
 	.ascii "Hello, OS world!"
 	
-	.org 0x1fe #0x7dfe
+	.org 0x1fe
 	.word 0xaa55 
