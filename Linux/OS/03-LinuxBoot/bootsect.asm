@@ -28,7 +28,7 @@ start:
 	; mov ax, go-$$
 	; mov word [bx], ax         ; ip<-   
 	; mov word [bx+2h], INITSEG ; cs<-
-	jmp dword INITSEG:0x40 ; jmp dword [bx] ; why it doesn't work!!!
+	jmp dword INITSEG:0x30 ; jmp dword [bx] ; why it doesn't work!!!
 times 48-($-$$) db 0
 
 go:	mov	ax, cs
