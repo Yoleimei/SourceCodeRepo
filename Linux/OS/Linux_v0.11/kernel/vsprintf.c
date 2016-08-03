@@ -89,6 +89,7 @@ static char * number(char * str, int num, int base, int size, int precision
 	return str;
 }
 
+// return: length of buf
 int vsprintf(char *buf, const char *fmt, va_list args)
 {
 	int len;
