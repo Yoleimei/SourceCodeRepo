@@ -118,7 +118,7 @@ ok_load_setup:
 	seg cs
 	mov	ax,root_dev
 	cmp	ax,#0
-	jne	root_defined
+	jne	root_defined            ! if ZF=0 jmp
 	seg cs
 	mov	bx,sectors
 	mov	ax,#0x0208		! /dev/ps0 - 1.2Mb
@@ -153,7 +153,7 @@ read_it:
 	mov ax,es               ! es=0x010000 (64kB)
 	test ax,#0x0fff
 die:	jne die			! es must be at 64kB boundary
-	xor bx,bx		! bx is starting address within segment
+	xor bx,bx		! bx is starting address within segment, ES:BS 
 rp_read:
 	mov ax,es
 	cmp ax,#ENDSEG		! have we loaded all yet?
@@ -162,38 +162,38 @@ rp_read:
 ok1_read:
 	seg cs
 	mov ax,sectors  ! mov ax, cs:[sectors], number of sectors in a track
-	sub ax,sread    ! sectors read of current track
+	sub ax,sread    ! sectors read of current track (al when int 0x13 & ah=0x2)
 	mov cx,ax       
-	shl cx,#9       ! cx * 512B
-	add cx,bx       ! add starting address
-	jnc ok2_read
-	je ok2_read
+	shl cx,#9       ! cx * 512B (bytes will be read)
+	add cx,bx       ! add starting address (check whether will be greater than 64kB)
+	jnc ok2_read    ! if CF=0 jmp (less than 64kB)
+	je ok2_read     ! if ZF=1 jmp (equal to 64kB)
 	xor ax,ax
-	sub ax,bx
-	shr ax,#9
+	sub ax,bx       ! (64kB - address within segment) will be read
+	shr ax,#9       ! number of sectors will be read
 ok2_read:
 	call read_track
-	mov cx,ax
+	mov cx,ax       ! ah=0, al=number of sectors has been read
 	add ax,sread
 	seg cs
 	cmp ax,sectors
-	jne ok3_read
+	jne ok3_read    ! if ZF=0 jmp (this track hasn't end yet)
 	mov ax,#1
 	sub ax,head
-	jne ok4_read
-	inc track
+	jne ok4_read    ! if ZF=0 jmp (ZF=0 means head=0)
+	inc track       ! move to next track
 ok4_read:
-	mov head,ax
+	mov head,ax     ! move to another head
 	xor ax,ax
 ok3_read:
-	mov sread,ax
+	mov sread,ax    ! set current sector
 	shl cx,#9
 	add bx,cx
-	jnc rp_read
+	jnc rp_read     ! if CF=0 jmp
 	mov ax,es
 	add ax,#0x1000
-	mov es,ax
-	xor bx,bx
+	mov es,ax       ! change ES
+	xor bx,bx       ! ES:BS
 	jmp rp_read
 
 read_track:
@@ -217,7 +217,7 @@ read_track:
 	pop bx
 	pop ax
 	ret
-bad_rt:	mov ax,#0
+bad_rt:	mov ax,#0     ! read track fail, reset
 	mov dx,#0
 	int 0x13
 	pop dx
@@ -233,7 +233,7 @@ bad_rt:	mov ax,#0
  */
 kill_motor:
 	push dx
-	mov dx,#0x3f2
+	mov dx,#0x3f2  ! port of softdisk
 	mov al,#0
 	outb
 	pop dx

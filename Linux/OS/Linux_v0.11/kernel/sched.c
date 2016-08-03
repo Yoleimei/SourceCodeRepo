@@ -389,6 +389,12 @@ void sched_init(void)
 
 	if (sizeof(struct sigaction) != 16)
 		panic("Struct sigaction MUST be 16 bytes");
+// 0 - NULL
+// 1 - CODE Segment
+// 2 - DATA Segment
+// 3 - TEMPORARY, don't use
+// 4 - FIRST_TSS_ENTRY, task0's TSS Descriptor
+// 5 - FIRST_LDT_ENTRY, task0's LDT Descriptor
 	set_tss_desc(gdt+FIRST_TSS_ENTRY,&(init_task.task.tss));
 	set_ldt_desc(gdt+FIRST_LDT_ENTRY,&(init_task.task.ldt));
 	p = gdt+2+FIRST_TSS_ENTRY;

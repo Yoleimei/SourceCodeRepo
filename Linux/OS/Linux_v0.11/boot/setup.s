@@ -30,6 +30,22 @@ begbss:
 entry start
 start:
 
+!  address  size             name  description
+! 0x90000     2  cursor position
+! 0x90002     2      memory size
+! 0x90004     2     display page
+! 0x90006     1       vedio mode
+! 0x90007     1     window width
+! ----- about EGA/VGA
+! 0x90008     2
+! 0x9000A     1     
+! 0x9000B     1     
+! 0x9000C     2
+! -----
+! 0x90080    16         hd0 data
+! 0x90090    16         hd1 data
+! 0x901FC     2         root dev
+
 ! ok, the read went well so we get current cursor position and save it for
 ! posterity.
 
@@ -150,6 +166,7 @@ end_move:
 ! rectify it afterwards. Thus the bios puts interrupts at 0x08-0x0f,
 ! which is used for the internal hardware interrupts as well. We just
 ! have to reprogram the 8259's, and it isn't fun.
+! 8059 -> Programable Interrupt Controller
 
 	mov	al,#0x11		! initialization sequence
 	out	#0x20,al		! send it to 8259A-1
@@ -195,6 +212,7 @@ end_move:
 ! This routine checks that the keyboard command queue is empty
 ! No timeout is used - if this hangs there is something wrong with
 ! the machine, and we probably couldn't proceed anyway.
+! 8042 -> PS/2 Controller (keyboard)
 empty_8042:
 	.word	0x00eb,0x00eb
 	in	al,#0x64	! 8042 status port
@@ -202,17 +220,18 @@ empty_8042:
 	jnz	empty_8042	! yes - loop
 	ret
 
-gdt:
-	.word	0,0,0,0		! dummy
+! Global Descriptor Table 
+gdt:  
+	.word	0,0,0,0		! dummy - useless
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)
 	.word	0x0000		! base address=0
-	.word	0x9A00		! code read/exec
+	.word	0x9A00		! type=1010b, code read/exec
 	.word	0x00C0		! granularity=4096, 386
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)
 	.word	0x0000		! base address=0
-	.word	0x9200		! data read/write
+	.word	0x9200		! type=0020b, data read/write
 	.word	0x00C0		! granularity=4096, 386
 
 idt_48:
@@ -221,7 +240,7 @@ idt_48:
 
 gdt_48:
 	.word	0x800		! gdt limit=2048, 256 GDT entries
-	.word	512+gdt,0x9	! gdt base = 0X9xxxx
+	.word	512+gdt,0x9	! gdt base = 0X9xxxx, 0x90200+gdt
 	
 .text
 endtext:

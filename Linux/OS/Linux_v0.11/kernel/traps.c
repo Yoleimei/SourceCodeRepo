@@ -178,6 +178,31 @@ void do_reserved(long esp, long error_code)
 	die("reserved (15,17-47) error",esp,error_code);
 }
 
+
+/**
+ * 0x00  Division by zero
+ * 0x01  Debugger
+ * 0x02  NMI - Non Maskable Interrupt
+ * 0x03  Breakpoint
+ * 0x04  Overflow
+ * 0x05  Bounds
+ * 0x06  Invalid Opcode
+ * 0x07  Coprocessor not available
+ * 0x08  Double fault
+ * 0x09  Coprocessor Segment Overrun
+ * 0x0A  Invalid Task State Segment
+ * 0x0B  Segment not present
+ * 0x0C  Stack Fault
+ * 0x0D  General protection fault
+ * 0x0E  Page Fault
+ * 0x0F  reserved
+ * 0x10  Math Fault
+ * 0x11  Alignment Check
+ * 0x12  Machine Check
+ * 0x13  SIMD Floating-Point Exception
+ * 0x14  Virtualization Exception
+ * 0x15  Control Protection Exception
+ */
 void trap_init(void)
 {
 	int i;
@@ -196,7 +221,7 @@ void trap_init(void)
 	set_trap_gate(11,&segment_not_present);
 	set_trap_gate(12,&stack_segment);
 	set_trap_gate(13,&general_protection);
-	set_trap_gate(14,&page_fault);
+	set_trap_gate(14,&page_fault);  // defined in /mm/page.s
 	set_trap_gate(15,&reserved);
 	set_trap_gate(16,&coprocessor_error);
 	for (i=17;i<48;i++)

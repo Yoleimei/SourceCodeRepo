@@ -11,9 +11,15 @@
  * the page directory will exist. The startup code will be overwritten by
  * the page directory.
  */
+
+# setup idt
+# setup gdt
+# paging, page-directory, page-table
+# push params, push _main, ret : ->main()
+ 
 .text
 .globl _idt,_gdt,_pg_dir,_tmp_floppy_area
-_pg_dir:
+_pg_dir:  # page-directory table, will be overwritten
 startup_32:
 	movl $0x10,%eax
 	mov %ax,%ds
@@ -112,16 +118,16 @@ setup_gdt:
  * more than 16MB will have to expand this.
  */
 .org 0x1000
-pg0:
+pg0:  # page-table 0
 
 .org 0x2000
-pg1:
+pg1:  # page-table 1
 
 .org 0x3000
-pg2:
+pg2:  # page-table 2
 
 .org 0x4000
-pg3:
+pg3:  # page-table 3
 
 .org 0x5000
 /*
@@ -129,7 +135,7 @@ pg3:
  * reach to a buffer-block. It needs to be aligned, so that it isn't
  * on a 64kB border.
  */
-_tmp_floppy_area:
+_tmp_floppy_area: # floppy area
 	.fill 1024,1,0
 
 after_page_tables:

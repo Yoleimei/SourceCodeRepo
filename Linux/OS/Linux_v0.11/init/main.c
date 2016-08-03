@@ -66,9 +66,9 @@ extern long startup_time;
  * bios-listing reading. Urghh.
  */
 
-#define CMOS_READ(addr) ({ \
-outb_p(0x80|addr,0x70); \
-inb_p(0x71); \
+#define CMOS_READ(addr) ({ \  
+outb_p(0x80|addr,0x70); \ // 70 - write port,  0x80|addr - coms memory address
+inb_p(0x71); \           // 71 - read port
 })
 
 #define BCD_TO_BIN(val) ((val)=((val)&15) + ((val)>>4)*10)
@@ -136,7 +136,7 @@ void main(void)		/* This really IS void, no error here. */
 	sti();
 	move_to_user_mode();
 	if (!fork()) {		/* we count on this going ok */
-		init();
+		init();  // task 1
 	}
 /*
  *   NOTE!!   For any other task 'pause()' would mean we have to get a
@@ -145,7 +145,7 @@ void main(void)		/* This really IS void, no error here. */
  * can run). For task0 'pause()' just means we go check if some other
  * task can run, and if not we return here.
  */
-	for(;;) pause();
+	for(;;) pause(); // task 0
 }
 
 static int printf(const char *fmt, ...)
@@ -170,13 +170,13 @@ void init(void)
 	int pid,i;
 
 	setup((void *) &drive_info);
-	(void) open("/dev/tty0",O_RDWR,0);
-	(void) dup(0);
-	(void) dup(0);
+	(void) open("/dev/tty0",O_RDWR,0);  // 0 - stdin
+	(void) dup(0);                      // 1 - stdout
+	(void) dup(0);                      // 2 - stderr
 	printf("%d buffers = %d bytes buffer space\n\r",NR_BUFFERS,
 		NR_BUFFERS*BLOCK_SIZE);
 	printf("Free mem: %d bytes\n\r",memory_end-main_memory_start);
-	if (!(pid=fork())) {
+	if (!(pid=fork())) {  // task 2
 		close(0);
 		if (open("/etc/rc",O_RDONLY,0))
 			_exit(1);
@@ -200,7 +200,7 @@ void init(void)
 			_exit(execve("/bin/sh",argv,envp));
 		}
 		while (1)
-			if (pid == wait(&i))
+			if (pid == wait(&i))  // task 1 (init) wait 
 				break;
 		printf("\n\rchild %d died with code %04x\n\r",pid,i);
 		sync();
