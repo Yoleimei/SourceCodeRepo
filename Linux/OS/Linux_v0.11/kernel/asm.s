@@ -17,27 +17,27 @@
 .globl _general_protection,_coprocessor_error,_irq13,_reserved
 
 _divide_error:
-	pushl $_do_divide_error
+	pushl $_do_divide_error  # 0 (assume this is stack top)
 no_error_code:
-	xchgl %eax,(%esp)
-	pushl %ebx
-	pushl %ecx
-	pushl %edx
-	pushl %edi
-	pushl %esi
-	pushl %ebp
-	push %ds
-	push %es
-	push %fs
-	pushl $0		# "error code"
+	xchgl %eax,(%esp)        # exchange %eax with (%esp) which is $_do_divide_error
+	pushl %ebx               # 4
+	pushl %ecx               # 8
+	pushl %edx               # 12
+	pushl %edi               # 16
+	pushl %esi               # 20
+	pushl %ebp               # 24
+	push %ds                 # 28
+	push %es                 # 32
+	push %fs                 # 36
+	pushl $0		 # 40  # "error code"
 	lea 44(%esp),%edx
-	pushl %edx
-	movl $0x10,%edx
+	pushl %edx               # address of stack top
+	movl $0x10,%edx          # DATA SEG in gdt
 	mov %dx,%ds
 	mov %dx,%es
 	mov %dx,%fs
-	call *%eax
-	addl $8,%esp
+	call *%eax               # call _do_divide_error
+	addl $8,%esp  # ignore (error code) and (address of stack top) that are params of _do_divide_error
 	pop %fs
 	pop %es
 	pop %ds
@@ -48,7 +48,7 @@ no_error_code:
 	popl %ecx
 	popl %ebx
 	popl %eax
-	iret
+	iret                    # return to 
 
 _debug:
 	pushl $_do_int3		# _do_debug

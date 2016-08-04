@@ -64,11 +64,11 @@ struct task_struct *last_task_used_math = NULL;
 
 struct task_struct * task[NR_TASKS] = {&(init_task.task), };
 
-long user_stack [ PAGE_SIZE>>2 ] ;
+long user_stack [ PAGE_SIZE>>2 ] ;  // PAGE_SIZE>>2 = 1024
 
 struct {
-	long * a;
-	short b;
+	long * a;  // %esp
+	short b;   // %ss
 	} stack_start = { & user_stack [PAGE_SIZE>>2] , 0x10 };
 /*
  *  'math_state_restore()' saves the current math information in the
@@ -395,8 +395,8 @@ void sched_init(void)
 // 3 - TEMPORARY, don't use
 // 4 - FIRST_TSS_ENTRY, task0's TSS Descriptor
 // 5 - FIRST_LDT_ENTRY, task0's LDT Descriptor
-	set_tss_desc(gdt+FIRST_TSS_ENTRY,&(init_task.task.tss));
-	set_ldt_desc(gdt+FIRST_LDT_ENTRY,&(init_task.task.ldt));
+	set_tss_desc(gdt+FIRST_TSS_ENTRY,&(init_task.task.tss));  // task 0
+	set_ldt_desc(gdt+FIRST_LDT_ENTRY,&(init_task.task.ldt));  // task 0
 	p = gdt+2+FIRST_TSS_ENTRY;
 	for(i=1;i<NR_TASKS;i++) {
 		task[i] = NULL;

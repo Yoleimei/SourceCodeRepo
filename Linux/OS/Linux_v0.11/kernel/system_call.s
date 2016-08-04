@@ -16,18 +16,18 @@
  *
  * Stack layout in 'ret_from_system_call':
  *
- *	 0(%esp) - %eax
- *	 4(%esp) - %ebx
- *	 8(%esp) - %ecx
- *	 C(%esp) - %edx
- *	10(%esp) - %fs
- *	14(%esp) - %es
- *	18(%esp) - %ds
- *	1C(%esp) - %eip
- *	20(%esp) - %cs
- *	24(%esp) - %eflags
- *	28(%esp) - %oldesp
- *	2C(%esp) - %oldss
+ *	0x00(%esp) - %eax
+ *	0x04(%esp) - %ebx
+ *	0x08(%esp) - %ecx
+ *	0x0C(%esp) - %edx
+ *	0x10(%esp) - %fs
+ *	0x14(%esp) - %es
+ *	0x18(%esp) - %ds
+ *	0x1C(%esp) - %eip
+ *	0x20(%esp) - %cs
+ *	0x24(%esp) - %eflags
+ *	0x28(%esp) - %oldesp
+ *	0x2C(%esp) - %oldss
  */
 
 SIG_CHLD	= 17
@@ -78,7 +78,7 @@ reschedule:
 	jmp _schedule
 .align 2
 _system_call:
-	cmpl $nr_system_calls-1,%eax
+	cmpl $nr_system_calls-1,%eax  # check whether it is a valid sys_call
 	ja bad_sys_call
 	push %ds
 	push %es

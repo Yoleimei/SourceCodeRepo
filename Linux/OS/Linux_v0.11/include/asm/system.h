@@ -12,6 +12,24 @@ __asm__ ("movl %%esp,%%eax\n\t" \
 	"movw %%ax,%%fs\n\t" \
 	"movw %%ax,%%gs" \
 	:::"ax")
+/**
+ * if priviledge changes from 3 to 0, CPU will push old SS and old ESP
+ * the code bellow simulates this situation
+ * when iret (change from 0 to 3), the old ESP and old SS will be poped
+ */
+// movl %esp, %eax
+// pushl $0x17  # SS (Selector in LDT, DI=2, TI=1, RPL=3)
+// pushl %eax   # ESP
+// pushfl       # EFLAGS
+// pushl $0x0f  # CS (Selector in LDT, DI=1, TI=1, RPL=3)
+// pushl $1f    # EIP  # (f:forward b:backward)
+// iret         # CPU will set SS:EIP and SS:ESP when iret
+// 1:
+// movl $0x17, %eax  # Selector=0x17: DI=2, TI=1, RPL=3 
+// movw %ax, %ds     # set DS, ES, FS, GS
+// movw %ax, %es
+// movw %ax, %fs
+// movw %ax, %gs
 
 #define sti() __asm__ ("sti"::)
 #define cli() __asm__ ("cli"::)
@@ -20,7 +38,7 @@ __asm__ ("movl %%esp,%%eax\n\t" \
 #define iret() __asm__ ("iret"::)
 
 // dpl: descriptor priviledge level
-#define _set_gate(gate_addr,type,dpl,addr) \
+#define _set_gate(gate_addr,type,dpl,addr) \  // idt (tail of head.s)
 __asm__ ("movw %%dx,%%ax\n\t" \
 	"movw %0,%%dx\n\t" \
 	"movl %%eax,%1\n\t" \

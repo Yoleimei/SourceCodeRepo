@@ -1,0 +1,7 @@
+---- buffer_memory_end Matches (6 in 1 files) ----
+Main.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\init):static long buffer_memory_end = 0;
+Main.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\init):		buffer_memory_end = 4*1024*1024;
+Main.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\init):		buffer_memory_end = 2*1024*1024;
+Main.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\init):		buffer_memory_end = 1*1024*1024;
+Main.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\init):	main_memory_start = buffer_memory_end;
+Main.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\init):	buffer_init(buffer_memory_end);
