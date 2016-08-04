@@ -42,8 +42,8 @@ DS		= 0x18
 EIP		= 0x1C
 CS		= 0x20
 EFLAGS		= 0x24
-OLDESP		= 0x28
-OLDSS		= 0x2C
+OLDESP		= 0x28  # when change from 3 to 0, USER's SP will stored in KERNEL's stack
+OLDSS		= 0x2C  # when change from 3 to 0, USER's SS will stored in KERNEL's stack
 
 state	= 0		# these are offsets into the task-struct.
 counter	= 4

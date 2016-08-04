@@ -81,7 +81,7 @@ struct task_struct {
 	long counter;
 	long priority;
 	long signal;
-	struct sigaction sigaction[32];
+	struct sigaction sigaction[32];  // declared in signal.h
 	long blocked;	/* bitmap of masked signals */
 /* various fields */
 	int exit_code;
@@ -112,18 +112,27 @@ struct task_struct {
  */
 #define INIT_TASK \
 /* state etc */	{ 0,15,15, \
+// state=0, counter=15, priority=15
 /* signals */	0,{{},},0, \
+// signal=0, sigaction={}, blocked=0
 /* ec,brk... */	0,0,0,0,0,0, \
+// exit_code=0, start_code=0, end_code=0, end_data=0, brk=0, start_stack=0
 /* pid etc.. */	0,-1,0,0,0, \
+// pid=0, father=-1, pgrp=0, session=0, leader=0
 /* uid etc */	0,0,0,0,0,0, \
+// uid=0, euid=0, suid=0, gid=0, egid=0, sgid=0
 /* alarm */	0,0,0,0,0,0, \
+// alarm=0, utime=0, stime=0, cutime=0, cstime=0, start_time=0
 /* math */	0, \
+// used_math=0
 /* fs info */	-1,0022,NULL,NULL,NULL,0, \
+// tty=-1, umask=0022, pwd=NULL, root=NULL, executable=NULL, close_on_exec=0
 /* filp */	{NULL,}, \
+// filp={NULL,}
 	{ \
-		{0,0}, \
-/* ldt */	{0x9f,0xc0fa00}, \
-		{0x9f,0xc0f200}, \
+		{0,0}, \                // NULL
+/* ldt */	{0x9f,0xc0fa00}, \ // CS
+		{0x9f,0xc0f200}, \     // DS & SS
 	}, \
 /*tss*/	{0,PAGE_SIZE+(long)&init_task,0x10,0,0,0,0,(long)&pg_dir,\
 	 0,0,0,0,0,0,0,0, \
