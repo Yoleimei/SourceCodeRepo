@@ -65,16 +65,18 @@ int copy_mem(int nr,struct task_struct * p)
  * information (task[nr]) and sets up the necessary registers. It
  * also copies the data segment in it's entirety.
  */
-int copy_process(int nr,long ebp,long edi,long esi,long gs,long none,
-		long ebx,long ecx,long edx,
-		long fs,long es,long ds,
-		long eip,long cs,long eflags,long esp,long ss)
+int copy_process(int nr,long ebp,long edi,long esi,long gs,long none, // pushed in _sys_fork
+// nr is eax which contains the return value of find_emtpy_process()
+// none is pushed when _system_call call _sys_fork
+		long ebx,long ecx,long edx,                     // pushed in _system_call
+		long fs,long es,long ds,                        // pushed in _system_call
+		long eip,long cs,long eflags,long esp,long ss)  // system_call gate, Ring3 to Ring0
 {
 	struct task_struct *p;
 	int i;
 	struct file *f;
 
-	p = (struct task_struct *) get_free_page();
+	p = (struct task_struct *) get_free_page(); // free page in main memory
 	if (!p)
 		return -EAGAIN;
 	task[nr] = p;

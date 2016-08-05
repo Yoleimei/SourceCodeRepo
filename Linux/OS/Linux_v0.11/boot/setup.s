@@ -226,12 +226,12 @@ gdt:
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)
 	.word	0x0000		! base address=0
-	.word	0x9A00		! type=1010b, code read/exec
+	.word	0x9A00		!!! P=1; DPL=0; S=1; TYPE=1010b, code C=0, R=1, A=0
 	.word	0x00C0		! granularity=4096, 386
 
 	.word	0x07FF		! 8Mb - limit=2047 (2048*4096=8Mb)
 	.word	0x0000		! base address=0
-	.word	0x9200		! type=0020b, data read/write
+	.word	0x9200		!!! P=1; DPL=0; S=1; TYPE=0010b, data E=0, W=1, A=0
 	.word	0x00C0		! granularity=4096, 386
 
 idt_48:

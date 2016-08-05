@@ -69,7 +69,7 @@ nr_system_calls = 72
 .globl _device_not_available, _coprocessor_error
 
 .align 2
-bad_sys_call:
+bad_sys_call:  # return -1
 	movl $-1,%eax
 	iret
 .align 2
@@ -77,9 +77,12 @@ reschedule:
 	pushl $ret_from_sys_call
 	jmp _schedule
 .align 2
-_system_call:
+_system_call:  
+# jump to here when INT 0x80 occurs, CPU has push SS, ESP, EFLAGS, CS, EIP into stack of kernel
+# because priviledge has been changed from Ring3 to Ring1 (Selector in system_call trap gate has RPL=0
+# and point to Code Segment in GDT)
 	cmpl $nr_system_calls-1,%eax  # check whether it is a valid sys_call
-	ja bad_sys_call
+	ja bad_sys_call  # if ($nr_system_calls-1 >= %eax) jmp bad_sys_call
 	push %ds
 	push %es
 	push %fs
@@ -91,7 +94,7 @@ _system_call:
 	mov %dx,%es
 	movl $0x17,%edx		# fs points to local data space
 	mov %dx,%fs
-	call _sys_call_table(,%eax,4)
+	call _sys_call_table(,%eax,4)  # system call
 	pushl %eax
 	movl _current,%eax
 	cmpl $0,state(%eax)		# state
@@ -207,8 +210,8 @@ _sys_execve:
 .align 2
 _sys_fork:
 	call _find_empty_process
-	testl %eax,%eax
-	js 1f
+	testl %eax,%eax  # influence SF
+	js 1f            # if (%eax < 0) jmp 1f
 	push %gs
 	pushl %esi
 	pushl %edi

@@ -44,19 +44,26 @@ __asm__ ("movw %%dx,%%ax\n\t" \
 	"movl %%eax,%1\n\t" \
 	"movl %%edx,%2" \
 	: \
-	: "i" ((short) (0x8000+(dpl<<13)+(type<<8))), \
-	"o" (*((char *) (gate_addr))), \
-	"o" (*(4+(char *) (gate_addr))), \
+	: "i" ((short) (0x8000+(dpl<<13)+(type<<8))), \  // 0x8000 means P=1, DPL(14-13), TYPE(11-8)
+	"o" (*((char *) (gate_addr))), \   // low 4 bytes of descriptor
+	"o" (*(4+(char *) (gate_addr))), \ // hight 4 bytes of descriptor
 	"d" ((char *) (addr)),"a" (0x00080000))
+// movl $addr, %edx                       // edx=$addr
+// movl $0x80000, %eax                    // eax=0x00080000
+// movw %dx, %ax                          // eax=0x00080000 + (addr & 0xFFFF)
+// movw $0x8000+(dpl<<13)+(type<<8), %dx  // edx=$0x8000+(dpl<<13)+(type<<8)  # set P, DPL, TYPE
+// movl %eax, gate_addr                   // !!! selector=0x8(TI=0; RPL=0), offset=addr
+// selector=0x8 is very important, 'cause it is Kernel Code Segment which DPL=0!!!
+// movl %edx, gate_addr+4                 // P=1, DPL=dpl, TYPE=type
 
-#define set_intr_gate(n,addr) \
-	_set_gate(&idt[n],14,0,addr)
+#define set_intr_gate(n,addr) \    // interrupt gate
+	_set_gate(&idt[n],14,0,addr)  // TYPE=14=1110b (32-bit interrupt gate), DPL=0
 
-#define set_trap_gate(n,addr) \
-	_set_gate(&idt[n],15,0,addr)
+#define set_trap_gate(n,addr) \    // trap gate
+	_set_gate(&idt[n],15,0,addr)  // TYPE=15=1111b (32-bit trap gate), DPL=0
 
-#define set_system_gate(n,addr) \
-	_set_gate(&idt[n],15,3,addr)
+#define set_system_gate(n,addr) \  // system gate
+	_set_gate(&idt[n],15,3,addr)  // TYPE=15=1111b (32-bit trap gate), DPL=3
 
 #define _set_seg_desc(gate_addr,type,dpl,base,limit) {\
 	*(gate_addr) = ((base) & 0xff000000) | \
