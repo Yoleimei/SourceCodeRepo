@@ -190,6 +190,15 @@ __asm__("cmpl %%ecx,_current\n\t" \
 	"1:" \
 	::"m" (*&__tmp.a),"m" (*&__tmp.b), \
 	"d" (_TSS(n)),"c" ((long) task[n])); \
+// mov TSS_IN_GDT, %edx
+// mov 
+// cmpl %ecx, _current
+// je 1f
+// movw %dx, __tmp.b
+// xchgl %ecx, _current
+// ljmp __tmp.a
+// cmpl %ecx, _last_task_used_math
+//
 }
 
 #define PAGE_ALIGN(n) (((n)+0xfff)&0xfffff000)

@@ -1,24 +1,2 @@
----- sigaction Matches (27 in 6 files) ----
-Exec.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\fs):		current->sigaction[i].sa_handler = NULL;
-Sched.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	if (sizeof(struct sigaction) != 16)
-Sched.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):		panic("Struct sigaction MUST be 16 bytes");
-Sched.h (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\include\linux):	struct sigaction sigaction[32];
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	verify_area(to, sizeof(struct sigaction));
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	for (i=0 ; i< sizeof(struct sigaction) ; i++) {
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	for (i=0 ; i< sizeof(struct sigaction) ; i++)
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	struct sigaction tmp;
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	handler = (long) current->sigaction[signum-1].sa_handler;
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	current->sigaction[signum-1] = tmp;
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):int sys_sigaction(int signum, const struct sigaction * action,
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	struct sigaction * oldaction)
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	struct sigaction tmp;
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	tmp = current->sigaction[signum-1];
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):		(char *) (signum-1+current->sigaction));
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	if (current->sigaction[signum-1].sa_flags & SA_NOMASK)
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):		current->sigaction[signum-1].sa_mask = 0;
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):		current->sigaction[signum-1].sa_mask |= (1<<(signum-1));
-Signal.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	struct sigaction * sa = current->sigaction + signr - 1;
-Signal.h (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\include):struct sigaction {
-Signal.h (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\include):int sigaction(int sig, struct sigaction *act, struct sigaction *oldact);
-System_call.s (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):sigaction = 16		# MUST be 16 (=len of sigaction)
-System_call.s (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):# offsets within sigaction
+---- stack_start Matches (1 in 1 files) ----
+Sched.c (e:\gitrepo\sourcecoderepo\linux\os\linux_v0.11\kernel):	} stack_start = { & user_stack [PAGE_SIZE>>2] , 0x10 };

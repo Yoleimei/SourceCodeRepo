@@ -218,7 +218,7 @@ _sys_fork:
 	pushl %ebp
 	pushl %eax
 	call _copy_process
-	addl $20,%esp
+	addl $20,%esp  # discard gs, esi, edi, ebp, eax
 1:	ret
 
 _hd_interrupt:

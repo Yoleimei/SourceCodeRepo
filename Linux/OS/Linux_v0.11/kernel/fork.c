@@ -92,8 +92,8 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none, // pushed 
 	p->cutime = p->cstime = 0;
 	p->start_time = jiffies;
 	p->tss.back_link = 0;
-	p->tss.esp0 = PAGE_SIZE + (long) p;
-	p->tss.ss0 = 0x10;
+	p->tss.esp0 = PAGE_SIZE + (long) p;  // NOTE! set Ring0 esp here
+	p->tss.ss0 = 0x10;                  // NOTE! set Ring0 ss here
 	p->tss.eip = eip;
 	p->tss.eflags = eflags;
 	p->tss.eax = 0;
@@ -128,8 +128,8 @@ int copy_process(int nr,long ebp,long edi,long esi,long gs,long none, // pushed 
 		current->root->i_count++;
 	if (current->executable)
 		current->executable->i_count++;
-	set_tss_desc(gdt+(nr<<1)+FIRST_TSS_ENTRY,&(p->tss));
-	set_ldt_desc(gdt+(nr<<1)+FIRST_LDT_ENTRY,&(p->ldt));
+	set_tss_desc(gdt+(nr<<1)+FIRST_TSS_ENTRY,&(p->tss)); // set tss desc in gdt
+	set_ldt_desc(gdt+(nr<<1)+FIRST_LDT_ENTRY,&(p->ldt)); // set ldt desc in gdt
 	p->state = TASK_RUNNING;	/* do this last, just in case */
 	return last_pid;
 }

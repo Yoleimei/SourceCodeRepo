@@ -20,36 +20,38 @@
 
 #include <signal.h>
 
-#define _S(nr) (1<<((nr)-1))
-#define _BLOCKABLE (~(_S(SIGKILL) | _S(SIGSTOP)))
+#define _S(nr) (1<<((nr)-1))  // signal bit map
+#define _BLOCKABLE (~(_S(SIGKILL) | _S(SIGSTOP)))  // other signals are all blockable
 
 void show_task(int nr,struct task_struct * p)
 {
 	int i,j = 4096-sizeof(struct task_struct);
 
-	printk("%d: pid=%d, state=%d, ",nr,p->pid,p->state);
+	printk("%d: pid=%d, state=%d, ",nr,p->pid,p->state); // print pid, state
 	i=0;
 	while (i<j && !((char *)(p+1))[i])
 		i++;
-	printk("%d (of %d) chars free in kernel stack\n\r",i,j);
+	printk("%d (of %d) chars free in kernel stack\n\r",i,j);  // print free memory
 }
 
 void show_stat(void)
 {
 	int i;
 
-	for (i=0;i<NR_TASKS;i++)
+	for (i=0;i<NR_TASKS;i++)  // print status of all existing tasks
 		if (task[i])
 			show_task(i,task[i]);
 }
 
-#define LATCH (1193180/HZ)
+#define LATCH (1193180/HZ)  // 8253
 
 extern void mem_use(void);
 
 extern int timer_interrupt(void);
 extern int system_call(void);
 
+// task struct and kernel stack of this task are in the same page
+// NOTE! every task has its own stack during running in kernel mode
 union task_union {
 	struct task_struct task;
 	char stack[PAGE_SIZE];
