@@ -1,3 +1,4 @@
+gcc xx.c -o xx -g
 (gdb) file <filename>        - 加载可执行程序
 (gdb) r                      - Run
 (gdb) c                      - Continue
