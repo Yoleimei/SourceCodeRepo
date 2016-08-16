@@ -8,7 +8,7 @@
 
 %%
 
-calclist:
+calclist: /* 空规则，代表从开头进行匹配 */
 	| calclist exp EOL { printf("= %d\n", $2); }
 	;
 	
@@ -26,6 +26,7 @@ term: NUMBER { $$ = $1; }
 	;
 	
 %%
+
 main(int argc, char **argv)
 {
 	yyparse();

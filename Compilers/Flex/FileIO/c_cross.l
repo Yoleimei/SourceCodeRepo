@@ -10,8 +10,8 @@ EXP  ([Ee][-+]?[0-9]+)
 /* 整数长度 */
 ILEN ([Uu](L|l|LL|ll)?|(L|l|LL|ll)[Uu]?)
 
-/* 符号表 */
 %{
+	/* 符号表 */
 	struct symbol {
 		struct ref *reflist;
 		char *name;
@@ -25,9 +25,9 @@ ILEN ([Uu](L|l|LL|ll)?|(L|l|LL|ll)[Uu]?)
 	};
 	
 	#define NHASH 9997
-	struct symbol symtab[NHASH];
-	struct symbol *lookup(char*);
-	void addref(int, char*, char*, int);
+	struct symbol symtab[NHASH];          // 哈希表，线性探测
+	struct symbol *lookup(char*);         // 查找符号 
+	void addref(int, char*, char*, int);  // 将 ref 添加到对应符号表
 	char *curfilename;
 	
 	/* 文件堆栈 */
@@ -162,6 +162,7 @@ L?\"([^"\\]|\\['"?\\abfnrtv]|\\[0-7]{1,3}|\\[Xx][0-9a-fA-F]+|{UCN})*\"
 
 %%
 
+// 检测两个符号表是否为同一个
 static int symcompare(const void *xa, const void *xb)
 {
 	const struct symbol *a = xa;
@@ -176,6 +177,7 @@ static int symcompare(const void *xa, const void *xb)
 	return strcmp(a->name, b->name);
 }
 
+// 打印符号表中的引用
 void printrefs()
 {
 	struct symbol *sp;
@@ -210,6 +212,7 @@ void printrefs()
 	}
 }
 
+// 哈希算法
 static unsigned symhash(char *sym)
 {
 	unsigned int hash = 0;
@@ -219,6 +222,7 @@ static unsigned symhash(char *sym)
 	return hash;
 }
 
+// 查找符号表
 struct symbol * lookup(char *sym)
 {
 	struct symbol *sp = &symtab[symhash(sym)%NHASH];
@@ -241,6 +245,7 @@ struct symbol * lookup(char *sym)
 	abort();
 }
 
+// 将引用添加到符号表
 void addref(int lineno, char *filename, char *word, int flags)
 {
 	struct ref *r;

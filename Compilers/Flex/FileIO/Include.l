@@ -1,13 +1,14 @@
 %option noyywrap
+ /* 把IFILE定义为起始状态 */
 %x IFILE
 
 %{
 	struct bufstack {
 		struct bufstack *prev; // info of previous file
-		YY_BUFFER_STATE bs;     // 
+		YY_BUFFER_STATE bs;    // 
 		int lineno;
 		char *filename;
-		FILE *f;
+		FILE *f;               // 
 	} *curbs = 0;
 	
 	char *curfilename;
@@ -18,7 +19,7 @@
 
 %%
 
-^"#"[ \t]*include[ \t]*[\"<]    { BEGIN IFILE; }
+^"#"[ \t]*include[ \t]*[\"<]    { BEGIN IFILE; }  // 切换到另一个起始状态
 <IFILE>[^ \t\n\">]+             {
 									{ 
 										int c;

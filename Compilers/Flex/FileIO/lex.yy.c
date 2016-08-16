@@ -870,8 +870,8 @@ char *yytext;
 /* 通用字符名 */
 /* 浮点数指数部分 */
 /* 整数长度 */
-/* 符号表 */
-#line 15 "c_cross.l"
+#line 14 "c_cross.l"
+	/* 符号表 */
 	struct symbol {
 		struct ref *reflist;
 		char *name;
@@ -885,9 +885,9 @@ char *yytext;
 	};
 	
 	#define NHASH 9997
-	struct symbol symtab[NHASH];
-	struct symbol *lookup(char*);
-	void addref(int, char*, char*, int);
+	struct symbol symtab[NHASH];          // 哈希表，线性探测
+	struct symbol *lookup(char*);         // 查找符号 
+	void addref(int, char*, char*, int);  // 将 ref 添加到对应符号表
 	char *curfilename;
 	
 	/* 文件堆栈 */
@@ -2540,6 +2540,7 @@ void yyfree (void * ptr )
 
 
 
+// 
 static int symcompare(const void *xa, const void *xb)
 {
 	const struct symbol *a = xa;

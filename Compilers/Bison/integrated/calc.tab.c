@@ -113,7 +113,7 @@ typedef union YYSTYPE
 {
 
 /* Line 293 of yacc.c  */
-#line 7 "calc.y"
+#line 9 "calc.y"
 
 	struct ast *a;
 	double d;
@@ -361,7 +361,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  14
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  24
+#define YYNSTATES  25
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -407,7 +407,7 @@ static const yytype_uint8 yytranslate[] =
 static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     4,     8,    11,    13,    17,    21,    23,
-      27,    31,    33,    36,    40
+      27,    31,    33,    37,    41
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
@@ -416,15 +416,15 @@ static const yytype_int8 yyrhs[] =
       13,     0,    -1,    -1,    13,    14,     4,    -1,    13,     4,
       -1,    15,    -1,    14,     5,    15,    -1,    14,     6,    15,
       -1,    16,    -1,    15,     7,    16,    -1,    15,     8,    16,
-      -1,     3,    -1,     9,    16,    -1,    10,    14,    11,    -1,
-       6,    16,    -1
+      -1,     3,    -1,     9,    16,     9,    -1,    10,    14,    11,
+      -1,     6,    16,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    18,    18,    19,    24,    26,    27,    28,    30,    31,
-      32,    34,    35,    36,    37
+       0,    20,    20,    21,    26,    28,    29,    30,    32,    33,
+      34,    36,    37,    38,    39
 };
 #endif
 
@@ -460,7 +460,7 @@ static const yytype_uint8 yyr1[] =
 static const yytype_uint8 yyr2[] =
 {
        0,     2,     0,     3,     2,     1,     3,     3,     1,     3,
-       3,     1,     2,     3,     2
+       3,     1,     3,     3,     2
 };
 
 /* YYDEFACT[STATE-NAME] -- Default reduction number in state STATE-NUM.
@@ -469,8 +469,8 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,    11,     4,     0,     0,     0,     0,     5,
-       8,    14,    12,     0,     3,     0,     0,     0,     0,    13,
-       6,     7,     9,    10
+       8,    14,     0,     0,     3,     0,     0,     0,     0,    12,
+      13,     6,     7,     9,    10
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -485,14 +485,14 @@ static const yytype_int8 yydefgoto[] =
 static const yytype_int8 yypact[] =
 {
       -6,     5,    -6,    -6,    -6,    13,    13,    13,    -2,    -1,
-      -6,    -6,    -6,    15,    -6,    13,    13,    13,    13,    -6,
-      -1,    -1,    -6,    -6
+      -6,    -6,     1,    15,    -6,    13,    13,    13,    13,    -6,
+      -6,    -1,    -1,    -6,    -6
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -6,    -6,     3,     2,    -5
+      -6,    -6,    17,     2,    -5
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -502,8 +502,8 @@ static const yytype_int8 yypgoto[] =
 static const yytype_uint8 yytable[] =
 {
       11,    12,    14,    15,    16,     2,    17,    18,     3,     4,
-      13,     5,    22,    23,     6,     7,     3,    20,    21,     5,
-      15,    16,     6,     7,     0,     0,    19
+      19,     5,    23,    24,     6,     7,     3,    21,    22,     5,
+      15,    16,     6,     7,    13,     0,    20
 };
 
 #define yypact_value_is_default(yystate) \
@@ -515,8 +515,8 @@ static const yytype_uint8 yytable[] =
 static const yytype_int8 yycheck[] =
 {
        5,     6,     4,     5,     6,     0,     7,     8,     3,     4,
-       7,     6,    17,    18,     9,    10,     3,    15,    16,     6,
-       5,     6,     9,    10,    -1,    -1,    11
+       9,     6,    17,    18,     9,    10,     3,    15,    16,     6,
+       5,     6,     9,    10,     7,    -1,    11
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -524,8 +524,8 @@ static const yytype_int8 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,    13,     0,     3,     4,     6,     9,    10,    14,    15,
-      16,    16,    16,    14,     4,     5,     6,     7,     8,    11,
-      15,    15,    16,    16
+      16,    16,    16,    14,     4,     5,     6,     7,     8,     9,
+      11,    15,    15,    16,    16
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1362,7 +1362,7 @@ yyreduce:
         case 3:
 
 /* Line 1806 of yacc.c  */
-#line 19 "calc.y"
+#line 21 "calc.y"
     {
 							printf("= %4.4g\n", eval((yyvsp[(2) - (3)].a)));
 							treefree((yyvsp[(2) - (3)].a));
@@ -1373,63 +1373,63 @@ yyreduce:
   case 4:
 
 /* Line 1806 of yacc.c  */
-#line 24 "calc.y"
+#line 26 "calc.y"
     { printf("> "); }
     break;
 
   case 6:
 
 /* Line 1806 of yacc.c  */
-#line 27 "calc.y"
+#line 29 "calc.y"
     { (yyval.a) = newast('+', (yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a)); }
     break;
 
   case 7:
 
 /* Line 1806 of yacc.c  */
-#line 28 "calc.y"
+#line 30 "calc.y"
     { (yyval.a) = newast('-', (yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a)); }
     break;
 
   case 9:
 
 /* Line 1806 of yacc.c  */
-#line 31 "calc.y"
+#line 33 "calc.y"
     { (yyval.a) = newast('*', (yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a)); }
     break;
 
   case 10:
 
 /* Line 1806 of yacc.c  */
-#line 32 "calc.y"
+#line 34 "calc.y"
     { (yyval.a) = newast('/', (yyvsp[(1) - (3)].a), (yyvsp[(3) - (3)].a)); }
     break;
 
   case 11:
 
 /* Line 1806 of yacc.c  */
-#line 34 "calc.y"
+#line 36 "calc.y"
     { (yyval.a) = newnum((yyvsp[(1) - (1)].d)); }
     break;
 
   case 12:
 
 /* Line 1806 of yacc.c  */
-#line 35 "calc.y"
-    { (yyval.a) = newast('|', (yyvsp[(2) - (2)].a), NULL); }
+#line 37 "calc.y"
+    { (yyval.a) = newast('|', (yyvsp[(2) - (3)].a), NULL); }
     break;
 
   case 13:
 
 /* Line 1806 of yacc.c  */
-#line 36 "calc.y"
+#line 38 "calc.y"
     { (yyval.a) = (yyvsp[(2) - (3)].a); }
     break;
 
   case 14:
 
 /* Line 1806 of yacc.c  */
-#line 37 "calc.y"
+#line 39 "calc.y"
     { (yyval.a) = newast('M', (yyvsp[(2) - (2)].a), NULL); }
     break;
 
@@ -1667,7 +1667,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 40 "calc.y"
+#line 42 "calc.y"
 
 
 

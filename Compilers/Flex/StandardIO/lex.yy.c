@@ -458,18 +458,8 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "calc2.l"
-#line 2 "calc2.l"
-	enum yytokentype {
-		NUMBER = 258,
-		ADD = 259,
-		SUB = 260,
-		MUL = 261,
-		DIV = 262,
-		EOL = 264
-	};
-	int yylval;
-#line 473 "lex.yy.c"
+#line 1 "calc1.l"
+#line 463 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -656,9 +646,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 12 "calc2.l"
+#line 1 "calc1.l"
 
-#line 662 "lex.yy.c"
+#line 652 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -743,51 +733,51 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "calc2.l"
-{ return ADD; }
+#line 2 "calc1.l"
+{ printf("PLUS\n"); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 14 "calc2.l"
-{ return SUB; }
+#line 3 "calc1.l"
+{ printf("MINUS\n"); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 15 "calc2.l"
-{ return MUL; }
+#line 4 "calc1.l"
+{ printf("TIMES\n"); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 16 "calc2.l"
-{ return DIV; }
+#line 5 "calc1.l"
+{ printf("DIVIDE\n"); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 17 "calc2.l"
-{ yylval = atoi(yytext); return NUMBER; }
+#line 6 "calc1.l"
+{ printf("NUMBER %s\n", yytext); }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 18 "calc2.l"
-{ return EOL; }
+#line 7 "calc1.l"
+{ printf("NEWLINE\n"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 19 "calc2.l"
-{ /* ignore */ }
+#line 8 "calc1.l"
+{ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 20 "calc2.l"
-{ printf("Mystery character %c\n", *yytext); }
+#line 9 "calc1.l"
+{ printf("Mystery character %s\n", yytext); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 21 "calc2.l"
+#line 10 "calc1.l"
 ECHO;
 	YY_BREAK
-#line 791 "lex.yy.c"
+#line 781 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1785,18 +1775,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 21 "calc2.l"
+#line 10 "calc1.l"
 
-
-main(int argc, char **argv)
-{
-	int tok;
-	while (tok = yylex()) {
-		printf("%d", tok);
-		if (NUMBER == tok)
-			printf(" = %d\n", yylval);
-		else
-			printf("\n");
-	}
-}
 

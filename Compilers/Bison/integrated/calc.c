@@ -67,7 +67,7 @@ void treefree(struct ast *a)
 
 void yyerror(char *s, ...)
 {
-	va_list ap;
+	va_list ap;  // 可变长参数
 	va_start(ap, s);
 	
 	fprintf(stderr, "%d: error: ", yylineno);
