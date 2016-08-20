@@ -1,26 +1,34 @@
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/device.h>
+#include <linux/kernel.h>
+#include <linux/fs.h>
+#include <linux/cdev.h>
+#include <linux/slab.h>
+#include <asm/uaccess.h>
+
+#define LIGHT_MAJOR 0
 
 struct light_dev
 {
 	struct cdev cdev;
 	unsigned char value;  // 1: ON, 2: OFF
-}
+};
 
 struct light_dev *light_devp;
 int light_major = LIGHT_MAJOR;
 
-MODUL_LICENSE("Dual BSD/GPL");
+MODULE_LICENSE("Dual BSD/GPL");
 
 int light_open(struct inode *inode, struct file *filp)
 {
-	struct_dev *dev;
+	struct light_dev *dev;
 	dev = container_of(inode->i_cdev, struct light_dev, cdev);
 	filp->private_data = dev;
 	return 0;
 }
 
-int light_release(strcut inode *inode, struct file *filp)
+int light_release(struct inode *inode, struct file *filp)
 {
 	return 0;
 }
@@ -41,24 +49,24 @@ ssize_t light_write(struct file *filp, const char __user *buf, size_t count, lof
 		return -EFAULT;
 	}
 	if (dev->value == 1)
-		; // light_on();
+		printk("write: light on\n"); // light_on();
 	else
-		; // light_off();
+		printk("write: light off\n"); // light_off();
 	return 1;
 }
 
-int light_ioctl(struct inode *inode, struct file *filp, unsigned int cmd, unsigned long arg)
+long light_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
-	struct light_dev *dev = filp->private->data;
+	struct light_dev *dev = filp->private_data;
 
-	swtich (cmd) {
-	case LIGHT_ON:
+	switch (cmd) {
+	case 1: // LIGHT_ON:
 		dev->value = 1;
-		; // light_on();
+		printk("ioctl: light on\n"); // light_on();
 		break;
-	case LIGHT_OFF:
+	case 0: // LIGHT_OFF:
 		dev->value = 0;
-		; // light_off();
+		printk("ioctl: light off\n"); // light_off();
 		break;
 	default:
 		return -ENOTTY;
@@ -70,7 +78,7 @@ struct file_operations light_fops = {
 	.owner   = THIS_MODULE,
 	.read    = light_read,
 	.write   = light_write,
-	.ioctl   = light_ioctl,
+	.unlocked_ioctl   = light_ioctl,
 	.open    = light_open,
 	.release = light_release,
 };
@@ -80,7 +88,7 @@ static void light_setup_cdev(struct light_dev *dev, int index)
 	int err, devno = MKDEV(light_major, index);
 	cdev_init(&dev->cdev, &light_fops);
 	dev->cdev.owner = THIS_MODULE;
-	dev->cdev.ops = &light_ops;
+	dev->cdev.ops = &light_fops;
 	err = cdev_add(&dev->cdev, devno, 1);
 	if (err)
 		printk(KERN_NOTICE "Error %d adding LED%d", err, index);
@@ -111,7 +119,7 @@ int light_init(void)
 	return 0;
 
 fail_malloc:
-	unregister_chrdev_region(dev, light_devp);
+	unregister_chrdev_region(dev, 1);
 	return result;
 }
 
