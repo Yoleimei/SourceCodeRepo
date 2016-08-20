@@ -2,11 +2,10 @@
 obj-m := ModuleHello.o # target
 modules-objs :=        # need 
 #else
-KERNELDIR := /usr/src/linux-headers-3.5.0-17
+KERNELDIR := /lib/modules/$(shell uname -r)/build 
 PWD := $(shell pwd)
 
 .PHONY default:
-#$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
-	make -C $(KERNELDIR) M=$(PWD) modules
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules
 #endif
 
