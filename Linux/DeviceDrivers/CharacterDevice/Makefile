@@ -1,5 +1,5 @@
 #ifneq ($(KERNELRELEASE),)
-obj-m := hello.o # target
+obj-m := globalmem.o # target
 modules-objs :=        # need 
 #else
 KERNELDIR := /lib/modules/$(shell uname -r)/build 
