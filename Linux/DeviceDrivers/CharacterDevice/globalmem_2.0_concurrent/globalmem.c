@@ -196,8 +196,8 @@ static int globalmem_init(void)
 
 	globalmem_setup_cdev(&globalmem_devp[0], 0);
 	globalmem_setup_cdev(&globalmem_devp[1], 1);
-	init_MUTEX(&globalmem_devp[0]->sem);
-	init_MUTEX(&globalmem_devp[1]->sem);
+	sema_init(&(globalmem_devp[0].sem), 1);
+	sema_init(&(globalmem_devp[1].sem), 1);
 	return 0;
 
 fail_malloc:
