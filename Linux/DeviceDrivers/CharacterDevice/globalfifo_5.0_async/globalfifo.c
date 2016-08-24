@@ -30,6 +30,12 @@ struct globalfifo_dev
 };
 struct globalfifo_dev *globalfifo_devp;
 
+static int globalfifo_fasync(int fd, struct file *filp, int mode)
+{
+	struct globalfifo_dev *dev = filp->private_data;
+	return fasync_helper(fd, filp, mode, &dev->async_queue);
+}
+
 int globalfifo_open(struct inode *inode, struct file *filp)
 {
 	struct globalfifo_dev *dev;
@@ -41,7 +47,7 @@ int globalfifo_open(struct inode *inode, struct file *filp)
 int globalfifo_release(struct inode *inode, struct file *filp)
 {
 	struct globalfifo_dev *dev = filp->private_data;
-	globalfifo_fasync(-1. filp, 0);
+	globalfifo_fasync(-1, filp, 0);
 	return 0;
 }
 
@@ -60,12 +66,6 @@ static int globalfifo_ioctl(struct file *filp, unsigned int cmd, unsigned long a
 		return -EINVAL;
 	}
 	return 0;
-}
-
-static int globalfifo_fasync(int fd, struct file *filp, int mode)
-{
-	struct globalfifo_dev *dev = filp->private_data;
-	return fasync_helper(fd, filp, mode, &dev->async_queue);
 }
 
 static ssize_t globalfifo_read(struct file *filp, char __user *buf, size_t count, loff_t *ppos)
