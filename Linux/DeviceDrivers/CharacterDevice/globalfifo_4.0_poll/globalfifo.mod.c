@@ -34,9 +34,9 @@ __attribute__((section("__versions"))) = {
 	{ 0x3a013b7d, __VMLINUX_SYMBOL_STR(remove_wait_queue) },
 	{ 0x4f6b400b, __VMLINUX_SYMBOL_STR(_copy_from_user) },
 	{ 0xd7bd3af2, __VMLINUX_SYMBOL_STR(add_wait_queue) },
-	{ 0xdd1a2871, __VMLINUX_SYMBOL_STR(down) },
 	{ 0xffd5a395, __VMLINUX_SYMBOL_STR(default_wake_function) },
 	{ 0xc785fe38, __VMLINUX_SYMBOL_STR(current_task) },
+	{ 0xdd1a2871, __VMLINUX_SYMBOL_STR(down) },
 	{ 0xc4554217, __VMLINUX_SYMBOL_STR(up) },
 	{ 0x4792c572, __VMLINUX_SYMBOL_STR(down_interruptible) },
 	{ 0x50eedeb8, __VMLINUX_SYMBOL_STR(printk) },
@@ -51,4 +51,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "8297381E6EFAD0E7D2F3BDE");
+MODULE_INFO(srcversion, "C6DF1760F85517FAD1564CC");
