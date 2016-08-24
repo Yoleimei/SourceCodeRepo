@@ -20,6 +20,7 @@ static int globalfifo_major = GLOBALFIFO_MAJOR;
 struct globalfifo_dev 
 {
 	struct cdev cdev;
+	unsigned int current_len;
 	unsigned char mem[GLOBALFIFO_SIZE];
 	struct semaphore sem;
 	wait_queue_head_t r_wait;
