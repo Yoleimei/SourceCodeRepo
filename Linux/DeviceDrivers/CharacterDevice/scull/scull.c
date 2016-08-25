@@ -41,7 +41,7 @@ struct scull_qset *scull_follow(struct scull_dev *dev, int n)
 		dptr = dev->data;
 		if (dptr == NULL)
 			return NULL;
-		memset(dptr, 0, sizeof(struct scull_qset);
+		memset(dptr, 0, sizeof(struct scull_qset));
 	}
 	while (n--) {
 		if (!dptr->next) {
@@ -129,7 +129,7 @@ static ssize_t scull_read(struct file *filp, char __user *buf, size_t count, lof
 	*f_pos += count;
 	ret = count;
 
-	printk(KERN_INFO "read %d bytes(s) from %lu\n", count, f_pos);
+	printk(KERN_INFO "read %d bytes(s) from %lld\n", count, *f_pos);
 
 out:
 	up(&dev->sem);
@@ -169,7 +169,7 @@ static ssize_t scull_write(struct file *filp, const char __user *buf, size_t cou
 
 	if (count > quantum - q_pos)
 		count = quantum - q_pos;
-	if (copy_from_user(dev->data[s_pos] + q_pos, buf, count)) {
+	if (copy_from_user(dptr->data[s_pos] + q_pos, buf, count)) {
 		ret = -EFAULT;
 		goto out;
 	}
@@ -179,7 +179,7 @@ static ssize_t scull_write(struct file *filp, const char __user *buf, size_t cou
 	if (dev->size < *f_pos)
 		dev->size = *f_pos;
 
-	printk(KERN_INFO "written %d bytes(s) from %lu\n", count, f_pos);
+	printk(KERN_INFO "written %d bytes(s) from %lld\n", count, *f_pos);
 
 out:
 	up(&dev->sem);
