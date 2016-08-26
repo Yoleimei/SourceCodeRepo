@@ -1,0 +1,6 @@
+名称        说明
+NumPy       Numerical Python的简称，是Python科学计算的基础包。
+pandas      提供了能够快速便捷地处理结构化数据的大量数据结构和函数。
+matplotlib  用于绘制数据图表的Python库
+IPython     是Python的交互式shell，支持bash shell命令，内置了许多很有用的功能和函数。
+SciPy       一组专门解决科学计算中各种标准问题域的包的集合。
