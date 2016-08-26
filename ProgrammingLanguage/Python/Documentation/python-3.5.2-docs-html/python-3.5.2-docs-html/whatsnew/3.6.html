@@ -1,0 +1,725 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>What’s New In Python 3.6 &mdash; Python 3.6.0a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.6.0a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="Search within Python 3.6.0a1 documentation"
+          href="../_static/opensearch.xml"/>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="top" title="Python 3.6.0a1 documentation" href="../contents.html" />
+    <link rel="up" title="What’s New in Python" href="index.html" />
+    <link rel="next" title="What’s New In Python 3.5" href="3.5.html" />
+    <link rel="prev" title="What’s New in Python" href="index.html" />
+    <link rel="shortcut icon" type="image/png" href="../_static/py.png" />
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/version_switch.js"></script>
+    
+ 
+
+  </head>
+  <body role="document">  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="3.5.html" title="What’s New In Python 3.5"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="What’s New in Python"
+             accesskey="P">previous</a> |</li>
+        <li><img src="../_static/py.png" alt=""
+                 style="vertical-align: middle; margin-top: -1px"/></li>
+        <li><a href="https://www.python.org/">Python</a> &raquo;</li>
+        <li>
+          <span class="version_switcher_placeholder">3.6.0a1</span>
+          <a href="../index.html">Documentation </a> &raquo;
+        </li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">What&#8217;s New in Python</a> &raquo;</li> 
+      </ul>
+    </div>    
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="what-s-new-in-python-3-6">
+<h1>What&#8217;s New In Python 3.6<a class="headerlink" href="#what-s-new-in-python-3-6" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Release:</th><td class="field-body">3.6.0a1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Date:</th><td class="field-body">June 03, 2016</td>
+</tr>
+</tbody>
+</table>
+<p>This article explains the new features in Python 3.6, compared to 3.5.</p>
+<p>For full details, see the <a class="reference external" href="https://hg.python.org/cpython/file/default/Misc/NEWS">Misc/NEWS</a> file.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Prerelease users should be aware that this document is currently in draft
+form. It will be updated substantially as Python 3.6 moves towards release,
+so it&#8217;s worth checking back even after reading earlier versions.</p>
+</div>
+<div class="section" id="summary-release-highlights">
+<h2>Summary &#8211; Release highlights<a class="headerlink" href="#summary-release-highlights" title="Permalink to this headline">¶</a></h2>
+<p>New syntax features:</p>
+<ul class="simple">
+<li>PEP 498: <a class="reference internal" href="#whatsnew-fstrings"><span>Formatted string literals</span></a></li>
+</ul>
+<p>Windows improvements:</p>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">py.exe</span></code> launcher, when used interactively, no longer prefers
+Python 2 over Python 3 when the user doesn&#8217;t specify a version (via
+command line arguments or a config file).  Handling of shebang lines
+remains unchanged - &#8220;python&#8221; refers to Python 2 in that case.</li>
+</ul>
+<span class="target" id="pep-4xx"></span></div>
+<div class="section" id="new-features">
+<h2>New Features<a class="headerlink" href="#new-features" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pep-498-formatted-string-literals">
+<span id="whatsnew-fstrings"></span><h3>PEP 498: Formatted string literals<a class="headerlink" href="#pep-498-formatted-string-literals" title="Permalink to this headline">¶</a></h3>
+<p>Formatted string literals are a new kind of string literal, prefixed
+with <code class="docutils literal"><span class="pre">'f'</span></code>.  They are similar to the format strings accepted by
+<a class="reference internal" href="../library/stdtypes.html#str.format" title="str.format"><code class="xref py py-meth docutils literal"><span class="pre">str.format()</span></code></a>.  They contain replacement fields surrounded by
+curly braces.  The replacement fields are expressions, which are
+evaluated at run time, and then formatted using the <a class="reference internal" href="../library/functions.html#format" title="format"><code class="xref py py-func docutils literal"><span class="pre">format()</span></code></a> protocol.</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Fred&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="s2">&quot;He said his name is </span><span class="si">{name}</span><span class="s2">.&quot;</span>
+<span class="go">&#39;He said his name is Fred.&#39;</span>
+</pre></div>
+</div>
+<p>See <span class="target" id="index-0"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0498"><strong>PEP 498</strong></a> and the main documentation at <a class="reference internal" href="../reference/lexical_analysis.html#f-strings"><span>Formatted string literals</span></a>.</p>
+</div>
+<div class="section" id="pythonmalloc-environment-variable">
+<h3>PYTHONMALLOC environment variable<a class="headerlink" href="#pythonmalloc-environment-variable" title="Permalink to this headline">¶</a></h3>
+<p>The new <span class="target" id="index-1"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONMALLOC"><code class="xref std std-envvar docutils literal"><span class="pre">PYTHONMALLOC</span></code></a> environment variable allows to set the Python
+memory allocators and/or install debug hooks.</p>
+<p>It is now possible to install debug hooks on Python memory allocators on Python
+compiled in release mode using <code class="docutils literal"><span class="pre">PYTHONMALLOC=debug</span></code>. Effects of debug hooks:</p>
+<ul class="simple">
+<li>Newly allocated memory is filled with the byte <code class="docutils literal"><span class="pre">0xCB</span></code></li>
+<li>Freed memory is filled with the byte <code class="docutils literal"><span class="pre">0xDB</span></code></li>
+<li>Detect violations of Python memory allocator API. For example,
+<code class="xref c c-func docutils literal"><span class="pre">PyObject_Free()</span></code> called on a memory block allocated by
+<a class="reference internal" href="../c-api/memory.html#c.PyMem_Malloc" title="PyMem_Malloc"><code class="xref c c-func docutils literal"><span class="pre">PyMem_Malloc()</span></code></a>.</li>
+<li>Detect write before the start of the buffer (buffer underflow)</li>
+<li>Detect write after the end of the buffer (buffer overflow)</li>
+<li>Check that the <a class="reference internal" href="../glossary.html#term-global-interpreter-lock"><span class="xref std std-term">GIL</span></a> is held when allocator
+functions of <a class="reference internal" href="../c-api/memory.html#c.PYMEM_DOMAIN_OBJ" title="PYMEM_DOMAIN_OBJ"><code class="xref c c-data docutils literal"><span class="pre">PYMEM_DOMAIN_OBJ</span></code></a> (ex: <code class="xref c c-func docutils literal"><span class="pre">PyObject_Malloc()</span></code>) and
+<a class="reference internal" href="../c-api/memory.html#c.PYMEM_DOMAIN_MEM" title="PYMEM_DOMAIN_MEM"><code class="xref c c-data docutils literal"><span class="pre">PYMEM_DOMAIN_MEM</span></code></a> (ex: <a class="reference internal" href="../c-api/memory.html#c.PyMem_Malloc" title="PyMem_Malloc"><code class="xref c c-func docutils literal"><span class="pre">PyMem_Malloc()</span></code></a>) domains are called.</li>
+</ul>
+<p>Checking if the GIL is held is also a new feature of Python 3.6.</p>
+<p>See the <a class="reference internal" href="../c-api/memory.html#c.PyMem_SetupDebugHooks" title="PyMem_SetupDebugHooks"><code class="xref c c-func docutils literal"><span class="pre">PyMem_SetupDebugHooks()</span></code></a> function for debug hooks on Python
+memory allocators.</p>
+<p>It is now also possible to force the usage of the <code class="xref c c-func docutils literal"><span class="pre">malloc()</span></code> allocator of
+the C library for all Python memory allocations using <code class="docutils literal"><span class="pre">PYTHONMALLOC=malloc</span></code>.
+It helps to use external memory debuggers like Valgrind on a Python compiled in
+release mode.</p>
+<p>On error, the debug hooks on Python memory allocators now use the
+<a class="reference internal" href="../library/tracemalloc.html#module-tracemalloc" title="tracemalloc: Trace memory allocations."><code class="xref py py-mod docutils literal"><span class="pre">tracemalloc</span></code></a> module to get the traceback where a memory block was
+allocated.</p>
+<p>Example of fatal error on buffer overflow using
+<code class="docutils literal"><span class="pre">python3.6</span> <span class="pre">-X</span> <span class="pre">tracemalloc=5</span></code> (store 5 frames in traces):</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">Debug</span> <span class="n">memory</span> <span class="n">block</span> <span class="n">at</span> <span class="n">address</span> <span class="n">p</span><span class="o">=</span><span class="mh">0x7fbcd41666f8</span><span class="p">:</span> <span class="n">API</span> <span class="s1">&#39;o&#39;</span>
+    <span class="mi">4</span> <span class="nb">bytes</span> <span class="n">originally</span> <span class="n">requested</span>
+    <span class="n">The</span> <span class="mi">7</span> <span class="n">pad</span> <span class="nb">bytes</span> <span class="n">at</span> <span class="n">p</span><span class="o">-</span><span class="mi">7</span> <span class="n">are</span> <span class="n">FORBIDDENBYTE</span><span class="p">,</span> <span class="k">as</span> <span class="n">expected</span><span class="o">.</span>
+    <span class="n">The</span> <span class="mi">8</span> <span class="n">pad</span> <span class="nb">bytes</span> <span class="n">at</span> <span class="n">tail</span><span class="o">=</span><span class="mh">0x7fbcd41666fc</span> <span class="n">are</span> <span class="ow">not</span> <span class="nb">all</span> <span class="n">FORBIDDENBYTE</span> <span class="p">(</span><span class="mh">0xfb</span><span class="p">):</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">0</span><span class="p">:</span> <span class="mh">0x02</span> <span class="o">***</span> <span class="n">OUCH</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">1</span><span class="p">:</span> <span class="mh">0xfb</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span> <span class="mh">0xfb</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">3</span><span class="p">:</span> <span class="mh">0xfb</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">4</span><span class="p">:</span> <span class="mh">0xfb</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">5</span><span class="p">:</span> <span class="mh">0xfb</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">6</span><span class="p">:</span> <span class="mh">0xfb</span>
+        <span class="n">at</span> <span class="n">tail</span><span class="o">+</span><span class="mi">7</span><span class="p">:</span> <span class="mh">0xfb</span>
+    <span class="n">The</span> <span class="n">block</span> <span class="n">was</span> <span class="n">made</span> <span class="n">by</span> <span class="n">call</span> <span class="c1">#1233329 to debug malloc/realloc.</span>
+    <span class="n">Data</span> <span class="n">at</span> <span class="n">p</span><span class="p">:</span> <span class="mi">1</span><span class="n">a</span> <span class="mi">2</span><span class="n">b</span> <span class="mi">30</span> <span class="mi">00</span>
+
+<span class="n">Memory</span> <span class="n">block</span> <span class="n">allocated</span> <span class="n">at</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">first</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;test/test_bytes.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">323</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/case.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">600</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/case.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">648</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/suite.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">122</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/suite.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">84</span>
+
+<span class="n">Fatal</span> <span class="n">Python</span> <span class="n">error</span><span class="p">:</span> <span class="n">bad</span> <span class="n">trailing</span> <span class="n">pad</span> <span class="n">byte</span>
+
+<span class="n">Current</span> <span class="n">thread</span> <span class="mh">0x00007fbcdbd32700</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">first</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;test/test_bytes.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">323</span> <span class="ow">in</span> <span class="n">test_hex</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/case.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">600</span> <span class="ow">in</span> <span class="n">run</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/case.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">648</span> <span class="ow">in</span> <span class="n">__call__</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/suite.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">122</span> <span class="ow">in</span> <span class="n">run</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/suite.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">84</span> <span class="ow">in</span> <span class="n">__call__</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/suite.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">122</span> <span class="ow">in</span> <span class="n">run</span>
+  <span class="n">File</span> <span class="s2">&quot;unittest/suite.py&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">84</span> <span class="ow">in</span> <span class="n">__call__</span>
+  <span class="o">...</span>
+</pre></div>
+</div>
+<p>(Contributed by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue26516">issue 26516</a> and <a class="reference external" href="https://bugs.python.org/issue26564">issue 26564</a>.)</p>
+</div>
+</div>
+<div class="section" id="other-language-changes">
+<h2>Other Language Changes<a class="headerlink" href="#other-language-changes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>None yet.</li>
+</ul>
+</div>
+<div class="section" id="new-modules">
+<h2>New Modules<a class="headerlink" href="#new-modules" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>None yet.</li>
+</ul>
+</div>
+<div class="section" id="improved-modules">
+<h2>Improved Modules<a class="headerlink" href="#improved-modules" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="asyncio">
+<h3>asyncio<a class="headerlink" href="#asyncio" title="Permalink to this headline">¶</a></h3>
+<p>Since the <a class="reference internal" href="../library/asyncio.html#module-asyncio" title="asyncio: Asynchronous I/O, event loop, coroutines and tasks."><code class="xref py py-mod docutils literal"><span class="pre">asyncio</span></code></a> module is <a class="reference internal" href="../glossary.html#term-provisional-api"><span class="xref std std-term">provisional</span></a>,
+all changes introduced in Python 3.6 have also been backported to Python
+3.5.x.</p>
+<p>Notable changes in the <a class="reference internal" href="../library/asyncio.html#module-asyncio" title="asyncio: Asynchronous I/O, event loop, coroutines and tasks."><code class="xref py py-mod docutils literal"><span class="pre">asyncio</span></code></a> module since Python 3.5.0:</p>
+<ul class="simple">
+<li>The <a class="reference internal" href="../library/asyncio-task.html#asyncio.ensure_future" title="asyncio.ensure_future"><code class="xref py py-func docutils literal"><span class="pre">ensure_future()</span></code></a> function and all functions that
+use it, such as <a class="reference internal" href="../library/asyncio-eventloop.html#asyncio.BaseEventLoop.run_until_complete" title="asyncio.BaseEventLoop.run_until_complete"><code class="xref py py-meth docutils literal"><span class="pre">loop.run_until_complete()</span></code></a>,
+now accept all kinds of <a class="reference internal" href="../glossary.html#term-awaitable"><span class="xref std std-term">awaitable objects</span></a>.
+(Contributed by Yury Selivanov.)</li>
+<li>New <a class="reference internal" href="../library/asyncio-task.html#asyncio.run_coroutine_threadsafe" title="asyncio.run_coroutine_threadsafe"><code class="xref py py-func docutils literal"><span class="pre">run_coroutine_threadsafe()</span></code></a> function to submit
+coroutines to event loops from other threads.
+(Contributed by Vincent Michel.)</li>
+<li>New <a class="reference internal" href="../library/asyncio-protocol.html#asyncio.BaseTransport.is_closing" title="asyncio.BaseTransport.is_closing"><code class="xref py py-meth docutils literal"><span class="pre">Transport.is_closing()</span></code></a>
+method to check if the transport is closing or closed.
+(Contributed by Yury Selivanov.)</li>
+<li>The <a class="reference internal" href="../library/asyncio-eventloop.html#asyncio.BaseEventLoop.create_server" title="asyncio.BaseEventLoop.create_server"><code class="xref py py-meth docutils literal"><span class="pre">loop.create_server()</span></code></a>
+method can now accept a list of hosts.
+(Contributed by Yann Sionneau.)</li>
+<li>New <a class="reference internal" href="../library/asyncio-eventloop.html#asyncio.BaseEventLoop.create_future" title="asyncio.BaseEventLoop.create_future"><code class="xref py py-meth docutils literal"><span class="pre">loop.create_future()</span></code></a>
+method to create Future objects.  This allows alternative event
+loop implementations, such as
+<a class="reference external" href="https://github.com/MagicStack/uvloop">uvloop</a>, to provide a faster
+<a class="reference internal" href="../library/asyncio-task.html#asyncio.Future" title="asyncio.Future"><code class="xref py py-class docutils literal"><span class="pre">asyncio.Future</span></code></a> implementation.
+(Contributed by Yury Selivanov.)</li>
+<li>New <a class="reference internal" href="../library/asyncio-eventloop.html#asyncio.BaseEventLoop.get_exception_handler" title="asyncio.BaseEventLoop.get_exception_handler"><code class="xref py py-meth docutils literal"><span class="pre">loop.get_exception_handler()</span></code></a>
+method to get the current exception handler.
+(Contributed by Yury Selivanov.)</li>
+<li>New <a class="reference internal" href="../library/asyncio-task.html#asyncio.timeout" title="asyncio.timeout"><code class="xref py py-func docutils literal"><span class="pre">timeout()</span></code></a> context manager to simplify timeouts
+handling code.
+(Contributed by Andrew Svetlov.)</li>
+<li>New <a class="reference internal" href="../library/asyncio-stream.html#asyncio.StreamReader.readuntil" title="asyncio.StreamReader.readuntil"><code class="xref py py-meth docutils literal"><span class="pre">StreamReader.readuntil()</span></code></a>
+method to read data from the stream until a separator bytes
+sequence appears.
+(Contributed by Mark Korenberg.)</li>
+<li>The <a class="reference internal" href="../library/asyncio-eventloop.html#asyncio.BaseEventLoop.getaddrinfo" title="asyncio.BaseEventLoop.getaddrinfo"><code class="xref py py-meth docutils literal"><span class="pre">loop.getaddrinfo()</span></code></a>
+method is optimized to avoid calling the system <code class="docutils literal"><span class="pre">getaddrinfo</span></code>
+function if the address is already resolved.
+(Contributed by A. Jesse Jiryu Davis.)</li>
+</ul>
+</div>
+<div class="section" id="contextlib">
+<h3>contextlib<a class="headerlink" href="#contextlib" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../library/contextlib.html#contextlib.AbstractContextManager" title="contextlib.AbstractContextManager"><code class="xref py py-class docutils literal"><span class="pre">contextlib.AbstractContextManager</span></code></a> class has been added to
+provide an abstract base class for context managers. It provides a
+sensible default implementation for <cite>__enter__()</cite> which returns
+<code class="docutils literal"><span class="pre">self</span></code> and leaves <cite>__exit__()</cite> an abstract method. A matching
+class has been added to the <a class="reference internal" href="../library/typing.html#module-typing" title="typing: Support for type hints (see PEP 484)."><code class="xref py py-mod docutils literal"><span class="pre">typing</span></code></a> module as
+<a class="reference internal" href="../library/typing.html#typing.ContextManager" title="typing.ContextManager"><code class="xref py py-class docutils literal"><span class="pre">typing.ContextManager</span></code></a>.
+(Contributed by Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue25609">issue 25609</a>.)</p>
+</div>
+<div class="section" id="datetime">
+<h3>datetime<a class="headerlink" href="#datetime" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../library/datetime.html#datetime.datetime.strftime" title="datetime.datetime.strftime"><code class="xref py py-meth docutils literal"><span class="pre">datetime.strftime()</span></code></a> and
+<a class="reference internal" href="../library/datetime.html#datetime.date.strftime" title="datetime.date.strftime"><code class="xref py py-meth docutils literal"><span class="pre">date.strftime()</span></code></a> methods now support ISO 8601 date
+directives <code class="docutils literal"><span class="pre">%G</span></code>, <code class="docutils literal"><span class="pre">%u</span></code> and <code class="docutils literal"><span class="pre">%V</span></code>.
+(Contributed by Ashley Anderson in <a class="reference external" href="https://bugs.python.org/issue12006">issue 12006</a>.)</p>
+</div>
+<div class="section" id="faulthandler">
+<h3>faulthandler<a class="headerlink" href="#faulthandler" title="Permalink to this headline">¶</a></h3>
+<p>On Windows, the <a class="reference internal" href="../library/faulthandler.html#module-faulthandler" title="faulthandler: Dump the Python traceback."><code class="xref py py-mod docutils literal"><span class="pre">faulthandler</span></code></a> module now installs a handler for Windows
+exceptions: see <a class="reference internal" href="../library/faulthandler.html#faulthandler.enable" title="faulthandler.enable"><code class="xref py py-func docutils literal"><span class="pre">faulthandler.enable()</span></code></a>. (Contributed by Victor Stinner in
+<a class="reference external" href="https://bugs.python.org/issue23848">issue 23848</a>.)</p>
+</div>
+<div class="section" id="os">
+<h3>os<a class="headerlink" href="#os" title="Permalink to this headline">¶</a></h3>
+<p>A new <a class="reference internal" href="../library/os.html#os.scandir.close" title="os.scandir.close"><code class="xref py py-meth docutils literal"><span class="pre">close()</span></code></a> method allows explicitly closing a
+<a class="reference internal" href="../library/os.html#os.scandir" title="os.scandir"><code class="xref py py-func docutils literal"><span class="pre">scandir()</span></code></a> iterator.  The <a class="reference internal" href="../library/os.html#os.scandir" title="os.scandir"><code class="xref py py-func docutils literal"><span class="pre">scandir()</span></code></a> iterator now
+supports the <a class="reference internal" href="../glossary.html#term-context-manager"><span class="xref std std-term">context manager</span></a> protocol.  If a <code class="xref py py-func docutils literal"><span class="pre">scandir()</span></code>
+iterator is neither exhausted nor explicitly closed a <a class="reference internal" href="../library/exceptions.html#ResourceWarning" title="ResourceWarning"><code class="xref py py-exc docutils literal"><span class="pre">ResourceWarning</span></code></a>
+will be emitted in its destructor.
+(Contributed by Serhiy Storchaka in <a class="reference external" href="https://bugs.python.org/issue25994">issue 25994</a>.)</p>
+</div>
+<div class="section" id="pickle">
+<h3>pickle<a class="headerlink" href="#pickle" title="Permalink to this headline">¶</a></h3>
+<p>Objects that need calling <code class="docutils literal"><span class="pre">__new__</span></code> with keyword arguments can now be pickled
+using <a class="reference internal" href="../library/pickle.html#pickle-protocols"><span>pickle protocols</span></a> older than protocol version 4.
+Protocol version 4 already supports this case.  (Contributed by Serhiy
+Storchaka in <a class="reference external" href="https://bugs.python.org/issue24164">issue 24164</a>.)</p>
+</div>
+<div class="section" id="readline">
+<h3>readline<a class="headerlink" href="#readline" title="Permalink to this headline">¶</a></h3>
+<p>Added <a class="reference internal" href="../library/readline.html#readline.set_auto_history" title="readline.set_auto_history"><code class="xref py py-func docutils literal"><span class="pre">set_auto_history()</span></code></a> to enable or disable
+automatic addition of input to the history list.  (Contributed by
+Tyler Crompton in <a class="reference external" href="https://bugs.python.org/issue26870">issue 26870</a>.)</p>
+</div>
+<div class="section" id="rlcompleter">
+<h3>rlcompleter<a class="headerlink" href="#rlcompleter" title="Permalink to this headline">¶</a></h3>
+<p>Private and special attribute names now are omitted unless the prefix starts
+with underscores.  A space or a colon is added after some completed keywords.
+(Contributed by Serhiy Storchaka in <a class="reference external" href="https://bugs.python.org/issue25011">issue 25011</a> and <a class="reference external" href="https://bugs.python.org/issue25209">issue 25209</a>.)</p>
+<p>Names of most attributes listed by <a class="reference internal" href="../library/functions.html#dir" title="dir"><code class="xref py py-func docutils literal"><span class="pre">dir()</span></code></a> are now completed.
+Previously, names of properties and slots which were not yet created on
+an instance were excluded.  (Contributed by Martin Panter in <a class="reference external" href="https://bugs.python.org/issue25590">issue 25590</a>.)</p>
+</div>
+<div class="section" id="site">
+<h3>site<a class="headerlink" href="#site" title="Permalink to this headline">¶</a></h3>
+<p>When specifying paths to add to <a class="reference internal" href="../library/sys.html#sys.path" title="sys.path"><code class="xref py py-attr docutils literal"><span class="pre">sys.path</span></code></a> in a <cite>.pth</cite> file,
+you may now specify file paths on top of directories (e.g. zip files).
+(Contributed by Wolfgang Langner in <a class="reference external" href="https://bugs.python.org/issue26587">issue 26587</a>).</p>
+</div>
+<div class="section" id="socketserver">
+<h3>socketserver<a class="headerlink" href="#socketserver" title="Permalink to this headline">¶</a></h3>
+<p>Servers based on the <a class="reference internal" href="../library/socketserver.html#module-socketserver" title="socketserver: A framework for network servers."><code class="xref py py-mod docutils literal"><span class="pre">socketserver</span></code></a> module, including those
+defined in <a class="reference internal" href="../library/http.server.html#module-http.server" title="http.server: HTTP server and request handlers."><code class="xref py py-mod docutils literal"><span class="pre">http.server</span></code></a>, <a class="reference internal" href="../library/xmlrpc.server.html#module-xmlrpc.server" title="xmlrpc.server: Basic XML-RPC server implementations."><code class="xref py py-mod docutils literal"><span class="pre">xmlrpc.server</span></code></a> and
+<a class="reference internal" href="../library/wsgiref.html#module-wsgiref.simple_server" title="wsgiref.simple_server: A simple WSGI HTTP server."><code class="xref py py-mod docutils literal"><span class="pre">wsgiref.simple_server</span></code></a>, now support the <a class="reference internal" href="../glossary.html#term-context-manager"><span class="xref std std-term">context manager</span></a>
+protocol.
+(Contributed by Aviv Palivoda in <a class="reference external" href="https://bugs.python.org/issue26404">issue 26404</a>.)</p>
+</div>
+<div class="section" id="subprocess">
+<h3>subprocess<a class="headerlink" href="#subprocess" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../library/subprocess.html#subprocess.Popen" title="subprocess.Popen"><code class="xref py py-class docutils literal"><span class="pre">subprocess.Popen</span></code></a> destructor now emits a <a class="reference internal" href="../library/exceptions.html#ResourceWarning" title="ResourceWarning"><code class="xref py py-exc docutils literal"><span class="pre">ResourceWarning</span></code></a> warning
+if the child process is still running. Use the context manager protocol (<code class="docutils literal"><span class="pre">with</span>
+<span class="pre">proc:</span> <span class="pre">...</span></code>) or call explicitly the <a class="reference internal" href="../library/subprocess.html#subprocess.Popen.wait" title="subprocess.Popen.wait"><code class="xref py py-meth docutils literal"><span class="pre">wait()</span></code></a> method to
+read the exit status of the child process (Contributed by Victor Stinner in
+<a class="reference external" href="https://bugs.python.org/issue26741">issue 26741</a>).</p>
+</div>
+<div class="section" id="telnetlib">
+<h3>telnetlib<a class="headerlink" href="#telnetlib" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../library/telnetlib.html#telnetlib.Telnet" title="telnetlib.Telnet"><code class="xref py py-class docutils literal"><span class="pre">Telnet</span></code></a> is now a context manager (contributed by
+Stéphane Wirtel in <a class="reference external" href="https://bugs.python.org/issue25485">issue 25485</a>).</p>
+</div>
+<div class="section" id="typing">
+<h3>typing<a class="headerlink" href="#typing" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../library/typing.html#typing.ContextManager" title="typing.ContextManager"><code class="xref py py-class docutils literal"><span class="pre">typing.ContextManager</span></code></a> class has been added for
+representing <a class="reference internal" href="../library/contextlib.html#contextlib.AbstractContextManager" title="contextlib.AbstractContextManager"><code class="xref py py-class docutils literal"><span class="pre">contextlib.AbstractContextManager</span></code></a>.
+(Contributed by Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue25609">issue 25609</a>.)</p>
+</div>
+<div class="section" id="unittest-mock">
+<h3>unittest.mock<a class="headerlink" href="#unittest-mock" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../library/unittest.mock.html#unittest.mock.Mock" title="unittest.mock.Mock"><code class="xref py py-class docutils literal"><span class="pre">Mock</span></code></a> class has the following improvements:</p>
+<ul class="simple">
+<li>Two new methods, <a class="reference internal" href="../library/unittest.mock.html#unittest.mock.Mock.assert_called" title="unittest.mock.Mock.assert_called"><code class="xref py py-meth docutils literal"><span class="pre">Mock.assert_called()</span></code></a> and <a class="reference internal" href="../library/unittest.mock.html#unittest.mock.Mock.assert_called_once" title="unittest.mock.Mock.assert_called_once"><code class="xref py py-meth docutils literal"><span class="pre">Mock.assert_called_once()</span></code></a> to check if the mock object
+was called.
+(Contributed by Amit Saha in <a class="reference external" href="https://bugs.python.org/issue26323">issue 26323</a>.)</li>
+</ul>
+</div>
+<div class="section" id="urllib-robotparser">
+<h3>urllib.robotparser<a class="headerlink" href="#urllib-robotparser" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../library/urllib.robotparser.html#urllib.robotparser.RobotFileParser" title="urllib.robotparser.RobotFileParser"><code class="xref py py-class docutils literal"><span class="pre">RobotFileParser</span></code></a> now supports the <code class="docutils literal"><span class="pre">Crawl-delay</span></code> and
+<code class="docutils literal"><span class="pre">Request-rate</span></code> extensions.
+(Contributed by Nikolay Bogoychev in <a class="reference external" href="https://bugs.python.org/issue16099">issue 16099</a>.)</p>
+</div>
+<div class="section" id="warnings">
+<h3>warnings<a class="headerlink" href="#warnings" title="Permalink to this headline">¶</a></h3>
+<p>A new optional <em>source</em> parameter has been added to the
+<a class="reference internal" href="../library/warnings.html#warnings.warn_explicit" title="warnings.warn_explicit"><code class="xref py py-func docutils literal"><span class="pre">warnings.warn_explicit()</span></code></a> function: the destroyed object which emitted a
+<a class="reference internal" href="../library/exceptions.html#ResourceWarning" title="ResourceWarning"><code class="xref py py-exc docutils literal"><span class="pre">ResourceWarning</span></code></a>. A <em>source</em> attribute has also been added to
+<code class="xref py py-class docutils literal"><span class="pre">warnings.WarningMessage</span></code> (contributed by Victor Stinner in
+<a class="reference external" href="https://bugs.python.org/issue26568">issue 26568</a> and <a class="reference external" href="https://bugs.python.org/issue26567">issue 26567</a>).</p>
+<p>When a <a class="reference internal" href="../library/exceptions.html#ResourceWarning" title="ResourceWarning"><code class="xref py py-exc docutils literal"><span class="pre">ResourceWarning</span></code></a> warning is logged, the <a class="reference internal" href="../library/tracemalloc.html#module-tracemalloc" title="tracemalloc: Trace memory allocations."><code class="xref py py-mod docutils literal"><span class="pre">tracemalloc</span></code></a> is now
+used to try to retrieve the traceback where the detroyed object was allocated.</p>
+<p>Example with the script <code class="docutils literal"><span class="pre">example.py</span></code>:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+    <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
+<span class="n">f</span> <span class="o">=</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>Output of the command <code class="docutils literal"><span class="pre">python3.6</span> <span class="pre">-Wd</span> <span class="pre">-X</span> <span class="pre">tracemalloc=5</span> <span class="pre">example.py</span></code>:</p>
+<div class="highlight-python3"><div class="highlight"><pre><span></span><span class="n">example</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">7</span><span class="p">:</span> <span class="ne">ResourceWarning</span><span class="p">:</span> <span class="n">unclosed</span> <span class="n">file</span> <span class="o">&lt;</span><span class="n">_io</span><span class="o">.</span><span class="n">TextIOWrapper</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;example.py&#39;</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;UTF-8&#39;</span><span class="o">&gt;</span>
+  <span class="n">f</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">Object</span> <span class="n">allocated</span> <span class="n">at</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">first</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s2">&quot;example.py&quot;</span><span class="p">,</span> <span class="n">lineno</span> <span class="mi">4</span>
+    <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+  <span class="n">File</span> <span class="s2">&quot;example.py&quot;</span><span class="p">,</span> <span class="n">lineno</span> <span class="mi">6</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The &#8220;Object allocated at&#8221; traceback is new and only displayed if
+<a class="reference internal" href="../library/tracemalloc.html#module-tracemalloc" title="tracemalloc: Trace memory allocations."><code class="xref py py-mod docutils literal"><span class="pre">tracemalloc</span></code></a> is tracing Python memory allocations and if the
+<a class="reference internal" href="../library/warnings.html#module-warnings" title="warnings: Issue warning messages and control their disposition."><code class="xref py py-mod docutils literal"><span class="pre">warnings</span></code></a> was already imported.</p>
+</div>
+<div class="section" id="winreg">
+<h3>winreg<a class="headerlink" href="#winreg" title="Permalink to this headline">¶</a></h3>
+<p>Added the 64-bit integer type <a class="reference internal" href="../library/winreg.html#winreg.REG_QWORD" title="winreg.REG_QWORD"><code class="xref py py-data docutils literal"><span class="pre">REG_QWORD</span></code></a>.
+(Contributed by Clement Rouault in <a class="reference external" href="https://bugs.python.org/issue23026">issue 23026</a>.)</p>
+</div>
+<div class="section" id="zipfile">
+<h3>zipfile<a class="headerlink" href="#zipfile" title="Permalink to this headline">¶</a></h3>
+<p>A new <a class="reference internal" href="../library/zipfile.html#zipfile.ZipInfo.from_file" title="zipfile.ZipInfo.from_file"><code class="xref py py-meth docutils literal"><span class="pre">ZipInfo.from_file()</span></code></a> class method
+allows making a <a class="reference internal" href="../library/zipfile.html#zipfile.ZipInfo" title="zipfile.ZipInfo"><code class="xref py py-class docutils literal"><span class="pre">ZipInfo</span></code></a> instance from a filesystem file.
+A new <a class="reference internal" href="../library/zipfile.html#zipfile.ZipInfo.is_dir" title="zipfile.ZipInfo.is_dir"><code class="xref py py-meth docutils literal"><span class="pre">ZipInfo.is_dir()</span></code></a> method can be used
+to check if the <a class="reference internal" href="../library/zipfile.html#zipfile.ZipInfo" title="zipfile.ZipInfo"><code class="xref py py-class docutils literal"><span class="pre">ZipInfo</span></code></a> instance represents a directory.
+(Contributed by Thomas Kluyver in <a class="reference external" href="https://bugs.python.org/issue26039">issue 26039</a>.)</p>
+<p>The <a class="reference internal" href="../library/zipfile.html#zipfile.ZipFile.open" title="zipfile.ZipFile.open"><code class="xref py py-meth docutils literal"><span class="pre">ZipFile.open()</span></code></a> method can now be used to
+write data into a ZIP file, as well as for extracting data.
+(Contributed by Thomas Kluyver in <a class="reference external" href="https://bugs.python.org/issue26039">issue 26039</a>.)</p>
+</div>
+<div class="section" id="zlib">
+<h3>zlib<a class="headerlink" href="#zlib" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../library/zlib.html#zlib.compress" title="zlib.compress"><code class="xref py py-func docutils literal"><span class="pre">compress()</span></code></a> function now accepts keyword arguments.
+(Contributed by Aviv Palivoda in <a class="reference external" href="https://bugs.python.org/issue26243">issue 26243</a>.)</p>
+</div>
+<div class="section" id="fileinput">
+<h3>fileinput<a class="headerlink" href="#fileinput" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference internal" href="../library/fileinput.html#fileinput.hook_encoded" title="fileinput.hook_encoded"><code class="xref py py-func docutils literal"><span class="pre">hook_encoded()</span></code></a> now supports the <em>errors</em> argument.
+(Contributed by Joseph Hackman in <a class="reference external" href="https://bugs.python.org/issue25788">issue 25788</a>.)</p>
+</div>
+</div>
+<div class="section" id="optimizations">
+<h2>Optimizations<a class="headerlink" href="#optimizations" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>The ASCII decoder is now up to 60 times as fast for error handlers
+<code class="docutils literal"><span class="pre">surrogateescape</span></code>, <code class="docutils literal"><span class="pre">ignore</span></code> and <code class="docutils literal"><span class="pre">replace</span></code> (Contributed
+by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue24870">issue 24870</a>).</li>
+<li>The ASCII and the Latin1 encoders are now up to 3 times as fast for the
+error handler <code class="docutils literal"><span class="pre">surrogateescape</span></code> (Contributed by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue25227">issue 25227</a>).</li>
+<li>The UTF-8 encoder is now up to 75 times as fast for error handlers
+<code class="docutils literal"><span class="pre">ignore</span></code>, <code class="docutils literal"><span class="pre">replace</span></code>, <code class="docutils literal"><span class="pre">surrogateescape</span></code>, <code class="docutils literal"><span class="pre">surrogatepass</span></code> (Contributed
+by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue25267">issue 25267</a>).</li>
+<li>The UTF-8 decoder is now up to 15 times as fast for error handlers
+<code class="docutils literal"><span class="pre">ignore</span></code>, <code class="docutils literal"><span class="pre">replace</span></code> and <code class="docutils literal"><span class="pre">surrogateescape</span></code> (Contributed
+by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue25301">issue 25301</a>).</li>
+<li><code class="docutils literal"><span class="pre">bytes</span> <span class="pre">%</span> <span class="pre">args</span></code> is now up to 2 times faster. (Contributed by Victor Stinner
+in <a class="reference external" href="https://bugs.python.org/issue25349">issue 25349</a>).</li>
+<li><code class="docutils literal"><span class="pre">bytearray</span> <span class="pre">%</span> <span class="pre">args</span></code> is now between 2.5 and 5 times faster. (Contributed by
+Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue25399">issue 25399</a>).</li>
+<li>Optimize <a class="reference internal" href="../library/stdtypes.html#bytes.fromhex" title="bytes.fromhex"><code class="xref py py-meth docutils literal"><span class="pre">bytes.fromhex()</span></code></a> and <a class="reference internal" href="../library/stdtypes.html#bytearray.fromhex" title="bytearray.fromhex"><code class="xref py py-meth docutils literal"><span class="pre">bytearray.fromhex()</span></code></a>: they are now
+between 2x and 3.5x faster. (Contributed by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue25401">issue 25401</a>).</li>
+<li>Optimize <code class="docutils literal"><span class="pre">bytes.replace(b'',</span> <span class="pre">b'.')</span></code> and <code class="docutils literal"><span class="pre">bytearray.replace(b'',</span> <span class="pre">b'.')</span></code>:
+up to 80% faster. (Contributed by Josh Snider in <a class="reference external" href="https://bugs.python.org/issue26574">issue 26574</a>).</li>
+<li>Allocator functions of the <a class="reference internal" href="../c-api/memory.html#c.PyMem_Malloc" title="PyMem_Malloc"><code class="xref c c-func docutils literal"><span class="pre">PyMem_Malloc()</span></code></a> domain
+(<a class="reference internal" href="../c-api/memory.html#c.PYMEM_DOMAIN_MEM" title="PYMEM_DOMAIN_MEM"><code class="xref c c-data docutils literal"><span class="pre">PYMEM_DOMAIN_MEM</span></code></a>) now use the <a class="reference internal" href="../c-api/memory.html#pymalloc"><span>pymalloc memory allocator</span></a> instead of <code class="xref c c-func docutils literal"><span class="pre">malloc()</span></code> function of the C library. The
+pymalloc allocator is optimized for objects smaller or equal to 512 bytes
+with a short lifetime, and use <code class="xref c c-func docutils literal"><span class="pre">malloc()</span></code> for larger memory blocks.
+(Contributed by Victor Stinner in <a class="reference external" href="https://bugs.python.org/issue26249">issue 26249</a>).</li>
+<li><a class="reference internal" href="../library/pickle.html#pickle.load" title="pickle.load"><code class="xref py py-func docutils literal"><span class="pre">pickle.load()</span></code></a> and <a class="reference internal" href="../library/pickle.html#pickle.loads" title="pickle.loads"><code class="xref py py-func docutils literal"><span class="pre">pickle.loads()</span></code></a> are now up to 10% faster when
+deserializing many small objects (Contributed by Victor Stinner in
+<a class="reference external" href="https://bugs.python.org/issue27056">issue 27056</a>).</li>
+</ul>
+</div>
+<div class="section" id="build-and-c-api-changes">
+<h2>Build and C API Changes<a class="headerlink" href="#build-and-c-api-changes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>New <a class="reference internal" href="../c-api/init.html#c.Py_FinalizeEx" title="Py_FinalizeEx"><code class="xref c c-func docutils literal"><span class="pre">Py_FinalizeEx()</span></code></a> API which indicates if flushing buffered data
+failed (<a class="reference external" href="https://bugs.python.org/issue5319">issue 5319</a>).</li>
+</ul>
+</div>
+<div class="section" id="deprecated">
+<h2>Deprecated<a class="headerlink" href="#deprecated" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new-keywords">
+<h3>New Keywords<a class="headerlink" href="#new-keywords" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">async</span></code> and <code class="docutils literal"><span class="pre">await</span></code> are not recommended to be used as variable, class,
+function or module names.  Introduced by <span class="target" id="index-2"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0492"><strong>PEP 492</strong></a> in Python 3.5, they will
+become proper keywords in Python 3.7.</p>
+</div>
+<div class="section" id="deprecated-python-modules-functions-and-methods">
+<h3>Deprecated Python modules, functions and methods<a class="headerlink" href="#deprecated-python-modules-functions-and-methods" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference internal" href="../library/importlib.html#importlib.machinery.SourceFileLoader.load_module" title="importlib.machinery.SourceFileLoader.load_module"><code class="xref py py-meth docutils literal"><span class="pre">importlib.machinery.SourceFileLoader.load_module()</span></code></a> and
+<a class="reference internal" href="../library/importlib.html#importlib.machinery.SourcelessFileLoader.load_module" title="importlib.machinery.SourcelessFileLoader.load_module"><code class="xref py py-meth docutils literal"><span class="pre">importlib.machinery.SourcelessFileLoader.load_module()</span></code></a> are now
+deprecated. They were the only remaining implementations of
+<a class="reference internal" href="../library/importlib.html#importlib.abc.Loader.load_module" title="importlib.abc.Loader.load_module"><code class="xref py py-meth docutils literal"><span class="pre">importlib.abc.Loader.load_module()</span></code></a> in <a class="reference internal" href="../library/importlib.html#module-importlib" title="importlib: The implementation of the import machinery."><code class="xref py py-mod docutils literal"><span class="pre">importlib</span></code></a> that had not
+been deprecated in previous versions of Python in favour of
+<a class="reference internal" href="../library/importlib.html#importlib.abc.Loader.exec_module" title="importlib.abc.Loader.exec_module"><code class="xref py py-meth docutils literal"><span class="pre">importlib.abc.Loader.exec_module()</span></code></a>.</li>
+</ul>
+</div>
+<div class="section" id="deprecated-functions-and-types-of-the-c-api">
+<h3>Deprecated functions and types of the C API<a class="headerlink" href="#deprecated-functions-and-types-of-the-c-api" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>None yet.</li>
+</ul>
+</div>
+<div class="section" id="deprecated-features">
+<h3>Deprecated features<a class="headerlink" href="#deprecated-features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The <code class="docutils literal"><span class="pre">pyvenv</span></code> script has been deprecated in favour of <code class="docutils literal"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">venv</span></code>.
+This prevents confusion as to what Python interpreter <code class="docutils literal"><span class="pre">pyvenv</span></code> is
+connected to and thus what Python interpreter will be used by the virtual
+environment. (Contributed by Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue25154">issue 25154</a>.)</li>
+<li>When performing a relative import, falling back on <code class="docutils literal"><span class="pre">__name__</span></code> and
+<code class="docutils literal"><span class="pre">__path__</span></code> from the calling module when <code class="docutils literal"><span class="pre">__spec__</span></code> or
+<code class="docutils literal"><span class="pre">__package__</span></code> are not defined now raises an <a class="reference internal" href="../library/exceptions.html#ImportWarning" title="ImportWarning"><code class="xref py py-exc docutils literal"><span class="pre">ImportWarning</span></code></a>.
+(Contributed by Rose Ames in <a class="reference external" href="https://bugs.python.org/issue25791">issue 25791</a>.)</li>
+</ul>
+</div>
+<div class="section" id="deprecated-python-behavior">
+<h3>Deprecated Python behavior<a class="headerlink" href="#deprecated-python-behavior" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Raising the <a class="reference internal" href="../library/exceptions.html#StopIteration" title="StopIteration"><code class="xref py py-exc docutils literal"><span class="pre">StopIteration</span></code></a> exception inside a generator will now generate a
+<a class="reference internal" href="../library/exceptions.html#DeprecationWarning" title="DeprecationWarning"><code class="xref py py-exc docutils literal"><span class="pre">DeprecationWarning</span></code></a>, and will trigger a <a class="reference internal" href="../library/exceptions.html#RuntimeError" title="RuntimeError"><code class="xref py py-exc docutils literal"><span class="pre">RuntimeError</span></code></a> in Python 3.7.
+See <a class="reference internal" href="3.5.html#whatsnew-pep-479"><span>PEP 479: Change StopIteration handling inside generators</span></a> for details.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="removed">
+<h2>Removed<a class="headerlink" href="#removed" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="api-and-feature-removals">
+<h3>API and Feature Removals<a class="headerlink" href="#api-and-feature-removals" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">inspect.getmoduleinfo()</span></code> was removed (was deprecated since CPython 3.3).
+<a class="reference internal" href="../library/inspect.html#inspect.getmodulename" title="inspect.getmodulename"><code class="xref py py-func docutils literal"><span class="pre">inspect.getmodulename()</span></code></a> should be used for obtaining the module
+name for a given path.</li>
+<li><code class="docutils literal"><span class="pre">traceback.Ignore</span></code> class and <code class="docutils literal"><span class="pre">traceback.usage</span></code>, <code class="docutils literal"><span class="pre">traceback.modname</span></code>,
+<code class="docutils literal"><span class="pre">traceback.fullmodname</span></code>, <code class="docutils literal"><span class="pre">traceback.find_lines_from_code</span></code>,
+<code class="docutils literal"><span class="pre">traceback.find_lines</span></code>, <code class="docutils literal"><span class="pre">traceback.find_strings</span></code>,
+<code class="docutils literal"><span class="pre">traceback.find_executable_lines</span></code> methods were removed from the
+<a class="reference internal" href="../library/traceback.html#module-traceback" title="traceback: Print or retrieve a stack traceback."><code class="xref py py-mod docutils literal"><span class="pre">traceback</span></code></a> module. They were undocumented methods deprecated since
+Python 3.2 and equivalent functionality is available from private methods.</li>
+<li>The <code class="docutils literal"><span class="pre">tk_menuBar()</span></code> and <code class="docutils literal"><span class="pre">tk_bindForTraversal()</span></code> dummy methods in
+<a class="reference internal" href="../library/tkinter.html#module-tkinter" title="tkinter: Interface to Tcl/Tk for graphical user interfaces"><code class="xref py py-mod docutils literal"><span class="pre">tkinter</span></code></a> widget classes were removed (corresponding Tk commands
+were obsolete since Tk 4.0).</li>
+</ul>
+</div>
+</div>
+<div class="section" id="porting-to-python-3-6">
+<h2>Porting to Python 3.6<a class="headerlink" href="#porting-to-python-3-6" title="Permalink to this headline">¶</a></h2>
+<p>This section lists previously described changes and other bugfixes
+that may require changes to your code.</p>
+<div class="section" id="changes-in-the-python-api">
+<h3>Changes in the Python API<a class="headerlink" href="#changes-in-the-python-api" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>The format of the <code class="docutils literal"><span class="pre">co_lnotab</span></code> attribute of code objects changed to support
+negative line number delta. By default, Python does not emit bytecode with
+negative line number delta. Functions using <code class="docutils literal"><span class="pre">frame.f_lineno</span></code>,
+<code class="docutils literal"><span class="pre">PyFrame_GetLineNumber()</span></code> or <code class="docutils literal"><span class="pre">PyCode_Addr2Line()</span></code> are not affected.
+Functions decoding directly <code class="docutils literal"><span class="pre">co_lnotab</span></code> should be updated to use a signed
+8-bit integer type for the line number delta, but it&#8217;s only required to
+support applications using negative line number delta. See
+<code class="docutils literal"><span class="pre">Objects/lnotab_notes.txt</span></code> for the <code class="docutils literal"><span class="pre">co_lnotab</span></code> format and how to decode
+it, and see the <span class="target" id="index-3"></span><a class="pep reference external" href="https://www.python.org/dev/peps/pep-0511"><strong>PEP 511</strong></a> for the rationale.</li>
+<li>The functions in the <a class="reference internal" href="../library/compileall.html#module-compileall" title="compileall: Tools for byte-compiling all Python source files in a directory tree."><code class="xref py py-mod docutils literal"><span class="pre">compileall</span></code></a> module now return booleans instead
+of <code class="docutils literal"><span class="pre">1</span></code> or <code class="docutils literal"><span class="pre">0</span></code> to represent success or failure, respectively. Thanks to
+booleans being a subclass of integers, this should only be an issue if you
+were doing identity checks for <code class="docutils literal"><span class="pre">1</span></code> or <code class="docutils literal"><span class="pre">0</span></code>. See <a class="reference external" href="https://bugs.python.org/issue25768">issue 25768</a>.</li>
+<li>Reading the <code class="xref py py-attr docutils literal"><span class="pre">port</span></code> attribute of
+<a class="reference internal" href="../library/urllib.parse.html#urllib.parse.urlsplit" title="urllib.parse.urlsplit"><code class="xref py py-func docutils literal"><span class="pre">urllib.parse.urlsplit()</span></code></a> and <a class="reference internal" href="../library/urllib.parse.html#urllib.parse.urlparse" title="urllib.parse.urlparse"><code class="xref py py-func docutils literal"><span class="pre">urlparse()</span></code></a> results
+now raises <a class="reference internal" href="../library/exceptions.html#ValueError" title="ValueError"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code></a> for out-of-range values, rather than
+returning <a class="reference internal" href="../library/constants.html#None" title="None"><code class="xref py py-const docutils literal"><span class="pre">None</span></code></a>.  See <a class="reference external" href="https://bugs.python.org/issue20059">issue 20059</a>.</li>
+<li>The <a class="reference internal" href="../library/imp.html#module-imp" title="imp: Access the implementation of the import statement. (deprecated)"><code class="xref py py-mod docutils literal"><span class="pre">imp</span></code></a> module now raises a <a class="reference internal" href="../library/exceptions.html#DeprecationWarning" title="DeprecationWarning"><code class="xref py py-exc docutils literal"><span class="pre">DeprecationWarning</span></code></a> instead of
+<a class="reference internal" href="../library/exceptions.html#PendingDeprecationWarning" title="PendingDeprecationWarning"><code class="xref py py-exc docutils literal"><span class="pre">PendingDeprecationWarning</span></code></a>.</li>
+<li>The following modules have had missing APIs added to their <code class="xref py py-attr docutils literal"><span class="pre">__all__</span></code>
+attributes to match the documented APIs: <a class="reference internal" href="../library/calendar.html#module-calendar" title="calendar: Functions for working with calendars, including some emulation of the Unix cal program."><code class="xref py py-mod docutils literal"><span class="pre">calendar</span></code></a>, <a class="reference internal" href="../library/csv.html#module-csv" title="csv: Write and read tabular data to and from delimited files."><code class="xref py py-mod docutils literal"><span class="pre">csv</span></code></a>,
+<a class="reference internal" href="../library/xml.etree.elementtree.html#module-xml.etree.ElementTree" title="xml.etree.ElementTree: Implementation of the ElementTree API."><code class="xref py py-mod docutils literal"><span class="pre">ElementTree</span></code></a>, <a class="reference internal" href="../library/enum.html#module-enum" title="enum: Implementation of an enumeration class."><code class="xref py py-mod docutils literal"><span class="pre">enum</span></code></a>,
+<a class="reference internal" href="../library/fileinput.html#module-fileinput" title="fileinput: Loop over standard input or a list of files."><code class="xref py py-mod docutils literal"><span class="pre">fileinput</span></code></a>, <a class="reference internal" href="../library/ftplib.html#module-ftplib" title="ftplib: FTP protocol client (requires sockets)."><code class="xref py py-mod docutils literal"><span class="pre">ftplib</span></code></a>, <a class="reference internal" href="../library/logging.html#module-logging" title="logging: Flexible event logging system for applications."><code class="xref py py-mod docutils literal"><span class="pre">logging</span></code></a>,
+<a class="reference internal" href="../library/optparse.html#module-optparse" title="optparse: Command-line option parsing library. (deprecated)"><code class="xref py py-mod docutils literal"><span class="pre">optparse</span></code></a>, <a class="reference internal" href="../library/subprocess.html#module-subprocess" title="subprocess: Subprocess management."><code class="xref py py-mod docutils literal"><span class="pre">subprocess</span></code></a>, <a class="reference internal" href="../library/tarfile.html#module-tarfile" title="tarfile: Read and write tar-format archive files."><code class="xref py py-mod docutils literal"><span class="pre">tarfile</span></code></a>, <a class="reference internal" href="../library/threading.html#module-threading" title="threading: Thread-based parallelism."><code class="xref py py-mod docutils literal"><span class="pre">threading</span></code></a> and
+<a class="reference internal" href="../library/wave.html#module-wave" title="wave: Provide an interface to the WAV sound format."><code class="xref py py-mod docutils literal"><span class="pre">wave</span></code></a>.  This means they will export new symbols when <code class="docutils literal"><span class="pre">import</span> <span class="pre">*</span></code>
+is used.  See <a class="reference external" href="https://bugs.python.org/issue23883">issue 23883</a>.</li>
+<li>When performing a relative import, if <code class="docutils literal"><span class="pre">__package__</span></code> does not compare equal
+to <code class="docutils literal"><span class="pre">__spec__.parent</span></code> then <a class="reference internal" href="../library/exceptions.html#ImportWarning" title="ImportWarning"><code class="xref py py-exc docutils literal"><span class="pre">ImportWarning</span></code></a> is raised.
+(Contributed by Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue25791">issue 25791</a>.)</li>
+<li>When a relative import is performed and no parent package is known, then
+<a class="reference internal" href="../library/exceptions.html#ImportError" title="ImportError"><code class="xref py py-exc docutils literal"><span class="pre">ImportError</span></code></a> will be raised. Previously, <a class="reference internal" href="../library/exceptions.html#SystemError" title="SystemError"><code class="xref py py-exc docutils literal"><span class="pre">SystemError</span></code></a> could be
+raised. (Contributed by Brett Cannon in <a class="reference external" href="https://bugs.python.org/issue18018">issue 18018</a>.)</li>
+<li>Servers based on the <a class="reference internal" href="../library/socketserver.html#module-socketserver" title="socketserver: A framework for network servers."><code class="xref py py-mod docutils literal"><span class="pre">socketserver</span></code></a> module, including those
+defined in <a class="reference internal" href="../library/http.server.html#module-http.server" title="http.server: HTTP server and request handlers."><code class="xref py py-mod docutils literal"><span class="pre">http.server</span></code></a>, <a class="reference internal" href="../library/xmlrpc.server.html#module-xmlrpc.server" title="xmlrpc.server: Basic XML-RPC server implementations."><code class="xref py py-mod docutils literal"><span class="pre">xmlrpc.server</span></code></a> and
+<a class="reference internal" href="../library/wsgiref.html#module-wsgiref.simple_server" title="wsgiref.simple_server: A simple WSGI HTTP server."><code class="xref py py-mod docutils literal"><span class="pre">wsgiref.simple_server</span></code></a>, now only catch exceptions derived
+from <a class="reference internal" href="../library/exceptions.html#Exception" title="Exception"><code class="xref py py-exc docutils literal"><span class="pre">Exception</span></code></a>. Therefore if a request handler raises
+an exception like <a class="reference internal" href="../library/exceptions.html#SystemExit" title="SystemExit"><code class="xref py py-exc docutils literal"><span class="pre">SystemExit</span></code></a> or <a class="reference internal" href="../library/exceptions.html#KeyboardInterrupt" title="KeyboardInterrupt"><code class="xref py py-exc docutils literal"><span class="pre">KeyboardInterrupt</span></code></a>,
+<a class="reference internal" href="../library/socketserver.html#socketserver.BaseServer.handle_error" title="socketserver.BaseServer.handle_error"><code class="xref py py-meth docutils literal"><span class="pre">handle_error()</span></code></a> is no longer called, and
+the exception will stop a single-threaded server. (Contributed by
+Martin Panter in <a class="reference external" href="https://bugs.python.org/issue23430">issue 23430</a>.)</li>
+<li><a class="reference internal" href="../library/spwd.html#spwd.getspnam" title="spwd.getspnam"><code class="xref py py-func docutils literal"><span class="pre">spwd.getspnam()</span></code></a> now raises a <a class="reference internal" href="../library/exceptions.html#PermissionError" title="PermissionError"><code class="xref py py-exc docutils literal"><span class="pre">PermissionError</span></code></a> instead of
+<a class="reference internal" href="../library/exceptions.html#KeyError" title="KeyError"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code></a> if the user doesn&#8217;t have privileges.</li>
+<li>The <a class="reference internal" href="../library/socket.html#socket.socket.close" title="socket.socket.close"><code class="xref py py-meth docutils literal"><span class="pre">socket.socket.close()</span></code></a> method now raises an exception if
+an error (e.g. EBADF) was reported by the underlying system call.
+See <a class="reference external" href="https://bugs.python.org/issue26685">issue 26685</a>.</li>
+<li>The <em>decode_data</em> argument for <a class="reference internal" href="../library/smtpd.html#smtpd.SMTPChannel" title="smtpd.SMTPChannel"><code class="xref py py-class docutils literal"><span class="pre">smtpd.SMTPChannel</span></code></a> and
+<a class="reference internal" href="../library/smtpd.html#smtpd.SMTPServer" title="smtpd.SMTPServer"><code class="xref py py-class docutils literal"><span class="pre">smtpd.SMTPServer</span></code></a> constructors is now <code class="docutils literal"><span class="pre">False</span></code> by default.
+This means that the argument passed to
+<a class="reference internal" href="../library/smtpd.html#smtpd.SMTPServer.process_message" title="smtpd.SMTPServer.process_message"><code class="xref py py-meth docutils literal"><span class="pre">process_message()</span></code></a> is now a bytes object by
+default, and <code class="docutils literal"><span class="pre">process_message()</span></code> will be passed keyword arguments.
+Code that has already been updated in accordance with the deprecation
+warning generated by 3.5 will not be affected.</li>
+</ul>
+</div>
+<div class="section" id="changes-in-the-c-api">
+<h3>Changes in the C API<a class="headerlink" href="#changes-in-the-c-api" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference internal" href="../c-api/memory.html#c.PyMem_Malloc" title="PyMem_Malloc"><code class="xref c c-func docutils literal"><span class="pre">PyMem_Malloc()</span></code></a> allocator family now uses the <a class="reference internal" href="../c-api/memory.html#pymalloc"><span>pymalloc allocator</span></a> rather than system <code class="xref c c-func docutils literal"><span class="pre">malloc()</span></code>. Applications calling
+<a class="reference internal" href="../c-api/memory.html#c.PyMem_Malloc" title="PyMem_Malloc"><code class="xref c c-func docutils literal"><span class="pre">PyMem_Malloc()</span></code></a> without holding the GIL can now crash. Set the
+<span class="target" id="index-4"></span><a class="reference internal" href="../using/cmdline.html#envvar-PYTHONMALLOC"><code class="xref std std-envvar docutils literal"><span class="pre">PYTHONMALLOC</span></code></a> environment variable to <code class="docutils literal"><span class="pre">debug</span></code> to validate the
+usage of memory allocators in your application. See <a class="reference external" href="https://bugs.python.org/issue26249">issue 26249</a>.</li>
+<li><a class="reference internal" href="../c-api/sys.html#c.Py_Exit" title="Py_Exit"><code class="xref c c-func docutils literal"><span class="pre">Py_Exit()</span></code></a> (and the main interpreter) now override the exit status
+with 120 if flushing buffered data failed.  See <a class="reference external" href="https://bugs.python.org/issue5319">issue 5319</a>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">What&#8217;s New In Python 3.6</a><ul>
+<li><a class="reference internal" href="#summary-release-highlights">Summary &#8211; Release highlights</a></li>
+<li><a class="reference internal" href="#new-features">New Features</a><ul>
+<li><a class="reference internal" href="#pep-498-formatted-string-literals">PEP 498: Formatted string literals</a></li>
+<li><a class="reference internal" href="#pythonmalloc-environment-variable">PYTHONMALLOC environment variable</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#other-language-changes">Other Language Changes</a></li>
+<li><a class="reference internal" href="#new-modules">New Modules</a></li>
+<li><a class="reference internal" href="#improved-modules">Improved Modules</a><ul>
+<li><a class="reference internal" href="#asyncio">asyncio</a></li>
+<li><a class="reference internal" href="#contextlib">contextlib</a></li>
+<li><a class="reference internal" href="#datetime">datetime</a></li>
+<li><a class="reference internal" href="#faulthandler">faulthandler</a></li>
+<li><a class="reference internal" href="#os">os</a></li>
+<li><a class="reference internal" href="#pickle">pickle</a></li>
+<li><a class="reference internal" href="#readline">readline</a></li>
+<li><a class="reference internal" href="#rlcompleter">rlcompleter</a></li>
+<li><a class="reference internal" href="#site">site</a></li>
+<li><a class="reference internal" href="#socketserver">socketserver</a></li>
+<li><a class="reference internal" href="#subprocess">subprocess</a></li>
+<li><a class="reference internal" href="#telnetlib">telnetlib</a></li>
+<li><a class="reference internal" href="#typing">typing</a></li>
+<li><a class="reference internal" href="#unittest-mock">unittest.mock</a></li>
+<li><a class="reference internal" href="#urllib-robotparser">urllib.robotparser</a></li>
+<li><a class="reference internal" href="#warnings">warnings</a></li>
+<li><a class="reference internal" href="#winreg">winreg</a></li>
+<li><a class="reference internal" href="#zipfile">zipfile</a></li>
+<li><a class="reference internal" href="#zlib">zlib</a></li>
+<li><a class="reference internal" href="#fileinput">fileinput</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#optimizations">Optimizations</a></li>
+<li><a class="reference internal" href="#build-and-c-api-changes">Build and C API Changes</a></li>
+<li><a class="reference internal" href="#deprecated">Deprecated</a><ul>
+<li><a class="reference internal" href="#new-keywords">New Keywords</a></li>
+<li><a class="reference internal" href="#deprecated-python-modules-functions-and-methods">Deprecated Python modules, functions and methods</a></li>
+<li><a class="reference internal" href="#deprecated-functions-and-types-of-the-c-api">Deprecated functions and types of the C API</a></li>
+<li><a class="reference internal" href="#deprecated-features">Deprecated features</a></li>
+<li><a class="reference internal" href="#deprecated-python-behavior">Deprecated Python behavior</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#removed">Removed</a><ul>
+<li><a class="reference internal" href="#api-and-feature-removals">API and Feature Removals</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#porting-to-python-3-6">Porting to Python 3.6</a><ul>
+<li><a class="reference internal" href="#changes-in-the-python-api">Changes in the Python API</a></li>
+<li><a class="reference internal" href="#changes-in-the-c-api">Changes in the C API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">What&#8217;s New in Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="3.5.html"
+                        title="next chapter">What&#8217;s New In Python 3.5</a></p>
+<h3>This Page</h3>
+<ul class="this-page-menu">
+  <li><a href="../bugs.html">Report a Bug</a></li>
+  <li><a href="../_sources/whatsnew/3.6.txt"
+         rel="nofollow">Show Source</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="3.5.html" title="What’s New In Python 3.5"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="What’s New in Python"
+             >previous</a> |</li>
+        <li><img src="../_static/py.png" alt=""
+                 style="vertical-align: middle; margin-top: -1px"/></li>
+        <li><a href="https://www.python.org/">Python</a> &raquo;</li>
+        <li>
+          <span class="version_switcher_placeholder">3.6.0a1</span>
+          <a href="../index.html">Documentation </a> &raquo;
+        </li>
+
+          <li class="nav-item nav-item-1"><a href="index.html" >What&#8217;s New in Python</a> &raquo;</li> 
+      </ul>
+    </div>  
+    <div class="footer">
+    &copy; <a href="../copyright.html">Copyright</a> 2001-2016, Python Software Foundation.
+    <br />
+    The Python Software Foundation is a non-profit corporation.
+    <a href="https://www.python.org/psf/donations/">Please donate.</a>
+    <br />
+    Last updated on Jun 03, 2016.
+    <a href="../bugs.html">Found a bug</a>?
+    <br />
+    Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.3.3.
+    </div>
+
+  </body>
+</html>

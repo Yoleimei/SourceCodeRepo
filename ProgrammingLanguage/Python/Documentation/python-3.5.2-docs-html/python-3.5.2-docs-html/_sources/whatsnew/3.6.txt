@@ -1,0 +1,661 @@
+****************************
+  What's New In Python 3.6
+****************************
+
+:Release: |release|
+:Date: |today|
+
+.. Rules for maintenance:
+
+   * Anyone can add text to this document.  Do not spend very much time
+   on the wording of your changes, because your text will probably
+   get rewritten to some degree.
+
+   * The maintainer will go through Misc/NEWS periodically and add
+   changes; it's therefore more important to add your changes to
+   Misc/NEWS than to this file.
+
+   * This is not a complete list of every single change; completeness
+   is the purpose of Misc/NEWS.  Some changes I consider too small
+   or esoteric to include.  If such a change is added to the text,
+   I'll just remove it.  (This is another reason you shouldn't spend
+   too much time on writing your addition.)
+
+   * If you want to draw your new text to the attention of the
+   maintainer, add 'XXX' to the beginning of the paragraph or
+   section.
+
+   * It's OK to just add a fragmentary note about a change.  For
+   example: "XXX Describe the transmogrify() function added to the
+   socket module."  The maintainer will research the change and
+   write the necessary text.
+
+   * You can comment out your additions if you like, but it's not
+   necessary (especially when a final release is some months away).
+
+   * Credit the author of a patch or bugfix.   Just the name is
+   sufficient; the e-mail address isn't necessary.
+
+   * It's helpful to add the bug/patch number as a comment:
+
+   XXX Describe the transmogrify() function added to the socket
+   module.
+   (Contributed by P.Y. Developer in :issue:`12345`.)
+
+   This saves the maintainer the effort of going through the Mercurial log
+   when researching a change.
+
+This article explains the new features in Python 3.6, compared to 3.5.
+
+For full details, see the :source:`Misc/NEWS` file.
+
+.. note::
+
+   Prerelease users should be aware that this document is currently in draft
+   form. It will be updated substantially as Python 3.6 moves towards release,
+   so it's worth checking back even after reading earlier versions.
+
+
+Summary -- Release highlights
+=============================
+
+.. This section singles out the most important changes in Python 3.6.
+   Brevity is key.
+
+New syntax features:
+
+* PEP 498: :ref:`Formatted string literals <whatsnew-fstrings>`
+
+Windows improvements:
+
+* The ``py.exe`` launcher, when used interactively, no longer prefers
+  Python 2 over Python 3 when the user doesn't specify a version (via
+  command line arguments or a config file).  Handling of shebang lines
+  remains unchanged - "python" refers to Python 2 in that case.
+
+.. PEP-sized items next.
+
+.. _pep-4XX:
+
+.. PEP 4XX: Virtual Environments
+.. =============================
+
+
+.. (Implemented by Foo Bar.)
+
+.. .. seealso::
+
+    :pep:`4XX` - Python Virtual Environments
+       PEP written by Carl Meyer
+
+
+New Features
+============
+
+.. _whatsnew-fstrings:
+
+PEP 498: Formatted string literals
+----------------------------------
+
+Formatted string literals are a new kind of string literal, prefixed
+with ``'f'``.  They are similar to the format strings accepted by
+:meth:`str.format`.  They contain replacement fields surrounded by
+curly braces.  The replacement fields are expressions, which are
+evaluated at run time, and then formatted using the :func:`format` protocol.
+
+    >>> name = "Fred"
+    >>> f"He said his name is {name}."
+    'He said his name is Fred.'
+
+See :pep:`498` and the main documentation at :ref:`f-strings`.
+
+
+PYTHONMALLOC environment variable
+---------------------------------
+
+The new :envvar:`PYTHONMALLOC` environment variable allows to set the Python
+memory allocators and/or install debug hooks.
+
+It is now possible to install debug hooks on Python memory allocators on Python
+compiled in release mode using ``PYTHONMALLOC=debug``. Effects of debug hooks:
+
+* Newly allocated memory is filled with the byte ``0xCB``
+* Freed memory is filled with the byte ``0xDB``
+* Detect violations of Python memory allocator API. For example,
+  :c:func:`PyObject_Free` called on a memory block allocated by
+  :c:func:`PyMem_Malloc`.
+* Detect write before the start of the buffer (buffer underflow)
+* Detect write after the end of the buffer (buffer overflow)
+* Check that the :term:`GIL <global interpreter lock>` is held when allocator
+  functions of :c:data:`PYMEM_DOMAIN_OBJ` (ex: :c:func:`PyObject_Malloc`) and
+  :c:data:`PYMEM_DOMAIN_MEM` (ex: :c:func:`PyMem_Malloc`) domains are called.
+
+Checking if the GIL is held is also a new feature of Python 3.6.
+
+See the :c:func:`PyMem_SetupDebugHooks` function for debug hooks on Python
+memory allocators.
+
+It is now also possible to force the usage of the :c:func:`malloc` allocator of
+the C library for all Python memory allocations using ``PYTHONMALLOC=malloc``.
+It helps to use external memory debuggers like Valgrind on a Python compiled in
+release mode.
+
+On error, the debug hooks on Python memory allocators now use the
+:mod:`tracemalloc` module to get the traceback where a memory block was
+allocated.
+
+Example of fatal error on buffer overflow using
+``python3.6 -X tracemalloc=5`` (store 5 frames in traces)::
+
+    Debug memory block at address p=0x7fbcd41666f8: API 'o'
+        4 bytes originally requested
+        The 7 pad bytes at p-7 are FORBIDDENBYTE, as expected.
+        The 8 pad bytes at tail=0x7fbcd41666fc are not all FORBIDDENBYTE (0xfb):
+            at tail+0: 0x02 *** OUCH
+            at tail+1: 0xfb
+            at tail+2: 0xfb
+            at tail+3: 0xfb
+            at tail+4: 0xfb
+            at tail+5: 0xfb
+            at tail+6: 0xfb
+            at tail+7: 0xfb
+        The block was made by call #1233329 to debug malloc/realloc.
+        Data at p: 1a 2b 30 00
+
+    Memory block allocated at (most recent call first):
+      File "test/test_bytes.py", line 323
+      File "unittest/case.py", line 600
+      File "unittest/case.py", line 648
+      File "unittest/suite.py", line 122
+      File "unittest/suite.py", line 84
+
+    Fatal Python error: bad trailing pad byte
+
+    Current thread 0x00007fbcdbd32700 (most recent call first):
+      File "test/test_bytes.py", line 323 in test_hex
+      File "unittest/case.py", line 600 in run
+      File "unittest/case.py", line 648 in __call__
+      File "unittest/suite.py", line 122 in run
+      File "unittest/suite.py", line 84 in __call__
+      File "unittest/suite.py", line 122 in run
+      File "unittest/suite.py", line 84 in __call__
+      ...
+
+(Contributed by Victor Stinner in :issue:`26516` and :issue:`26564`.)
+
+
+Other Language Changes
+======================
+
+* None yet.
+
+
+New Modules
+===========
+
+* None yet.
+
+
+Improved Modules
+================
+
+
+asyncio
+-------
+
+Since the :mod:`asyncio` module is :term:`provisional <provisional api>`,
+all changes introduced in Python 3.6 have also been backported to Python
+3.5.x.
+
+Notable changes in the :mod:`asyncio` module since Python 3.5.0:
+
+* The :func:`~asyncio.ensure_future` function and all functions that
+  use it, such as :meth:`loop.run_until_complete() <asyncio.BaseEventLoop.run_until_complete>`,
+  now accept all kinds of :term:`awaitable objects <awaitable>`.
+  (Contributed by Yury Selivanov.)
+
+* New :func:`~asyncio.run_coroutine_threadsafe` function to submit
+  coroutines to event loops from other threads.
+  (Contributed by Vincent Michel.)
+
+* New :meth:`Transport.is_closing() <asyncio.BaseTransport.is_closing>`
+  method to check if the transport is closing or closed.
+  (Contributed by Yury Selivanov.)
+
+* The :meth:`loop.create_server() <asyncio.BaseEventLoop.create_server>`
+  method can now accept a list of hosts.
+  (Contributed by Yann Sionneau.)
+
+* New :meth:`loop.create_future() <asyncio.BaseEventLoop.create_future>`
+  method to create Future objects.  This allows alternative event
+  loop implementations, such as
+  `uvloop <https://github.com/MagicStack/uvloop>`_, to provide a faster
+  :class:`asyncio.Future` implementation.
+  (Contributed by Yury Selivanov.)
+
+* New :meth:`loop.get_exception_handler() <asyncio.BaseEventLoop.get_exception_handler>`
+  method to get the current exception handler.
+  (Contributed by Yury Selivanov.)
+
+* New :func:`~asyncio.timeout` context manager to simplify timeouts
+  handling code.
+  (Contributed by Andrew Svetlov.)
+
+* New :meth:`StreamReader.readuntil() <asyncio.StreamReader.readuntil>`
+  method to read data from the stream until a separator bytes
+  sequence appears.
+  (Contributed by Mark Korenberg.)
+
+* The :meth:`loop.getaddrinfo() <asyncio.BaseEventLoop.getaddrinfo>`
+  method is optimized to avoid calling the system ``getaddrinfo``
+  function if the address is already resolved.
+  (Contributed by A. Jesse Jiryu Davis.)
+
+
+contextlib
+----------
+
+The :class:`contextlib.AbstractContextManager` class has been added to
+provide an abstract base class for context managers. It provides a
+sensible default implementation for `__enter__()` which returns
+``self`` and leaves `__exit__()` an abstract method. A matching
+class has been added to the :mod:`typing` module as
+:class:`typing.ContextManager`.
+(Contributed by Brett Cannon in :issue:`25609`.)
+
+
+datetime
+--------
+
+The :meth:`datetime.strftime() <datetime.datetime.strftime>` and
+:meth:`date.strftime() <datetime.date.strftime>` methods now support ISO 8601 date
+directives ``%G``, ``%u`` and ``%V``.
+(Contributed by Ashley Anderson in :issue:`12006`.)
+
+
+faulthandler
+------------
+
+On Windows, the :mod:`faulthandler` module now installs a handler for Windows
+exceptions: see :func:`faulthandler.enable`. (Contributed by Victor Stinner in
+:issue:`23848`.)
+
+
+os
+--
+
+A new :meth:`~os.scandir.close` method allows explicitly closing a
+:func:`~os.scandir` iterator.  The :func:`~os.scandir` iterator now
+supports the :term:`context manager` protocol.  If a :func:`scandir`
+iterator is neither exhausted nor explicitly closed a :exc:`ResourceWarning`
+will be emitted in its destructor.
+(Contributed by Serhiy Storchaka in :issue:`25994`.)
+
+
+pickle
+------
+
+Objects that need calling ``__new__`` with keyword arguments can now be pickled
+using :ref:`pickle protocols <pickle-protocols>` older than protocol version 4.
+Protocol version 4 already supports this case.  (Contributed by Serhiy
+Storchaka in :issue:`24164`.)
+
+
+readline
+--------
+
+Added :func:`~readline.set_auto_history` to enable or disable
+automatic addition of input to the history list.  (Contributed by
+Tyler Crompton in :issue:`26870`.)
+
+
+rlcompleter
+-----------
+
+Private and special attribute names now are omitted unless the prefix starts
+with underscores.  A space or a colon is added after some completed keywords.
+(Contributed by Serhiy Storchaka in :issue:`25011` and :issue:`25209`.)
+
+Names of most attributes listed by :func:`dir` are now completed.
+Previously, names of properties and slots which were not yet created on
+an instance were excluded.  (Contributed by Martin Panter in :issue:`25590`.)
+
+
+site
+----
+
+When specifying paths to add to :attr:`sys.path` in a `.pth` file,
+you may now specify file paths on top of directories (e.g. zip files).
+(Contributed by Wolfgang Langner in :issue:`26587`).
+
+
+socketserver
+------------
+
+Servers based on the :mod:`socketserver` module, including those
+defined in :mod:`http.server`, :mod:`xmlrpc.server` and
+:mod:`wsgiref.simple_server`, now support the :term:`context manager`
+protocol.
+(Contributed by Aviv Palivoda in :issue:`26404`.)
+
+
+subprocess
+----------
+
+:class:`subprocess.Popen` destructor now emits a :exc:`ResourceWarning` warning
+if the child process is still running. Use the context manager protocol (``with
+proc: ...``) or call explicitly the :meth:`~subprocess.Popen.wait` method to
+read the exit status of the child process (Contributed by Victor Stinner in
+:issue:`26741`).
+
+
+telnetlib
+---------
+
+:class:`~telnetlib.Telnet` is now a context manager (contributed by
+Stéphane Wirtel in :issue:`25485`).
+
+
+typing
+------
+
+The :class:`typing.ContextManager` class has been added for
+representing :class:`contextlib.AbstractContextManager`.
+(Contributed by Brett Cannon in :issue:`25609`.)
+
+
+unittest.mock
+-------------
+
+The :class:`~unittest.mock.Mock` class has the following improvements:
+
+* Two new methods, :meth:`Mock.assert_called()
+  <unittest.mock.Mock.assert_called>` and :meth:`Mock.assert_called_once()
+  <unittest.mock.Mock.assert_called_once>` to check if the mock object
+  was called.
+  (Contributed by Amit Saha in :issue:`26323`.)
+
+
+urllib.robotparser
+------------------
+
+:class:`~urllib.robotparser.RobotFileParser` now supports the ``Crawl-delay`` and
+``Request-rate`` extensions.
+(Contributed by Nikolay Bogoychev in :issue:`16099`.)
+
+
+warnings
+--------
+
+A new optional *source* parameter has been added to the
+:func:`warnings.warn_explicit` function: the destroyed object which emitted a
+:exc:`ResourceWarning`. A *source* attribute has also been added to
+:class:`warnings.WarningMessage` (contributed by Victor Stinner in
+:issue:`26568` and :issue:`26567`).
+
+When a :exc:`ResourceWarning` warning is logged, the :mod:`tracemalloc` is now
+used to try to retrieve the traceback where the detroyed object was allocated.
+
+Example with the script ``example.py``::
+
+    import warnings
+
+    def func():
+        return open(__file__)
+
+    f = func()
+    f = None
+
+Output of the command ``python3.6 -Wd -X tracemalloc=5 example.py``::
+
+    example.py:7: ResourceWarning: unclosed file <_io.TextIOWrapper name='example.py' mode='r' encoding='UTF-8'>
+      f = None
+    Object allocated at (most recent call first):
+      File "example.py", lineno 4
+        return open(__file__)
+      File "example.py", lineno 6
+        f = func()
+
+The "Object allocated at" traceback is new and only displayed if
+:mod:`tracemalloc` is tracing Python memory allocations and if the
+:mod:`warnings` was already imported.
+
+
+winreg
+------
+
+Added the 64-bit integer type :data:`REG_QWORD <winreg.REG_QWORD>`.
+(Contributed by Clement Rouault in :issue:`23026`.)
+
+
+zipfile
+-------
+
+A new :meth:`ZipInfo.from_file() <zipfile.ZipInfo.from_file>` class method
+allows making a :class:`~zipfile.ZipInfo` instance from a filesystem file.
+A new :meth:`ZipInfo.is_dir() <zipfile.ZipInfo.is_dir>` method can be used
+to check if the :class:`~zipfile.ZipInfo` instance represents a directory.
+(Contributed by Thomas Kluyver in :issue:`26039`.)
+
+The :meth:`ZipFile.open() <zipfile.ZipFile.open>` method can now be used to
+write data into a ZIP file, as well as for extracting data.
+(Contributed by Thomas Kluyver in :issue:`26039`.)
+
+
+zlib
+----
+
+The :func:`~zlib.compress` function now accepts keyword arguments.
+(Contributed by Aviv Palivoda in :issue:`26243`.)
+
+
+fileinput
+---------
+
+:func:`~fileinput.hook_encoded` now supports the *errors* argument.
+(Contributed by Joseph Hackman in :issue:`25788`.)
+
+
+Optimizations
+=============
+
+* The ASCII decoder is now up to 60 times as fast for error handlers
+  ``surrogateescape``, ``ignore`` and ``replace`` (Contributed
+  by Victor Stinner in :issue:`24870`).
+
+* The ASCII and the Latin1 encoders are now up to 3 times as fast for the
+  error handler ``surrogateescape`` (Contributed by Victor Stinner in :issue:`25227`).
+
+* The UTF-8 encoder is now up to 75 times as fast for error handlers
+  ``ignore``, ``replace``, ``surrogateescape``, ``surrogatepass`` (Contributed
+  by Victor Stinner in :issue:`25267`).
+
+* The UTF-8 decoder is now up to 15 times as fast for error handlers
+  ``ignore``, ``replace`` and ``surrogateescape`` (Contributed
+  by Victor Stinner in :issue:`25301`).
+
+* ``bytes % args`` is now up to 2 times faster. (Contributed by Victor Stinner
+  in :issue:`25349`).
+
+* ``bytearray % args`` is now between 2.5 and 5 times faster. (Contributed by
+  Victor Stinner in :issue:`25399`).
+
+* Optimize :meth:`bytes.fromhex` and :meth:`bytearray.fromhex`: they are now
+  between 2x and 3.5x faster. (Contributed by Victor Stinner in :issue:`25401`).
+
+* Optimize ``bytes.replace(b'', b'.')`` and ``bytearray.replace(b'', b'.')``:
+  up to 80% faster. (Contributed by Josh Snider in :issue:`26574`).
+
+* Allocator functions of the :c:func:`PyMem_Malloc` domain
+  (:c:data:`PYMEM_DOMAIN_MEM`) now use the :ref:`pymalloc memory allocator
+  <pymalloc>` instead of :c:func:`malloc` function of the C library. The
+  pymalloc allocator is optimized for objects smaller or equal to 512 bytes
+  with a short lifetime, and use :c:func:`malloc` for larger memory blocks.
+  (Contributed by Victor Stinner in :issue:`26249`).
+
+* :func:`pickle.load` and :func:`pickle.loads` are now up to 10% faster when
+  deserializing many small objects (Contributed by Victor Stinner in
+  :issue:`27056`).
+
+Build and C API Changes
+=======================
+
+* New :c:func:`Py_FinalizeEx` API which indicates if flushing buffered data
+  failed (:issue:`5319`).
+
+
+Deprecated
+==========
+
+New Keywords
+------------
+
+``async`` and ``await`` are not recommended to be used as variable, class,
+function or module names.  Introduced by :pep:`492` in Python 3.5, they will
+become proper keywords in Python 3.7.
+
+
+Deprecated Python modules, functions and methods
+------------------------------------------------
+
+* :meth:`importlib.machinery.SourceFileLoader.load_module` and
+  :meth:`importlib.machinery.SourcelessFileLoader.load_module` are now
+  deprecated. They were the only remaining implementations of
+  :meth:`importlib.abc.Loader.load_module` in :mod:`importlib` that had not
+  been deprecated in previous versions of Python in favour of
+  :meth:`importlib.abc.Loader.exec_module`.
+
+
+Deprecated functions and types of the C API
+-------------------------------------------
+
+* None yet.
+
+
+Deprecated features
+-------------------
+
+* The ``pyvenv`` script has been deprecated in favour of ``python3 -m venv``.
+  This prevents confusion as to what Python interpreter ``pyvenv`` is
+  connected to and thus what Python interpreter will be used by the virtual
+  environment. (Contributed by Brett Cannon in :issue:`25154`.)
+
+* When performing a relative import, falling back on ``__name__`` and
+  ``__path__`` from the calling module when ``__spec__`` or
+  ``__package__`` are not defined now raises an :exc:`ImportWarning`.
+  (Contributed by Rose Ames in :issue:`25791`.)
+
+
+Deprecated Python behavior
+--------------------------
+
+* Raising the :exc:`StopIteration` exception inside a generator will now generate a
+  :exc:`DeprecationWarning`, and will trigger a :exc:`RuntimeError` in Python 3.7.
+  See :ref:`whatsnew-pep-479` for details.
+
+
+Removed
+=======
+
+API and Feature Removals
+------------------------
+
+* ``inspect.getmoduleinfo()`` was removed (was deprecated since CPython 3.3).
+  :func:`inspect.getmodulename` should be used for obtaining the module
+  name for a given path.
+
+* ``traceback.Ignore`` class and ``traceback.usage``, ``traceback.modname``,
+  ``traceback.fullmodname``, ``traceback.find_lines_from_code``,
+  ``traceback.find_lines``, ``traceback.find_strings``,
+  ``traceback.find_executable_lines`` methods were removed from the
+  :mod:`traceback` module. They were undocumented methods deprecated since
+  Python 3.2 and equivalent functionality is available from private methods.
+
+* The ``tk_menuBar()`` and ``tk_bindForTraversal()`` dummy methods in
+  :mod:`tkinter` widget classes were removed (corresponding Tk commands
+  were obsolete since Tk 4.0).
+
+
+Porting to Python 3.6
+=====================
+
+This section lists previously described changes and other bugfixes
+that may require changes to your code.
+
+Changes in the Python API
+-------------------------
+
+* The format of the ``co_lnotab`` attribute of code objects changed to support
+  negative line number delta. By default, Python does not emit bytecode with
+  negative line number delta. Functions using ``frame.f_lineno``,
+  ``PyFrame_GetLineNumber()`` or ``PyCode_Addr2Line()`` are not affected.
+  Functions decoding directly ``co_lnotab`` should be updated to use a signed
+  8-bit integer type for the line number delta, but it's only required to
+  support applications using negative line number delta. See
+  ``Objects/lnotab_notes.txt`` for the ``co_lnotab`` format and how to decode
+  it, and see the :pep:`511` for the rationale.
+
+* The functions in the :mod:`compileall` module now return booleans instead
+  of ``1`` or ``0`` to represent success or failure, respectively. Thanks to
+  booleans being a subclass of integers, this should only be an issue if you
+  were doing identity checks for ``1`` or ``0``. See :issue:`25768`.
+
+* Reading the :attr:`~urllib.parse.SplitResult.port` attribute of
+  :func:`urllib.parse.urlsplit` and :func:`~urllib.parse.urlparse` results
+  now raises :exc:`ValueError` for out-of-range values, rather than
+  returning :const:`None`.  See :issue:`20059`.
+
+* The :mod:`imp` module now raises a :exc:`DeprecationWarning` instead of
+  :exc:`PendingDeprecationWarning`.
+
+* The following modules have had missing APIs added to their :attr:`__all__`
+  attributes to match the documented APIs: :mod:`calendar`, :mod:`csv`,
+  :mod:`~xml.etree.ElementTree`, :mod:`enum`,
+  :mod:`fileinput`, :mod:`ftplib`, :mod:`logging`,
+  :mod:`optparse`, :mod:`subprocess`, :mod:`tarfile`, :mod:`threading` and
+  :mod:`wave`.  This means they will export new symbols when ``import *``
+  is used.  See :issue:`23883`.
+
+* When performing a relative import, if ``__package__`` does not compare equal
+  to ``__spec__.parent`` then :exc:`ImportWarning` is raised.
+  (Contributed by Brett Cannon in :issue:`25791`.)
+
+* When a relative import is performed and no parent package is known, then
+  :exc:`ImportError` will be raised. Previously, :exc:`SystemError` could be
+  raised. (Contributed by Brett Cannon in :issue:`18018`.)
+
+* Servers based on the :mod:`socketserver` module, including those
+  defined in :mod:`http.server`, :mod:`xmlrpc.server` and
+  :mod:`wsgiref.simple_server`, now only catch exceptions derived
+  from :exc:`Exception`. Therefore if a request handler raises
+  an exception like :exc:`SystemExit` or :exc:`KeyboardInterrupt`,
+  :meth:`~socketserver.BaseServer.handle_error` is no longer called, and
+  the exception will stop a single-threaded server. (Contributed by
+  Martin Panter in :issue:`23430`.)
+
+* :func:`spwd.getspnam` now raises a :exc:`PermissionError` instead of
+  :exc:`KeyError` if the user doesn't have privileges.
+
+* The :meth:`socket.socket.close` method now raises an exception if
+  an error (e.g. EBADF) was reported by the underlying system call.
+  See :issue:`26685`.
+
+* The *decode_data* argument for :class:`smtpd.SMTPChannel` and
+  :class:`smtpd.SMTPServer` constructors is now ``False`` by default.
+  This means that the argument passed to
+  :meth:`~smtpd.SMTPServer.process_message` is now a bytes object by
+  default, and ``process_message()`` will be passed keyword arguments.
+  Code that has already been updated in accordance with the deprecation
+  warning generated by 3.5 will not be affected.
+
+Changes in the C API
+--------------------
+
+* :c:func:`PyMem_Malloc` allocator family now uses the :ref:`pymalloc allocator
+  <pymalloc>` rather than system :c:func:`malloc`. Applications calling
+  :c:func:`PyMem_Malloc` without holding the GIL can now crash. Set the
+  :envvar:`PYTHONMALLOC` environment variable to ``debug`` to validate the
+  usage of memory allocators in your application. See :issue:`26249`.
+
+* :c:func:`Py_Exit` (and the main interpreter) now override the exit status
+  with 120 if flushing buffered data failed.  See :issue:`5319`.
