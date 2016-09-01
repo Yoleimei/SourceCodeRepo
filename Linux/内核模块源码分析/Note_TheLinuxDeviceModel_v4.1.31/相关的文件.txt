@@ -1,0 +1,36 @@
+01. include/linux/device.h
+	=> 数据结构
+		=> struct device;
+		=> struct device_driver;
+		=> struct class;
+	=> 函数
+02. include/linux/kobject.h
+	=> 数据结构
+		=> struct kobject;
+		=> struct kobj_type;
+		=> struct kset;
+	=> 函数
+03. include/linux/platform_device.h
+	=> 数据结构
+	=> 函数
+04. lib/kobject.c
+	=> 数据结构
+	=> 函数
+05. lib/kobject_uevent.c
+	=> 数据结构
+	=> 函数
+06. drivers/base/base.h
+	=> 数据结构
+	=> 函数
+07. drivers/base/core.c
+	=> 数据结构
+	=> 函数
+08. drivers/base/class.c
+	=> 数据结构
+	=> 函数
+09. drivers/base/bus.c
+	=> 数据结构
+	=> 函数
+10. drivers/base/platform.c
+	=> 数据结构
+	=> 函数
