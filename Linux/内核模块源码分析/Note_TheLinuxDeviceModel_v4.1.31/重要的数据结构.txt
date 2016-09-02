@@ -2,11 +2,11 @@
 struct kobject {
     const  char        *name;
     struct list_head   entry;
-    struct kobject     *parent;  // 指向kobject的父对象
+    struct kobject     *parent;  // 指向kobject的父对象，用于构造对象层次结构(sysfs)
     struct kset        *kset;    
     struct kobj_type   *ktype;   
     struct kernfs_node *sd;      // 
-    struct kref  kref;
+    struct kref  kref;           // 提供引用计数
 #ifdef CONFIG_DEBUG_KOBJECT_RELEASE
     struct delayed_work release;
 #endif
@@ -16,3 +16,161 @@ struct kobject {
     unsigned int state_remove_uevent_sent:1;
     unsigned int uevent_suppress:1;
 };
+02. include/linux/cdev.h
+struct cdev {
+	struct kobject kobj;   // 嵌入的kobject
+	struct module *owner;
+	const struct file_operations *ops;
+	struct list_head list;
+	dev_t dev;
+	unsigned int count;
+};
+03. include/linux/kobject.h
+struct kobj_type {
+	void (*release)(struct kobject *kobj);   // kobject引用计数减至零时要被调用的析构函数，释放所有kobject使用的内存和其他相关清理工作
+	const struct sysfs_ops *sysfs_ops;   // 描述sysfs文件读写时的特性
+	struct attribute **default_attrs;   // 定义了kobject的默认属性
+	const struct kobj_ns_type_operations *(*child_ns_type)(struct kobject *kobj);
+	const void *(*namespace)(struct kobject *kobj);
+};
+04. include/linux/kobject.h
+struct kset {
+	struct list_head list;   // kobject对象的集合体
+	spinlock_t list_lock;   // 自旋锁
+	struct kobject kobj;   // kset本身也是特殊的kobject
+	const struct kset_uevent_ops *uevent_ops;   // 处理集合中kobject对象的热插拔操作
+};
+05. include/linux/kerf.h
+struct kref {
+	atomic_t refcount;
+};
+06. include/linux/sysfs.h
+struct attribute {
+	const char		*name;
+	umode_t			mode;
+#ifdef CONFIG_DEBUG_LOCK_ALLOC
+	bool			ignore_lockdep:1;
+	struct lock_class_key	*key;
+	struct lock_class_key	skey;
+#endif
+};
+07. include/linux/sysfs.h
+struct sysfs_ops {
+	ssize_t	(*show)(struct kobject *, struct attribute *, char *);
+	ssize_t	(*store)(struct kobject *, struct attribute *, const char *, size_t);
+};
+08. include/linux/device.h
+struct bus_type {
+	const char		*name;
+	const char		*dev_name;
+	struct device		*dev_root;
+	struct device_attribute	*dev_attrs;	/* use dev_groups instead */
+	const struct attribute_group **bus_groups;
+	const struct attribute_group **dev_groups;
+	const struct attribute_group **drv_groups;
+
+	int (*match)(struct device *dev, struct device_driver *drv);
+	int (*uevent)(struct device *dev, struct kobj_uevent_env *env);
+	int (*probe)(struct device *dev);
+	int (*remove)(struct device *dev);
+	void (*shutdown)(struct device *dev);
+
+	int (*online)(struct device *dev);
+	int (*offline)(struct device *dev);
+
+	int (*suspend)(struct device *dev, pm_message_t state);
+	int (*resume)(struct device *dev);
+
+	const struct dev_pm_ops *pm;
+
+	const struct iommu_ops *iommu_ops;
+
+	struct subsys_private *p;
+	struct lock_class_key lock_key;
+};
+09. include/linux/device.h
+struct bus_attribute {
+	struct attribute	attr;
+	ssize_t (*show)(struct bus_type *bus, char *buf);
+	ssize_t (*store)(struct bus_type *bus, const char *buf, size_t count);
+};
+10. include/linux/device.h
+struct device {
+	struct device		*parent;   // 父设备，某种总线或主控制器
+
+	struct device_private	*p;
+
+	struct kobject kobj;   // 代表这个设备的层次，device->kobj->parent=device->parent->kobj
+	const char		*init_name; /* initial name of the device */
+	const struct device_type *type;
+
+	struct mutex		mutex;	/* mutex to synchronize calls to
+					 * its driver.
+					 */
+
+	struct bus_type	*bus;		/* type of bus device is on */
+	struct device_driver *driver;	/* which driver has allocated this device */
+	void		*platform_data;	/* Platform specific data, device
+					   core doesn't touch it */
+	void		*driver_data;	/* Driver data, set and get with
+					   dev_set/get_drvdata */
+	struct dev_pm_info	power;
+	struct dev_pm_domain	*pm_domain;
+
+#ifdef CONFIG_PINCTRL
+	struct dev_pin_info	*pins;
+#endif
+
+#ifdef CONFIG_NUMA
+	int		numa_node;	/* NUMA node this device is close to */
+#endif
+	u64		*dma_mask;	/* dma mask (if dma'able device) */
+	u64		coherent_dma_mask;/* Like dma_mask, but for
+					     alloc_coherent mappings as
+					     not all hardware supports
+					     64 bit addresses for consistent
+					     allocations such descriptors. */
+	unsigned long	dma_pfn_offset;
+
+	struct device_dma_parameters *dma_parms;
+
+	struct list_head	dma_pools;	/* dma pools (if dma'ble) */
+
+	struct dma_coherent_mem	*dma_mem; /* internal for coherent mem
+					     override */
+#ifdef CONFIG_DMA_CMA
+	struct cma *cma_area;		/* contiguous memory area for dma
+					   allocations */
+#endif
+	/* arch specific additions */
+	struct dev_archdata	archdata;
+
+	struct device_node	*of_node; /* associated device tree node */
+	struct fwnode_handle	*fwnode; /* firmware device node */
+
+	dev_t			devt;	/* dev_t, creates the sysfs "dev" */
+	u32			id;	/* device instance */
+
+	spinlock_t		devres_lock;
+	struct list_head	devres_head;
+
+	struct klist_node	knode_class;
+	struct class		*class;
+	const struct attribute_group **groups;	/* optional groups */
+
+	void	(*release)(struct device *dev);
+	struct iommu_group	*iommu_group;
+
+	bool			offline_disabled:1;
+	bool			offline:1;
+};
+11. include/linux/device.h
+struct device_attribute {
+	struct attribute	attr;
+	ssize_t (*show)(struct device *dev, struct device_attribute *attr,
+			char *buf);
+	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
+			 const char *buf, size_t count);
+};
+12. 
+

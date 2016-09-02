@@ -1,0 +1,33 @@
+01. lib/kobject.c
+	=> void kobject_init(struct kobject *kobj, struct kobj_type *ktype);
+	=> int kobject_set_name(struct kobject *kobj, const char *fmt, ...);
+	=> struct kobject *kobject_create(void);
+	=> struct kobject *kobject_get(struct kobject *kobj);
+	=> void kobject_put(struct kobject *kobj);
+	=> int kobject_add(struct kobject *kobj, struct kobject *parent, const char *fmt, ...);
+	=> struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);
+	=> void kobject_del(struct kobject *kobj);
+02. include/linux/kref.h
+	=> static inline void kref_init(struct kref *kref);
+	=> static inline void kref_get(struct kref *kref);
+	=> static inline int kref_put(struct kref *kref, void (*release)(struct kref *kref));
+03. include/linux/sysfs.h
+	=> static inline int __must_check sysfs_create_file(struct kobject *kobj, const struct attribute *attr);
+	=> static inline int sysfs_create_link(struct kobject *kobj, struct kobject *target, const char *name);
+	=> static inline void sysfs_remove_file(struct kobject *kobj, const struct attribute *attr);
+	=> static inline void sysfs_remove_link(struct kobject *kobj, const char *name);
+04. lib/kobject_uevent.c
+	=> int kobject_uevent(struct kobject *kobj, enum kobject_action action);
+05. drivers/base/bus.c
+	=> int bus_register(struct bus_type *bus);
+	=> void bus_unregister(struct bus_type *bus);
+	=> int bus_for_each_dev(struct bus_type *bus, struct device *start, void *data, int (*fn)(struct device *, void *));
+	=> int bus_for_each_drv(struct bus_type *bus, struct device_driver *start, void *data, int (*fn)(struct device_driver *, void *));
+	=> int bus_create_file(struct bus_type *bus, struct bus_attribute *attr);
+	=> void bus_remove_file(struct bus_type *bus, struct bus_attribute *attr);
+06. drivers/base/core.c
+	=> int device_register(struct device *dev);
+	=> void device_unregister(struct device *dev);
+	=> int device_create_file(struct device *dev, const struct device_attribute *attr);
+	=> void device_remove_file(struct device *dev, const struct device_attribute *attr);
+07. 
