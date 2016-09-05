@@ -1,3 +1,4 @@
 compiler - LLVM
 programming_language - swift
-
+复习 数据结构：栈、队列、二叉树(红黑书)、图
+复习 算法：排序算法，查找算法

@@ -7,6 +7,13 @@
 	=> int kobject_add(struct kobject *kobj, struct kobject *parent, const char *fmt, ...);
 	=> struct kobject *kobject_create_and_add(const char *name, struct kobject *parent);
 	=> void kobject_del(struct kobject *kobj);
+	=> void kset_init(struct kset *k);
+	=> static struct kset *kset_create(const char *name, const struct kset_uevent_ops *uevent_ops, struct kobject *parent_kobj);
+	=> struct kset *kset_create_and_add(const char *name, const struct kset_uevent_ops *uevent_ops, struct kobject *parent_kobj);
+	=> int kset_register(struct kset *k);
+	=> void kset_unregister(struct kset *k);
+02. include/linux/kobject.h
+	=> static inline struct kobj_type *get_ktype(struct kobject *kobj);
 02. include/linux/kref.h
 	=> static inline void kref_init(struct kref *kref);
 	=> static inline void kref_get(struct kref *kref);
@@ -14,8 +21,10 @@
 03. include/linux/sysfs.h
 	=> static inline int __must_check sysfs_create_file(struct kobject *kobj, const struct attribute *attr);
 	=> static inline int sysfs_create_link(struct kobject *kobj, struct kobject *target, const char *name);
+	=> static inline int sysfs_create_bin_file(struct kobject *kobj, const struct bin_attribute *attr);
 	=> static inline void sysfs_remove_file(struct kobject *kobj, const struct attribute *attr);
 	=> static inline void sysfs_remove_link(struct kobject *kobj, const char *name);
+	=> static inline void sysfs_remove_bin_file(struct kobject *kobj, const struct bin_attribute *attr);
 04. lib/kobject_uevent.c
 	=> int kobject_uevent(struct kobject *kobj, enum kobject_action action);
 05. drivers/base/bus.c
@@ -30,4 +39,16 @@
 	=> void device_unregister(struct device *dev);
 	=> int device_create_file(struct device *dev, const struct device_attribute *attr);
 	=> void device_remove_file(struct device *dev, const struct device_attribute *attr);
-07. 
+07. drivers/base/driver.c
+	=> int driver_register(struct device_driver *drv);
+	=> void driver_unregister(struct device_driver *drv);
+	=> int driver_create_file(struct device_driver *drv, const struct driver_attribute *attr);
+	=> void driver_remove_file(struct device_driver *drv, const struct driver_attribute *attr);
+08. drivers/base/class.c
+	=> int __class_register(struct class *cls, struct lock_class_key *key);
+	=> void class_unregister(struct class *cls);
+	=> int class_create_file_ns(struct class *cls, const struct class_attribute *attr, const void *ns);
+	=> void class_remove_file_ns(struct class *cls, const struct class_attribute *attr, const void *ns);
+	=> int class_interface_register(struct class_interface *class_intf);
+	=> void class_interface_unregister(struct class_interface *class_intf);
+08. 
