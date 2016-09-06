@@ -1,0 +1,5 @@
+01. 什么是udev
+	udev是linux2.6内核里的一个功能，它替代了原来的devfs，成为当前Linux默认的设备管理工具。
+在2.6内核里，使用了udev来取代hotplug，之所以废弃了hotplug原因是sysfs的出现，sysfs会产生非常多的hotplug事件，远远超过了2.4内核(只要实现了kobject模型的设备驱动都会产生该事件)。所以hotplug变得复杂，而且因为hotplug都是bash所写，所以开始变得没有效率。
+2.6.15之后，/proc/sys/kernel/hotplug会成空的，因为内核通知用户空间的接口变成了netlink，所以最新的udev也采用了netlink接口去写，废弃了/sbin/hotplug或者/sbin/udevsend。udev在2.6.15以后的内核上可以直接通过netlink接听设备事件，sysfs提供了uevent文件，对该文件的"写"可以送出设备事件。
+udev完全在用户态工作，利用设备加入或移除时内核所发送的hotplug事件(event)来工作。关于设备的详细信息是由内核输出(export)到位于/sys的sysfs文件系统的。所有的设备命名策略、权限控制和时间处理都是在用户态下完成的。与此相反，devfs是作为内核的一部分工作的。

@@ -1,0 +1,6 @@
+01. socket(AF_INET, SOCK_STREAM, 0);                         // ipv4 TCP
+02. socket(AF_INET, SOCK_DGRAM, 0);                          // ipv4 UDP
+03. socket(AF_UNIX, SOCK_STREAM, 0);                         // UnixDomain TCP
+04. socket(AF_UNIX, SOCK_DGRAM, 0);                          // UnixDomain UDP
+05. socket(AF_NETLINK, SOCK_DGRAM, NETLINK_KOBJECT_UEVENT);  // 内核事件向用户态通知
+06. 
