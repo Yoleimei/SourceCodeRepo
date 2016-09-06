@@ -1,0 +1,90 @@
+NetlinkEvent
+	==> public bool decode(char *buffer, int size, int format = NetlinkListener::NETLINK_FORMAT_ASCII)
+	==> public const char *findParam(const char *paramName)
+	==> public const char *getSubsystem()
+	==> public Action getAction()
+	==> public void dump()
+	==> protected bool parseBinaryNetlinkMessage(char *buffer, int size)
+	==> protected bool parseAsciiNetlinkMessage(char *buffer, int size)
+	==> protected bool parseIfInfoMessage(const struct nlmsghdr *nh)
+	==> protected bool parseIfAddrMessage(const struct nlmsghdr *nh)
+	==> protected bool parseUlogPacketMessage(const struct nlmsghdr *nh)
+	==> protected bool parseNfPacketMessage(struct nlmsghdr *nh)
+	==> protected bool parseRtMessage(const struct nlmsghdr *nh)
+	==> protected bool parseNdUserOptMessage(const struct nlmsghdr *nh)
+
+SocketListener
+	==> public int startListener()
+	==> public int startListener(int backlog)
+	==> public int stopListener()
+	==> public void sendBroadcast(int code, const char *msg, bool addErrno)
+	==> public void runOnEachSocket(SocketClientCommand *command)
+	==> public bool release(SocketClient *c)
+	==> protected virtual bool onDataAvailable(SocketClient *c) = 0
+
+
+NetlinkListener
+	/|\ public SocketListener
+	==> protected virtual bool onDataAvailable(SocketClient *cli)
+	==> protected virtual void onEvent(NetlinkEvent *evt) = 0
+
+
+NetlinkHandler
+	/|\ public NetlinkListener
+	==> public int start()
+	==> public int stop()
+	==> protected virtual void onEvent(NetlinkEvent *evt)
+
+
+NetlinkManager
+	-|> private SocketListener *mBroadcaster
+	-|> private NetlinkHandler *mHandler
+	==> public int start()
+	==> public int stop()
+	==> public void setBroadcaster(SocketListener *sl)
+	==> public SocketListener *getBroadcaster()
+
+
+// typedef android::List<ContainerData*> AsecIdCollection;
+VolumeManager
+	-|> private SocketListener *mBroadcaster
+	-|> private AsecIdCollection *mActiveContainers
+	==> public int start()
+	==> public int stop()
+	==> public void handleBlockEvent(NetlinkEvent *evt)
+
+
+VolumeBase
+	==> public const std::string& getId()
+	==> public const std::string& getDiskId()
+	==> public const std::string& getPartGuid()
+	==> public Type getType()
+	==> public int getMountFlags()
+	==> public userid_t getMountUserId()
+	==> public State getState()
+	==> public const std::string& getPath()
+	==> public const std::string& getInternalPath()
+	==> public status_s setDiskId(const std::string& diskId)
+	==> public status_s setPartGuid(const std::string& partGuid)
+	==> public status_s setMountFlags(int mountFlags);
+	==> public status_s setMountUserId(userid_t mountUserId)
+	==> public status_s setSilent(bool silent)
+	==> public void addVolume(const std::shared_ptr<VolumeBase>& volume)
+	==> public void removeVolume(const std::shared_ptr<VolumeBase>& volume)
+	==> public status_s create()
+	==> public status_s destroy()
+	==> public status_s mount()
+	==> public status_s unmount()
+	==> public status_s format(const std::string& fsType)
+
+
+FrameworkListener
+	/|\ SocketListener
+	==> protected void registerCmd(FrameworkCommand *cmd)
+	==> protected bool onDataAvailable(SocketClient *c)
+
+
+CommandListener  // ÓëFramework²ãÍ¨ÐÅ
+	/|\ public FrameworkListener
+	==> private static void dumpArgs(int argc, char **argv, int argObscure)
+	==> private static sendGenericOkFail(SocketClient *cli, int cond)

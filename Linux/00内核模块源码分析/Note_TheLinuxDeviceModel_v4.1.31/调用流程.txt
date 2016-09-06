@@ -1,0 +1,5 @@
+// uevent
+int driver_register(struct device_driver *drv)
+=> kobject_uevent(&drv->p->kobj, KOBJ_ADD);
+=> kobject_uevent_env(kobj, action, NULL);
+=> netlink_broadcast_filtered(uevent_sock, skb, 0, 1, GFP_KERNEL, kobj_bcast_filter, kobj);

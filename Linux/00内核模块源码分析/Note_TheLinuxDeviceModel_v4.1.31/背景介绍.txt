@@ -8,3 +8,8 @@
 	=> (class)可以将设备按照类型加以归类，比如分类为输入设备，而无需理解物理设备的拓扑结构。
 	=> (电源管理)可以沿设备树的叶子向其根的方向依次遍历，以保证能以正确顺序关闭个设备的电源
 	
+uevent
+	=> "ACTION=%s"     // add, remove, change, move, online, offline
+	=> "DEVPATH=%s"    // kobject_get_path(kobj, GFP_KERNEL)
+	=> "SUBSYSTEM=%s"  // kset_uevent_ops->name()
+	=> "SEQNUM=%llu"   // uevent_seqnum

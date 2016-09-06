@@ -12,6 +12,7 @@
 	=> struct kset *kset_create_and_add(const char *name, const struct kset_uevent_ops *uevent_ops, struct kobject *parent_kobj);
 	=> int kset_register(struct kset *k);
 	=> void kset_unregister(struct kset *k);
+	=> char *kobject_get_path(struct kobject *kobj, gfp_t gfp_mask);
 02. include/linux/kobject.h
 	=> static inline struct kobj_type *get_ktype(struct kobject *kobj);
 02. include/linux/kref.h
@@ -27,6 +28,8 @@
 	=> static inline void sysfs_remove_bin_file(struct kobject *kobj, const struct bin_attribute *attr);
 04. lib/kobject_uevent.c
 	=> int kobject_uevent(struct kobject *kobj, enum kobject_action action);
+	=> int kobject_uevent_env(struct kobject *kobj, enum kobject_action action, char *envp_ext[]);
+	=> int add_uevent_var(struct kobj_uevent_env *env, const char *format, ...);
 05. drivers/base/bus.c
 	=> int bus_register(struct bus_type *bus);
 	=> void bus_unregister(struct bus_type *bus);
@@ -51,4 +54,4 @@
 	=> void class_remove_file_ns(struct class *cls, const struct class_attribute *attr, const void *ns);
 	=> int class_interface_register(struct class_interface *class_intf);
 	=> void class_interface_unregister(struct class_interface *class_intf);
-08. 
+09. 

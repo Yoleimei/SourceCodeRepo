@@ -213,5 +213,19 @@ struct class_interface {
 	int (*add_dev)		(struct device *, struct class_interface *);
 	void (*remove_dev)	(struct device *, struct class_interface *);
 };
-15. 
+15. include/linux/kobject.h
+struct kobj_uevent_env {
+	char *argv[3];
+	char *envp[UEVENT_NUM_ENVP];
+	int envp_idx;
+	char buf[UEVENT_BUFFER_SIZE];
+	int buflen;
+};
+16. include/linux/kobject.h
+struct kset_uevent_ops {
+	int (* const filter)(struct kset *kset, struct kobject *kobj);
+	const char *(* const name)(struct kset *kset, struct kobject *kobj);
+	int (* const uevent)(struct kset *kset, struct kobject *kobj, struct kobj_uevent_env *env);
+};
+17. 
 

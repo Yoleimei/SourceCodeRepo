@@ -1,0 +1,16 @@
+// 开启NetlinkHandler子线程流程
+NetlinkManager  |  01. start()  |  int
+{
+  NetlinkHandler  |  02. start()  |  int
+  {
+    NetlinkHandler  |  03. startListener()  |  int
+	{
+	  NetlinkHandler  |  04. startListener(4)  |  int
+	  {
+	    NetlinkHandler  | 05. runListener()  |  void  // pthread_create(&mThread, NULL, SocketListener::threadStart, this)
+	  }
+	}
+  }
+}
+
+
