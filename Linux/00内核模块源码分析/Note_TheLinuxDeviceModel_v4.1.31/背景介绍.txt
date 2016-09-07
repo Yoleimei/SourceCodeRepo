@@ -12,4 +12,8 @@ uevent
 	=> "ACTION=%s"     // add, remove, change, move, online, offline
 	=> "DEVPATH=%s"    // kobject_get_path(kobj, GFP_KERNEL)
 	=> "SUBSYSTEM=%s"  // kset_uevent_ops->name()
+		=> block, switch, usb_composite, battery, power_supply, net, i2c, mics, usb
 	=> "SEQNUM=%llu"   // uevent_seqnum
+	=> "DEVNAME"       // maybe
+	=> "DEVTYPE"       // maybe
+	=> "INTERFACE"     // maybe
