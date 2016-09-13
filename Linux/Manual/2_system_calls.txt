@@ -1,0 +1,361 @@
+一、文件I/O
+01. open and possibly create a file or device
+int open(const char *pathname, int flags);
+int open(const char *pathname, int flags, mode_t mode);
+int openat(int dirfd, const char *pathname, int flags);
+int openat(int dirfd, const char *pathname, int flags, mode_t mode);
+int creat(const char *pathname, mode_t mode);
+02. close a file descriptor
+int close(int fd);
+03. read from or write to a file descriptor
+ssize_t read(int fd, void *buf, soze_t count);
+ssize_t write(int fd, const void *buf, size_t count);
+04. read from or write to a file descriptor at a given offset (lseek+read/write)
+ssize_t pread(int fd, void *buf, size_t count, off_t offset);
+ssize_t pwrite(int fd, void *buf, size_t count, off_t offset);
+05. read or write data into multiple buffers
+struct iovec { 
+    void *iov_base; /* Starting address */ 
+    size_t iov_len; /* Number of bytes to transfer */ 
+};
+ssize_t readv(inf fd, const struct iovec *iov, int iovcnt);
+ssize_t writev(inf fd, const struct iovec *iov, int iovcnt);
+ssize_t preadv(inf fd, const struct iovec *iov, int iovcnt, off_t offset);
+ssize_t pwritev(inf fd, const struct iovec *iov, int iovcnt, off_t offset);
+06. reposition read/write file offset
+off_t lseek(int fd, off_t offset, int whence);
+07. control device
+int ioctl(int f, int request, ...);
+08. manipulate file descriptor
+int fcntl(int fd, int cmd, .../* arg */);
+09. duplicate a file descriptor
+int dup(int oldfd);
+int dup2(int oldfd, int newfd);
+int dup3(int oldfd, int newfd, int flags);
+10. truncate a file to a specified length
+int truncate(const char *path, off_t length);
+int ftruncate(int fd, off_t length);
+11. synchronize a file's in-core state with storage device
+int fsync(int fd);
+int fdatasync(int fd);
+12. commit buffer cache to disk
+int sync(void);
+13. synchronous I/O multiplexing
+int pselect(int nfds, fd_set *restrict readfds, fd_set *restrict writefds, fd_set *restrict exceptfds, const struct timespec *restrict timeout, const sigset_t *restrict sigmask);
+int select(int nfds, fd_set *restrict readfds, fd_set *restrict writefds, fd_set *restrict exceptfds, struct timeval *restrict timeout);
+void FD_CLR(int fd, fd_set *fdset);
+int FD_ISSET(int fd, fd_set *fdset);
+void FD_SET(int fd, fd_set *fdset);
+void FD_ZERO(fd_set *fdset);
+14. wait for some event on a file descriptor
+int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+15. open an epoll file descriptor
+int epoll_create(int size);
+16. control interface for an epoll descriptor
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+17. wait for an I/O event on an epoll file descriptor
+int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+
+二、系统和进程
+01. get process identification
+pid_t getpid(void);
+pid_t getppid(void);
+02. get name and information about current kernel
+int uname(struct utsname *buf);
+03. create a child process
+pid_t fork(void);
+04. create a child process and block parent
+pid_t vfork(void);
+05. terminate the calling process
+void _exit(int status);
+06. wait for process to change state
+pid_t wait(int *status);
+pid_t waitpid(pid_t pid, int *status, int options);
+int waitid(idtype_t idtype, id_t id, siginfo_t *infop, int options);
+07. wait for process to change state, BSD style
+pid_t wait3(int *status, int options, struct rusage *rusage);
+pit_t wait4(pid_t pid, int *status, int options, struct rusage *rusage);
+08. execute program
+int execve(const char *filename, char *const argv[], char *const envp[]);
+09. switch process accounting on of off
+int acct(const char *filename);
+10. create a child process
+int clone(int (*fn)(void *), void *child_stack, int flags, void *args,.../* pid_t *ptid, struct user_desc *tls, pid_t *ctid */);
+11. set/get process group
+int setpgid(pid_t pid, pid_t pgid);
+pid_t getpgid(pid_t pid);
+pid_t getpgrp(void);
+int setpgrp(pid_t pid, pid_t pgid);
+12. get session ID
+pid_t getsid(pid_t pid);
+13. creates a session and sets the process group ID
+pid_t setsid(void);
+14. get/set program scheduling priority
+int getpriority(int which, int who);
+int setpriority(int which, int who, int prio);
+15. get static priority range
+int sched_get_priority_max(int policy);
+int sched_get_priority_min(int policy);
+16. set get and scheduling policy/parameters
+int sched_setscheduler(pid_t pid, int policy, const struct sched_param *param);
+int sched_getscheduler(pid_t pid);
+17. set and get scheduling parameters
+int sched_setparam(pid_t pid, const struct sched_param *param);
+int sched_getparam(pid_t pid, struct sched_param *param);
+18. yield the processor
+int sched_yield(void);
+19. get the SCHED_RR interval for the named process
+int shced_rr_get_interval(pid_t pid, struct timespec *tp);
+20. set and get a process's CPU affinity mask
+int sched_setaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+int sched_getaffinity(pid_t pid, size_t cpusetsize, cpu_set_t *mask);
+21. get resource usage
+int getrusage(int who, struct rusage *usage);
+22. get/set resource limits
+int getrlimit(int resource, struct rlimit *rlim);
+int setrlimit(int resource, const struct rlimit *rlim)
+23. get descriptor table size
+int getdtablesize(void);
+
+三、信号
+01. ANSI C signal handling
+typedef void (*sighandler_t)(int);
+sighandler_t signal(int signum, sighandler_t handler);
+02. send signal to a process
+int kill(pid_t pid, int sig);
+03. send signal to a process group
+int killpg(int pgrp, int sig);
+04. wait for signal
+int pause(void);
+05. create a file descriptor for accepting signals
+int signalfd(int fd, const sigset_t *mask, int flags);
+
+四、内存
+01. change data segment size
+int brk(void *addr);
+void *sbrk(intptr_t increment);
+02. lock and unlock memory
+int mlock(const void *addr, size_t len);
+int munlock(const void *addr, size_t len);
+int mlockall(int flags);
+int munlockall(void);
+03. determine whether pages are resident in memory
+int mincore(void *addr, size_t length, unsigned char *vec);
+04. give advice about use of memory
+int madvise(void *addr, size_t length, int advice);
+05. get memory page size
+int getpagesize(void);
+
+五、用户和组
+01. get/set user/group identity
+uid_t getuid(void);
+gid_t getgid(void);
+int setuid(uid_t uid);
+int setgid(gid_t gid);
+02. get/set effective user/group ID
+uid_t geteuid(void);
+gid_t getegid(void);
+int seteuid(uid_t euid);
+int setegid(gid_t egid);
+03. set real and/or effective user or group ID
+int setreuid(uid_t ruid, uid_t euid);
+int setregid(git_t rgid, gid_t egid);
+04. get real, effective and saved user/group IDs
+int getresuid(uid_t *ruid, uid_t *euid, uid_t *suid);
+int getresgid(gid_t *rgid, gid_t *egid, gid_t *sgid);
+05. set real, effective and saved user or group ID
+int setresuid(uid_t ruid, uid_t euid, uid_t suid);
+int setresgid(gid_t rgid, gid_t egid, gid_t sgid);
+06. set user or group identity used for file system checks
+int setfsuid(uid_t fsuid);
+int setfsgid(gid_t fsgid);
+07. get/set list of supplementary group IDs
+int getgroups(int size, gid_t list[]);
+int setgroups(size_t size, const gid_t *list);
+
+六、时间
+01. get/set time
+int gettimeofday(struct timeval *tv, struct timezone *tz);
+int settimeofday(const struct timeval *tv, const struct timezone *tz);
+02. get time in seconds
+time_t time(time_t *t);
+03. get process times
+clock_t times(struct tms *buf);
+04. get or set value of an interval timer
+int getitimer(int which, struct itimerval *curr_value);
+int setitimer(int which, const struct itimerval *new_value, struct itimerval *old_value);
+05. set an alarm clock for delivery of a signal
+unsigned int alarm(unsigned int seconds);
+06. high-resolution sleep with specifiable clock
+int clock_nanosleep(clockid_t clock_id, int flags, const struct timespec *request, struct timespec *remain);
+07. timers that notify via file descriptors
+int timerfd_create(int clockid, int flags);
+int timerfd_settime(int fd, int flags, const struct itimerspec *new_value, struct itimerspec *old_value);
+int timerfd_gettime(inf fd, strcut itimerspec *curr_value);
+
+七、文件系统
+01. mount file system
+int mount(const char *source, const char *target, const char *filesystemtype, unsigned long mountflags, const void *data);
+02. unmount file system
+int unmount(const char *target);
+int unmount2(const char *target, int flags);
+03. get file system statistics
+int statvfs(const char *path, struct statvfs *buf);
+int fstatvfs(int fd, struct statvfs *buf);
+04. get file status (l:link)
+int stat(const char *path, struct stat *buf);
+int fstat(int fd, struct stat *buf);
+int fstatat(int dirfd, const char *pathname, struct stat *buf, int flags);
+int lstat(const char *path, struct stat *buf);
+05. change file last access and modification times
+int utimes(const char *filename, const struct timeval times[2]);
+06. change file timestamps with nanosecond precision
+int utimensat(int dirfd, const char *pathname, const struct timespec times[2], int flags);
+int futimens(int fd, const struct timespec times[2]);
+07. change ownership of a file
+int chown(const char *path, uid_t owner, gid_t group);
+int fchown(int fd, uid_t owner, gid_t group);
+int fchownat(int dirfd, const char *pathname, uid_t owner, gid_t group, int flags);
+int lchown(const char *path, uid_t owner, gid_t group);
+08. change permissions of a file
+int chmod(const char *path, mode_t mode);
+int fchmod(int fd, mode_t mode);
+int fchmodat(int dirfd, const char *pathname, mode_t mode, int flags);
+09. check real user's permissions for a file
+int access(const char *pathname, int mode);
+int faccess(int dirfd, const char *pathname, int mode, int flags);
+10. set file mode creation mask
+mode_t umask(mode_t mask);
+11. set an extended attribute value
+int setxattr(const char *path, const char *name, const value *value, size_t size, int flags);
+int lsetxattr(const char *path, const char *name, const value *value, size_t size, int flags);
+int fsetxattr(int fd, const char *name, const value *value, size_t size, int flags);
+12. retrieve an extended attribute value
+ssize_t getxattr(const char *path, const char *name, void *value, size_t size);
+ssize_t lgetxattr(const char *path, const char *name, void *value, size_t size);
+ssize_t fgetxattr(int fd, const char *name, void *value, size_t size);
+13. remove an extended attribute
+int removexattr(const char *path, const char *name);
+int lremovexattr(const char *path, const char *name);
+int fremovexattr(int fd, const char *name);
+14. list extended attribute names
+ssize_t listxattr(const char *path, char *list, size_t size);
+ssize_t llistxattr(const char *path, char *list, size_t size);
+ssize_t flistxattr(int fd, char *list, size_t size);
+15. make a new name for a file
+int link(const char *oldpath, const char *newpath);
+int linkat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath, int flags);
+16. delete a name and possibly the file it refers to
+int unlink(const char *pathname);
+int unlinkat(int dirfd, const char *pathname, int flags);
+17. make a new name for a file
+int symlink(const char *oldpath, const char *newpath);
+18. read value of a symbolic link
+ssize_t readlink(const char *path, char *buf, size_t bufsize);
+19. create a directory
+int mkdir(const char *pathname, mode_t mode);
+int mkdirat(int dirfd, const char *pathname, mode_t mode);
+20. delete a directory
+int rmdir(const char *pathname);
+21. get current working directory
+char *getcwd(char *buf, size_t size);
+22. change working directory
+int chdir(const char *path);
+int fchdir(int fd);
+23. change root directory
+int chroot(const char *path);
+24. initialize an inotify instance
+int inotify_init(void);
+25. add a watch to an initialized inotify instance
+int inotify_add_watch(int fd, const char *pathname, uint32_t mask);
+26. remove an existing watch from an inotify instance
+int inotify_rm_watch(int fd, int wd);
+27. apply or remove an advisory lock on an open file
+int flock(int fd, int operation);
+28. get file system statistics
+int statvfs(const char *path, struct statvfs *buf);
+int fstatvfs(int fd, struct statvfs *buf);
+29. get directory entries
+int getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count);
+30. change the name or location of a file
+int rename(const char *oldpath, const char *newpath);
+int renameat(int olddirfd, const char *oldpath, int newdirfd, const char *newpath);
+
+八、进程间通信
+01. create pipe
+int pipe(int pipefd[2]);
+02. get a message queue identifier
+int msgget(key_t key, int msgflg);
+03. message operations
+int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp, int msgflg);
+04. message control operations
+int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+05. get a semaphore set identifier
+int semget(key_t key, int nsems, int semflg);
+06. semaphore control operations
+int semctl(int semid, int semnum, int cmd, ...);
+07. semaphore operations
+int semop(int semid, struct sembuf *sops, unsigned nsops);
+int semtimedop(int semid, struct sembuf *sops, unsigned nsops, struct timespec *timeout);
+08. allocates a shared memory segment
+int shmget(key_t key, size_t size, int shmflg);
+09. shared memory operations
+void *shmat(int shmid, const void *shmaddr, int shmflg);
+int shmdt(const void *shmaddr);
+10. shared memory control
+int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+11. map pages of memory
+void *mmap(void *addr, size_t len, int prot, int flags, int fildes, off_t off);
+12. unmap pages of memory
+int munmap(void *addr, size_t len);
+13. synchronize memory with physical storage
+int msync(void *addr, size_t len, int flags);
+14. remap a virtual memory address
+void *mremap(void *old_address, size_t old_size, size_t new_size, int flags, ... /* void *new_address */);
+15. create a nonlinear file mapping
+int remap_file_pages(void *addr, size_t size, int prot, ssize_t pgoff, int flags);
+
+九、SOCKET
+01. create an endpoint for communication
+int socket(int domain, int type, int protocol);
+02. bind a name to a socket
+int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+03. listen for connections on a socket
+int listen(int sockfd, int backlog);
+04. accept a connection on a socket
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+05. initiate a connection on a socket
+int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+06. close a file descriptor
+int close(int fd);
+07. receive a message from a socket
+ssize_t recv(int sockfd, void *buf, size_t len, int flags);
+ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags, struct sockaddr *src_addr, socklen_t *addrlen);
+ssize_t recvmsg(int sockfd, struct msghdr *msg, int flags);
+08. send a message on a socket
+ssize_t send(int sockfd, const void *buf, size_t len, int flags);
+ssize_t sendto(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
+ssize_t sendmsg(int sockfd, const struct msghdr *msg, int flags);
+09. create a pair of connected sockets
+int socketpair(int domain, int type, int protocol, int sv[2]);
+10. shut down part of a full-duplex connection
+int shutdown(int sockfd, int how);
+11. transfer data between file descriptors
+ssize_t sendfile(int out_fd, int in_fd, off_t *offset, size_t count);
+12. get socket name
+int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+13. get name of connected peer socket
+int getpeername(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+14. get and set options on sockets
+int getsockopt(int sockfd, int level, int optname, void *optval, socklen_t *optlen);
+int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
+15. get/set hostname
+int gethostname(char *name, size_t len);
+int sethostname(const char *name, size_t len);
+16. get/set NIS domain name
+int getdomainname(char *name, size_t len);
+int setdomainname(const char *name, size_t len);
+17. get or set the unique identifier of the current host
+long gethostid(void);
+int sethostid(long hostid);

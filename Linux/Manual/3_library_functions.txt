@@ -1,0 +1,348 @@
+一、文件I/O
+01. create a unique temporary file
+int mkstemp(char *template);
+02. create a temporary file
+FILE *tmpfile(void);
+03. stream buffering operations
+int setvbuf(FILE *stream, char *buf, int mode, size_t size);
+void setbuf(FILE *stream, char *buf);
+void setbuffer(FILE *stream, char *buf, size_t size);
+04. flush a stream
+int fflush(FILE *stream);
+05. check and reset stream status
+int fileno(FILE *stream);
+06. stream open functions
+FILE *fopen(const char *path, const char *mode);
+FILE *fdopen(int fd, const char *mode);
+07. close a stream
+int fclose(FILE *fp);
+08. binary stream input/output
+size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
+size_t fwrite(const void *ptr, size_t size, size_t nmemb, FILE *stream);
+09. input of characters and strings
+int fgetc(FILE *stream);
+char *fgets(char *s, int size, FILE *stream);
+10. output of characters and strings
+int fputc(int c, FILE *stream);
+int fputs(const char *s, FILE *stream);
+11. reposition a stream
+int fseek(FILE *stream, long offset, int whence);
+int fgetpos(FILE *stream, fpos_t *pos);
+int fsetpos(FILE *stream, fpos_t *pos);
+
+二、进程
+01. get an evrironment variable
+char *getenv(const char *name);
+char *secure_getenv(const char *name);
+02. change or add an environment variable
+int putenv(char *string);
+int setenv(const char*name, const char *value, int overwrite);
+int unsetenv(const char *name);
+03. clear the environment
+int clearenv(void);
+04. save stack context for nonlocal goto
+int setjmp(jmp_buf env);
+int sigsetjmp(sigjmp_buf env, int savesigs);
+05. nonlocal jump to a saved stack context
+void longjmp(jmp_buf env, int val);
+void siglongjmp(sigjmp_buf env, int val);
+06. cause normal process termination
+void exit(int status);
+07. register a function to be called at normal process termination
+int atexit(void (*function)(void));
+08. register a function to be called at normal process termination
+int on_exit(void (*function)(int, void*), void *arg);
+09. execute a file(l:list, v:vector; p:PATH; e:environment)
+int execl(const char *path, const char *arg,...);
+int execlp(const char *file, const char *arg,...);
+int execle(const char *path, const char *arg,..., char *const envp[]);
+int execv(const char *path, char *const argv[]);
+int execvp(const char *file, char *const argv[]);
+10. execute program specified via file descriptor
+int fexecve(int fd, char *const argv[], char *const envp[]);
+11. execute a shell command
+int system(const char *command);
+12. get controlling teminal name
+char *ctermid(char *s);
+13. get and set terminal foreground process group
+pid_t tcgetpgrp(int fd);
+int tcsetpgrp(int fd, pid_t pgrp);
+14. send messages to the system logger
+void openlog(const char *ident, int option, int facility);
+void syslog(int priority, const char *format, ...);
+void closelog(void);
+15. set log priority mask
+int setlogmask(int mask);
+16. get session ID
+pid_t tcgetsid(int fd);
+
+一、信号
+01. send a signal to the caller
+int raise(int sig);
+02. return string describing signal
+char *strsignal(int sig);
+03. POSIX signal set operations
+int sigemptyset(sigset_t *set);
+int sigfillset(sigset_t *set);
+int sigaddset(sigset_t *set, int signum);
+int sigdelset(sigset_t *set, int signum);
+int sigismember(const sigset_t *set, int signum);
+int sigisemptyset(sigset_t *set);
+int sigorset(sigset_t *dest, sigset_t *left, sigset_t *right);
+int sigandset(sigset_t *dest, sigset_t *left, sigset_t *right);
+04. examine and change blocked signals
+int sigprocmask(int how, const sigset_t *restrict set, sigset_t *restrict oset);
+05. examine pending signals
+int sigpending(sigset_t *set);
+06. examine and change a signal action
+int sigaction(int sig, const struct sigaction *restrict act, struct sigaction *restrict oact);
+07. cause abnormal process termination
+void abort(void);
+08. set and get signal alternate stack context
+int sigaltstack(const stack_t *restrict ss, stack_t *restrict oss);
+09. allow signals to interrupt system calls
+int siginterrupt(int sig, int flag);
+10. queue a signal and data to a process
+int sigqueue(pid_t pid, int sig, const union sigval value);
+11. wait for a signal
+int sigsuspend(const sigset_t *sigmask);
+12. wait for queued signals(REALTIME)
+int sigwaitinfo(const sigset_t *restrict set, siginfo_t *restrict info);
+int sigtimedwait(const sigset_t *restrict set, siginfo_t *restrict info, const struct timespec *restrict timeout);
+
+三、内存
+01. allocate and free dynamic memory
+void *malloc(size_t size);
+void free(void *ptr);
+void *calloc(size_t nmemb, size_t size);
+void *realloc(void *ptr, size_t size);
+02. allocate aligned memory
+int posix_memalign(void **memptr, size_t alignment, size_t size);
+void memalign(size_t alignment, size_t size);
+03. allocate memory that is automatically freed
+void *alloca(size_t size);
+04. set protection of memory mapping
+int mprotect(void *addr, size_t len, int prot);
+
+四、用户和组
+01. get password file entry
+struct passwd *getpwnam(const char *name);
+struct passwd *getpwuid(uid_t uid);
+02. get group file entry
+struct group *getgrnam(const char *name);
+struct group *getgrgid(gid_t gid);
+03. get password file entry
+struct passwd *getpwent(void);
+void setpwent(void);
+void endpwent(void);
+04. get shadow password file entry
+struct spwd *getspnam(const char *name);
+struct spwd *getspent(void);
+void setspent(void);
+void endspent(void);
+05. password and data encryption
+char *crypt(const char *key, const char *salt);
+06. get a password
+char *getpass(const char *prompt);
+07. initialize the supplementary group access list
+int initgroups(const char *user, gid_t group);
+
+五、时间
+01. transform date and time to broken-down time or ASCII
+char *ctime(const time_t *timep);
+struct tm *gmtime(const time_t *timep);
+struct tm *localtime(const time_t *timep);
+time_t mktime(struct tm *tm);
+char *asctime(const struct tm *tm);
+02. convert a string representation of time to a time tm structure
+char *strptime(const char *s, const char *format, struct tm *tm);
+03. set the current locale
+char *setlocale(int category, const char *locale);
+04. correct the time to synchronize the system clock
+int adjtime(const struct timeval *delta, struct timeval *olddelta);
+05. determine processor time
+clock_t clock(void);
+06. sleep for the specified number of seconds
+unsigned int sleep(unsigned int seconds);
+07. high resolution sleep(REALTIME)
+int nanosleep(const struct timespec *rqtp, struct timespec *rmtp);
+08. clock and time functions
+int clock_getres(clockid_t clk_id, struct timespec *res);
+int clock_gettime(clockid_t clk_id, struct timespec *tp);
+int clock_settime(clockid_t clk_id, const struct timespec *tp);
+09. obtain ID of a process CPU-time clock
+int clock_getcpuclockid(pid_t pid, clockid_t *clock_id);
+10. retrive ID of a thread's CPU time clock
+int pthread_getcpuclockid(pthread_t thread, clockid_t *clock_id);
+11. create a per-process timer(REALTIME)
+int timer_create(clockid_t clockid, struct sigevent *restrict evp, timer_t *restrict timerid);
+12. per-process timers(REALTIME)
+int timer_settime(timer_t timerid, int flags, const struct itimerspec *restrict value, struct itimerspec *restrict ovalue);
+int timer_gettime(timer_t timerid, strcut itimerspec *value);
+int timer_getoverrun(timer_t timerid);
+13. delete a per-process timer(REALTIME)
+int timer_delete(timer_t timerid);
+
+六、系统限制和选项
+01. get configuration information at run time
+long sysconf(int name);
+02. get configuration values for files
+long fpathconf(int fd, int name);
+long pathconf(char *path, int name);
+
+七、文件系统
+01. set file access and modification times
+int utime(const char *path, const struct utimebuf *times);
+02. change file timestamps
+int futimes(int fd, const struct timeval tv[2]);
+int lutimes(const char *filename, const struct timeval tv[2]);
+04. remove a file or directory
+int remove(const char *pathname);
+05. open a directory
+DIR *opendir(const char *name);
+DIR *fdopendir(int fd);
+06. read a directory
+struct dirent *readdir(DIR *dirp);
+07. reset directory stream
+void rewinddir(DIR *dirp);
+08. close a directory
+int closedir(DIR *dirp);
+09. get directory stream file descriptor
+int dirfd(DIR *dirp);
+10. return the canonicalized absolute pathname
+char *realpath(const char *path, char *resolved_path);
+11. parse pathname components
+char *dirname(char *path);
+char *basename(char *path);
+
+八、线程
+01. create a new thread
+int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);
+02. terminate calling thread
+void pthread_exit(void *retval);
+03. obtain ID of the calling thread
+pthread_t pthread_self(void);
+04. compare thread IDs
+int pthread_equal(pthread_t t1, pthread_t t2);
+05. join with a terminated thread
+int pthread_join(pthread_t thread, void **retval);
+06. detach a thread
+int pthread_detach(pthread_t thread);
+07. lock and unlock a mutex
+int pthread_mutex_lock(pthread_mutex_t *mutex);
+int pthread_mutex_trylock(pthread_mutex_t *mutex);
+int pthread_mutex_unlock(pthread_mutex_t *mutex);
+08. destroy and initialize a mutex
+int pthread_mutex_destroy(pthread_mutex_t *mutex);
+int pthread_mutex_init(pthread_mutex_t *restrict mutex, const pthread_mutexattr_t *restrict attr);
+09. broadcast or signal a condition
+int pthread_cond_broadcast(pthread_cond_t *cond);
+int pthread_signal(pthread_cond_t *cond);
+10. wait on a condition
+int pthread_cond_wait(pthread_cont_t *restrict cond, pthread_mutex_t *restrict mutex);
+int pthread_cond_timedwait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex, const struct timespec *restrict abstime);
+11. destroy and initialize condition variables
+int pthread_cond_destroy(pthread_cond_t *cond);
+int pthread_cond_init(pthread_cond_t *retrict cond, const pthread_condattr_t *restrict attr);
+12. dynamic package initialization
+int pthread_once(pthread_once_t *once_control, void (*init_routine)(void));
+13. thread-specific data key creation
+int pthread_key_create(pthread_key_t *key, void (*destructor)(void *));
+14. thread-specific data management
+void *pthread_getspecific(pthread_key_t key);
+int pthread_setspecific(pthread_key_t key, const void *value);
+15. send a cancellation request to a thread
+int pthread_cancel(pthread_t thread);
+16. set cancelability state and type
+int pthread_setcancelstate(int state, int *oldstate);
+int pthread_setcanceltype(int type, int *oldtype);
+17. request delivery of any pending cacellation request
+void pthread_testcancel(void);
+18. push and pop thread cancellation clean-up handlers
+void pthread_cleanup_push(void (*routine)(void *), void *arg);
+void pthread_cleanup_pop(int execute);
+19. examine and change mask of blocked signals
+int pthread_sigmask(int how, const sigset_t *restrict set, sigset_t *restrict oset);
+20. send a signal to a thread
+int pthread_kill(pthread_t thread, int sig);
+21. queue a signal and data to a thread
+int pthread_sigqueue(pthread_t *thread, int sig, const union sigval value);
+22. destroy and initialize a read-write lock object
+int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);
+int phtread_rwlock_init(pthread_rwlock_t *restrict rwlock, const pthread_rwlockattr_t *restrict attr);
+23. lock a read-write lock object for reading
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_timedrdlock(pthread_rwlock_t *restrict rwlock, const struct timespec *restrict abs_timeout);
+24. lock a read-write lock object for writing
+int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);
+int phtread_rwlock_trywrlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_timedwrlock(pthread_rwlock_t *restrict rwlock, const struct timespec *restrict abs_timeout);
+25. unlock a read-write lock object
+int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
+
+九、进程间通信
+01. pipe stream to or from a process
+FILE *popen(const char *command, const char *type);
+int pclose(FILE *stream);
+02. make a FIFO special file(a named pipe)
+int mkfifo(const char *pathname, mode_t mode);
+03. convert a pathname and a project identifier to a System V IPC
+key_t ftok(const char *pathname, int proj_id);
+04. open a message queue
+mqd_t mq_open(const char *name, int oflag);
+mqd_t mq_open(const char *name, int oflag, mode_t mode, struct mq_attr *attr);
+05. close a message queue descriptor
+int mq_close(mqd_t mqdes);
+06. remove a message queue
+int mq_unlink(const char *name);
+07. get/set message queue attributes
+int mq_getattr(mqd_t mqdes, struct mq_attr *attr);
+int mq_setattr(mqd_t mqdes, struct mq_attr *newattr, struct mq_attr *oldattr);
+08. send a message to a message queue
+int mq_send(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned msg_prio);
+int mq_timedsend(mqd_t mqdes, const  char *msg_ptr, size_t msg_len, unsigned msg_prio, const struct timespec *abs_timeout);
+09. receive a message from a message queue
+ssize_t mq_receive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned *msg_prio);
+ssize_t mq_timedreceive(mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned *msg_prio, const struct timespec *abs_timeout);
+10. register for notification when a message is available
+int mq_notify(mqd_t mqdes, const strut sigevent *sevp);
+11. initialze and open a named semaphore
+sem_t *sem_open(const char *name, int oflag);
+sem_t *sem_open(const char *name, int oflag, mode_t mode, unsigned int value);
+12. close a named semaphore
+int sem_close(sem_t *sem);
+13. remove a named semaphore
+int sem_unlink(const char *name);
+14. lock a semaphore
+int sem_wait(sem_t *sem);
+int sem_trywait(sem_t *sem);
+int sem_timedwait(sem_t *sem, const struct timespec *abs_timeout);
+15. unlock a semaphore
+int sem_post(sem_t *sem);
+16. get the value of a semaphore
+int sem_getvalue(sem_t *sem, int *sval);
+17. initialize an unnamed semaphore
+int sem_init(sem_t *sem, int pshared, unsigned int value);
+18. destroy an unnamed semaphore
+int sem_destroy(sem_t *sem);
+19. create/open or unlink POSIX shared memory objects
+int shm_open(const char *name, int oflag, mode_t mode);
+int shm_unlink(const  char *name);
+
+十、SOCKET
+01. convert values between host and network byte order
+uint32_t htonl(uint32_t hostlong);
+uint16_t htons(uint16_t hostshort);
+uint32_t ntohl(uint32_t netlong);
+uint16_t ntohs(uint16_t netshort);
+02. convert IPv4 and IPv6 addresses from text to binary form
+int inet_pton(int af, const char *src, void *dst);
+03. convert IPv4 and IPv6 addressed from binary to text form
+const char *inet_ntop(int af, const void *src, char *dst, socklen_t size);
+04. network address and service translation
+int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res);
+void freeaddrinfo(struct addrinfo *res);
+const char *gai_strerror(int errcode);
+05. address-to-name translation in protocol-independent manner
+int getnameinfo(const struct sockaddr *sa, socklen_t salen, char *host, size_t hostlen, char *serv, size_t servlen, int flags);
