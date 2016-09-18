@@ -16,6 +16,13 @@ void SHA1_ThreeStep(const unsigned char *d, size_t n, unsigned char *md)
 	SHA1_Final(md, &shactx);
 }
 
+void show(const unsigned char *d)
+{
+	for (int i = 0; i < SHA_DIGEST_LENGTH; i++)
+		printf("%02x", d[i]);
+	printf("\n");
+}
+
 int main()
 {
 	char data[] = "abcdefghijklmnopqrst";
@@ -24,11 +31,10 @@ int main()
 	unsigned char res[SHA_DIGEST_LENGTH + 1];
 	memset(res, 0, SHA_DIGEST_LENGTH + 1);
 	
-	SHA1_OneStep(data, strlen(data), md1);
-	SHA1_ThreeStep(data, strlen(data), md2);
+	SHA1_OneStep((unsigned char *)data, strlen(data), md1);
+	SHA1_ThreeStep((unsigned char *)data, strlen(data), md2);
 	
-	memcpy(res, md1, SHA_DIGEST_LENGTH);
-	printf("%s\n", (char *)res);
-	memcpy(res, md2, SHA_DIGEST_LENGTH);
-	printf("%s\n", (char *)res);
+	printf("SHA_DIGEST_LENGTH = %d\n", SHA_DIGEST_LENGTH);
+	show(md1);
+	show(md2);
 }
