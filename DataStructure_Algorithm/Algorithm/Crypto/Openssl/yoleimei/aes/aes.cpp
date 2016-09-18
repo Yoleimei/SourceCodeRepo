@@ -40,8 +40,10 @@ int main()
 	unsigned char ciphertext[256];
 	memset(plaintext, 0, 256);
 	memset(ciphertext, 0, 256);
-	memcpy(plaintext, "Hello world", 11);
-	aes_encrypt((unsigned char *)plaintext, 256, ciphertext);
-	aes_decrypt(ciphertext, 256, (unsigned char *)plaintext);
+	strcpy(plaintext, "Hello world");
+	if (!aes_encrypt((unsigned char *)plaintext, 256, ciphertext))
+		printf("encrypt error\n");
+	if (!aes_decrypt(ciphertext, 256, (unsigned char *)plaintext))
+		printf("decrypt error\n");
 	printf("%s\n", plaintext);
 }

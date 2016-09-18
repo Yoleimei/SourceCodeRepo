@@ -1,1 +1,0 @@
-export CPLUS_INCLUDE_PATH=/home/yuliming/GitTest/SourceCodeRepo/DataStructure_Algorithm/Algorithm/Crypto/Openssl/include:$CPLUS_INCLUDE_PATH
