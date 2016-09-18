@@ -1,7 +1,7 @@
 .PHONY all: aes
 
-ase: aes.cpp aes_core.c
-	g++ -c -o $<
+ase: aes.cpp
+	g++ aes.cpp -o aes -lcrypto
 
 .PHONY clean:
 	rm -rf *.o

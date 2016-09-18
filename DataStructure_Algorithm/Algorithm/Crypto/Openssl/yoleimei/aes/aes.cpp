@@ -29,6 +29,14 @@ bool aes_decrypt(const BYTE *inbuf, UINT len, BYTE *outbuf)
 	return true;
 }
 
+void show(const char *title, unsigned char *data, int len)
+{
+	printf("%s\n", title);
+	for (int i = 0; i < len; i++)
+		printf(" %02x", (unsigned int)data[i]);
+	printf("\n");
+}
+
 int main()
 {
 	for (int i = 0; i < AES_BLOCK_SIZE; ++i) 
@@ -36,14 +44,16 @@ int main()
 	for (int i = 0; i < AES_BLOCK_SIZE; ++i) 
 		iv[i] = 0;
 	
-	char plaintext[256];
-	unsigned char ciphertext[256];
-	memset(plaintext, 0, 256);
-	memset(ciphertext, 0, 256);
-	strcpy(plaintext, "Hello world");
-	if (!aes_encrypt((unsigned char *)plaintext, 256, ciphertext))
+	char plaintext[AES_BLOCK_SIZE];
+	unsigned char ciphertext[AES_BLOCK_SIZE];
+	memset(plaintext, 0, AES_BLOCK_SIZE);
+	memset(ciphertext, 0, AES_BLOCK_SIZE);
+	strcpy(plaintext, "abcdefg");
+	show("==plaintext==", plaintext);
+	if (!aes_encrypt((unsigned char *)plaintext, AES_BLOCK_SIZE, ciphertext))
 		printf("encrypt error\n");
-	if (!aes_decrypt(ciphertext, 256, (unsigned char *)plaintext))
+	show("==ciphertext==", ciphertext);
+	if (!aes_decrypt(ciphertext, AES_BLOCK_SIZE, (unsigned char *)plaintext))
 		printf("decrypt error\n");
-	printf("%s\n", plaintext);
+	show("==plaintext==", plaintext);
 }
