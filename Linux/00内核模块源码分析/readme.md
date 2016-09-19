@@ -14,3 +14,7 @@
 	
 另外，如果是分析C++/JAVA等面向对象的语言，类图和顺序图可以很好的帮助分析。
 有一些工具可以从源码直接生成类图或顺序图(逆向工程)，如: Enterprise Architect, Rational Software Architect。
+
+看源代码有两种方式:
+	=> 自上而下，看基本 use case
+	=> 自下而上，看基本 function 功能
