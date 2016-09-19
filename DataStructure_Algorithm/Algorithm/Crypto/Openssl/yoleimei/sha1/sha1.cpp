@@ -11,9 +11,9 @@ void SHA1_OneStep(const unsigned char *d, size_t n, unsigned char *md)
 void SHA1_ThreeStep(const unsigned char *d, size_t n, unsigned char *md)
 {
 	SHA_CTX shactx;
-	SHA1_Init(&shactx);
-	SHA1_Update(&shactx, d, n);
-	SHA1_Final(md, &shactx);
+	printf("return value of SHA1_Init = %d\n", SHA1_Init(&shactx));
+	printf("return value of SHA1_Update = %d\n", SHA1_Update(&shactx, d, n));
+	printf("return value of SHA1_Final = %d\n", SHA1_Final(md, &shactx));
 }
 
 void show(const unsigned char *d)
