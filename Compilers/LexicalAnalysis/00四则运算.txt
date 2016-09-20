@@ -1,0 +1,10 @@
++       ADD      1
+-       SUB      2
+*       MUL      3
+/       DIV      4
+[0-9]+  NUMBER   5
+\n      EOL      6
+[ \t]            7
+.                8
+
+yy_accept

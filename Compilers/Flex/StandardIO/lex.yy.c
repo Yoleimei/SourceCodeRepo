@@ -340,7 +340,7 @@ void yyfree (void *  );
 
 /* Begin user sect3 */
 
-typedef unsigned char YY_CHAR;
+typedef char YY_CHAR;
 
 FILE *yyin = (FILE *) 0, *yyout = (FILE *) 0;
 
@@ -352,6 +352,233 @@ int yylineno = 1;
 
 extern char *yytext;
 #define yytext_ptr yytext
+static yyconst flex_int16_t yy_nxt[][128] =
+    {
+    {
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0,    0,    0,    0,    0,    0,    0
+    },
+
+    {
+        3,    4,    4,    4,    4,    4,    4,    4,    4,    5,
+        6,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    5,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    7,    8,    4,    9,    4,   10,   11,   11,
+       11,   11,   11,   11,   11,   11,   11,   11,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4
+    },
+
+    {
+        3,    4,    4,    4,    4,    4,    4,    4,    4,    5,
+        6,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    5,    4,    4,    4,    4,    4,    4,    4,
+
+        4,    4,    7,    8,    4,    9,    4,   10,   11,   11,
+       11,   11,   11,   11,   11,   11,   11,   11,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4
+    },
+
+    {
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3,
+       -3,   -3,   -3,   -3,   -3,   -3,   -3,   -3
+    },
+
+    {
+        3,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4,
+       -4,   -4,   -4,   -4,   -4,   -4,   -4,   -4
+    },
+
+    {
+        3,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5,
+       -5,   -5,   -5,   -5,   -5,   -5,   -5,   -5
+    },
+
+    {
+        3,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6,
+
+       -6,   -6,   -6,   -6,   -6,   -6,   -6,   -6
+    },
+
+    {
+        3,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7,
+       -7,   -7,   -7,   -7,   -7,   -7,   -7,   -7
+    },
+
+    {
+        3,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8,
+       -8,   -8,   -8,   -8,   -8,   -8,   -8,   -8
+    },
+
+    {
+        3,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9,
+       -9,   -9,   -9,   -9,   -9,   -9,   -9,   -9
+
+    },
+
+    {
+        3,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10,
+      -10,  -10,  -10,  -10,  -10,  -10,  -10,  -10
+    },
+
+    {
+        3,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,   12,   12,
+       12,   12,   12,   12,   12,   12,   12,   12,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11,
+      -11,  -11,  -11,  -11,  -11,  -11,  -11,  -11
+    },
+
+    {
+        3,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,   12,   12,
+       12,   12,   12,   12,   12,   12,   12,   12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12,
+      -12,  -12,  -12,  -12,  -12,  -12,  -12,  -12
+    },
+
+    } ;
 
 static yy_state_type yy_get_previous_state (void );
 static yy_state_type yy_try_NUL_trans (yy_state_type current_state  );
@@ -377,75 +604,17 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static yyconst flex_int16_t yy_accept[14] =
+static yyconst flex_int16_t yy_accept[13] =
     {   0,
         0,    0,   10,    8,    7,    6,    3,    1,    2,    4,
-        5,    5,    0
+        5,    5
     } ;
 
-static yyconst flex_int32_t yy_ec[256] =
+static yyconst yy_state_type yy_NUL_trans[13] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    4,    5,    1,    6,    1,    7,    8,    8,    8,
-        8,    8,    8,    8,    8,    8,    8,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1
+        4,    4,    0,    0,    0,    0,    0,    0,    0,    0,
+        0,    0
     } ;
-
-static yyconst flex_int32_t yy_meta[9] =
-    {   0,
-        1,    1,    1,    1,    1,    1,    1,    1
-    } ;
-
-static yyconst flex_int16_t yy_base[14] =
-    {   0,
-        0,    0,   11,   12,   12,   12,   12,   12,   12,   12,
-        2,    1,   12
-    } ;
-
-static yyconst flex_int16_t yy_def[14] =
-    {   0,
-       13,    1,   13,   13,   13,   13,   13,   13,   13,   13,
-       13,   13,    0
-    } ;
-
-static yyconst flex_int16_t yy_nxt[21] =
-    {   0,
-        4,    5,    6,    7,    8,    9,   10,   11,   12,   12,
-       13,    3,   13,   13,   13,   13,   13,   13,   13,   13
-    } ;
-
-static yyconst flex_int16_t yy_chk[21] =
-    {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,   12,   11,
-        3,   13,   13,   13,   13,   13,   13,   13,   13,   13
-    } ;
-
-static yy_state_type yy_last_accepting_state;
-static char *yy_last_accepting_cpos;
 
 extern int yy_flex_debug;
 int yy_flex_debug = 0;
@@ -458,8 +627,18 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "calc1.l"
-#line 463 "lex.yy.c"
+#line 1 "calc2.l"
+#line 2 "calc2.l"
+	enum yytokentype {
+		NUMBER = 258,
+		ADD = 259,
+		SUB = 260,
+		MUL = 261,
+		DIV = 262,
+		EOL = 264
+	};
+	int yylval;
+#line 642 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -646,9 +825,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 1 "calc1.l"
+#line 12 "calc2.l"
 
-#line 652 "lex.yy.c"
+#line 831 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -690,33 +869,13 @@ YY_DECL
 
 		yy_current_state = (yy_start);
 yy_match:
-		do
-			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
-			if ( yy_accept[yy_current_state] )
-				{
-				(yy_last_accepting_state) = yy_current_state;
-				(yy_last_accepting_cpos) = yy_cp;
-				}
-			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-				{
-				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 14 )
-					yy_c = yy_meta[(unsigned int) yy_c];
-				}
-			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+		while ( (yy_current_state = yy_nxt[yy_current_state][ YY_SC_TO_UI(*yy_cp) ]) > 0 )
 			++yy_cp;
-			}
-		while ( yy_base[yy_current_state] != 12 );
+
+		yy_current_state = -yy_current_state;
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
-		if ( yy_act == 0 )
-			{ /* have to back up */
-			yy_cp = (yy_last_accepting_cpos);
-			yy_current_state = (yy_last_accepting_state);
-			yy_act = yy_accept[yy_current_state];
-			}
 
 		YY_DO_BEFORE_ACTION;
 
@@ -724,62 +883,55 @@ do_action:	/* This label is used only to access EOF actions. */
 
 		switch ( yy_act )
 	{ /* beginning of action switch */
-			case 0: /* must back up */
-			/* undo the effects of YY_DO_BEFORE_ACTION */
-			*yy_cp = (yy_hold_char);
-			yy_cp = (yy_last_accepting_cpos);
-			yy_current_state = (yy_last_accepting_state);
-			goto yy_find_action;
-
 case 1:
 YY_RULE_SETUP
-#line 2 "calc1.l"
-{ printf("PLUS\n"); }
+#line 13 "calc2.l"
+{ return ADD; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 3 "calc1.l"
-{ printf("MINUS\n"); }
+#line 14 "calc2.l"
+{ return SUB; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 4 "calc1.l"
-{ printf("TIMES\n"); }
+#line 15 "calc2.l"
+{ return MUL; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 5 "calc1.l"
-{ printf("DIVIDE\n"); }
+#line 16 "calc2.l"
+{ return DIV; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 6 "calc1.l"
-{ printf("NUMBER %s\n", yytext); }
+#line 17 "calc2.l"
+{ yylval = atoi(yytext); return NUMBER; }
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 7 "calc1.l"
-{ printf("NEWLINE\n"); }
+#line 18 "calc2.l"
+{ return EOL; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 8 "calc1.l"
-{ }
+#line 19 "calc2.l"
+{ /* ignore */ }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 9 "calc1.l"
-{ printf("Mystery character %s\n", yytext); }
+#line 20 "calc2.l"
+{ printf("Mystery character %c\n", *yytext); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 10 "calc1.l"
+#line 21 "calc2.l"
 ECHO;
 	YY_BREAK
-#line 781 "lex.yy.c"
-case YY_STATE_EOF(INITIAL):
-	yyterminate();
+#line 933 "lex.yy.c"
+			case YY_STATE_EOF(INITIAL):
+				yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1060,19 +1212,12 @@ static int yy_get_next_buffer (void)
 
 	for ( yy_cp = (yytext_ptr) + YY_MORE_ADJ; yy_cp < (yy_c_buf_p); ++yy_cp )
 		{
-		register YY_CHAR yy_c = (*yy_cp ? yy_ec[YY_SC_TO_UI(*yy_cp)] : 1);
-		if ( yy_accept[yy_current_state] )
+		if ( *yy_cp )
 			{
-			(yy_last_accepting_state) = yy_current_state;
-			(yy_last_accepting_cpos) = yy_cp;
+			yy_current_state = yy_nxt[yy_current_state][YY_SC_TO_UI(*yy_cp)];
 			}
-		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-			{
-			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 14 )
-				yy_c = yy_meta[(unsigned int) yy_c];
-			}
-		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
+		else
+			yy_current_state = yy_NUL_trans[yy_current_state];
 		}
 
 	return yy_current_state;
@@ -1086,22 +1231,9 @@ static int yy_get_next_buffer (void)
     static yy_state_type yy_try_NUL_trans  (yy_state_type yy_current_state )
 {
 	register int yy_is_jam;
-    	register char *yy_cp = (yy_c_buf_p);
-
-	register YY_CHAR yy_c = 1;
-	if ( yy_accept[yy_current_state] )
-		{
-		(yy_last_accepting_state) = yy_current_state;
-		(yy_last_accepting_cpos) = yy_cp;
-		}
-	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
-		{
-		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 14 )
-			yy_c = yy_meta[(unsigned int) yy_c];
-		}
-	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 13);
+    
+	yy_current_state = yy_NUL_trans[yy_current_state];
+	yy_is_jam = (yy_current_state == 0);
 
 	return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1775,6 +1907,18 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 10 "calc1.l"
+#line 21 "calc2.l"
 
+
+main(int argc, char **argv)
+{
+	int tok;
+	while (tok = yylex()) {
+		printf("%d", tok);
+		if (NUMBER == tok)
+			printf(" = %d\n", yylval);
+		else
+			printf("\n");
+	}
+}
 
