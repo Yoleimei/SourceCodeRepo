@@ -3,15 +3,42 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#include <inttypes.h>
-typedef int8_t flex_int8_t;
-typedef uint8_t flex_uint8_t;
-typedef int16_t flex_int16_t;
-typedef uint16_t flex_uint16_t;
-typedef int32_t flex_int32_t;
-typedef uint32_t flex_uint32_t;
+#ifndef FLEXINT_H
+	#define FLEXINT_H
+	#if defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L
+		#ifndef __STDC_LIMIT_MACROS
+			#define __STDC_LIMIT_MACROS 1
+		#endif
+		#include <inttypes.h>
+		typedef int8_t flex_int8_t;
+		typedef uint8_t flex_uint8_t;
+		typedef int16_t flex_int16_t;
+		typedef uint16_t flex_uint16_t;
+		typedef int32_t flex_int32_t;
+		typedef uint32_t flex_uint32_t;
+	#else
+		typedef signed char flex_int8_t;
+		typedef short int flex_int16_t;
+		typedef int flex_int32_t;
+		typedef unsigned char flex_uint8_t; 
+		typedef unsigned short int flex_uint16_t;
+		typedef unsigned int flex_uint32_t;
+	#endif
+#endif
 
-#define yyconst const
+#ifdef __cplusplus
+	#define YY_USE_CONST
+#else	
+	#if defined (__STDC__)
+		#define YY_USE_CONST
+	#endif	
+#endif	
+
+#ifdef YY_USE_CONST
+	#define yyconst const
+#else
+	#define yyconst
+#endif
 
 #define YY_NULL 0
 #define YY_SC_TO_UI(c) ((unsigned int) (unsigned char) c)
@@ -20,7 +47,15 @@ typedef uint32_t flex_uint32_t;
 #define YY_NEW_FILE yyrestart(yyin  )
 #define YY_END_OF_BUFFER_CHAR 0
 
-#define YY_BUF_SIZE 16384
+#ifndef YY_BUF_SIZE
+	#ifdef __ia64__
+		#define YY_BUF_SIZE 32768
+	#else
+		#define YY_BUF_SIZE 16384
+	#endif 
+#endif
+
+#define YY_STATE_BUF_SIZE   ((YY_BUF_SIZE + 2) * sizeof(yy_state_type))
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 
@@ -238,9 +273,24 @@ int yylval;
 
 #include <unistd.h>
 
-extern int yywrap (void );
+// Macros after this point can all be overridden by user definitions in section 1.
+#ifndef YY_SKIP_YYWRAP
+	#ifdef __cplusplus
+		extern "C" int yywrap (void );
+	#else
+		extern int yywrap (void );
+	#endif
+#endif
 
-#define YY_READ_BUF_SIZE 8192
+/* Amount of stuff to slurp up with each read. */
+#ifndef YY_READ_BUF_SIZE
+	#ifdef __ia64__
+		/* On IA-64, the buffer size is 16k, not 8k */
+		#define YY_READ_BUF_SIZE 16384
+	#else
+		#define YY_READ_BUF_SIZE 8192
+	#endif /* __ia64__ */
+#endif
 
 /* Copy whatever the last rule matched to the standard output. */
 #ifndef ECHO
@@ -282,6 +332,11 @@ extern int yywrap (void );
 // some compilers to complain about unreachable statements.
 #ifndef yyterminate
 #define yyterminate() return YY_NULL
+#endif
+
+/* Number of entries by which start-condition stack grows. */
+#ifndef YY_START_STACK_INCR
+#define YY_START_STACK_INCR 25
 #endif
 
 /* Report a fatal error. */

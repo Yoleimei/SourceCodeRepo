@@ -49,6 +49,12 @@ yylex() {
 yy_create_buffer() {
 	yy_init_buffer();
 }
+yy_init_buffer() {
+	yy_flush_buffer();
+}
+yy_flush_buffer() {
+	yy_load_buffer_state();
+}
 
 编译时带-Cf参数，则只会生成 yy_ntx 和 yy_accept 
 如果不带-Cf参数，则会生成多个数组，方法其实是一样的

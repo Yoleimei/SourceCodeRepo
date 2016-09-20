@@ -1,0 +1,7 @@
+---- yy_get_next_buffer Matches (6 in 1 files) ----
+Lex.yy.c (\\cl-builder14\gittest\sourcecoderepo\compilers\lexicalanalysis):static int yy_get_next_buffer (void );
+Lex.yy.c (\\cl-builder14\gittest\sourcecoderepo\compilers\lexicalanalysis):			} else switch ( yy_get_next_buffer(  ) ) {
+Lex.yy.c (\\cl-builder14\gittest\sourcecoderepo\compilers\lexicalanalysis):						* yy_get_next_buffer() to have set up
+Lex.yy.c (\\cl-builder14\gittest\sourcecoderepo\compilers\lexicalanalysis):/* yy_get_next_buffer - try to read in a new buffer
+Lex.yy.c (\\cl-builder14\gittest\sourcecoderepo\compilers\lexicalanalysis):static int yy_get_next_buffer (void)
+Lex.yy.c (\\cl-builder14\gittest\sourcecoderepo\compilers\lexicalanalysis):			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
