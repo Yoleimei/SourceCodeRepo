@@ -31,18 +31,6 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_END_OF_FILE 1
 #define EOB_ACT_LAST_MATCH 2
 #define YY_LESS_LINENO(n)
-	
-/* Return all but the first "n" matched characters back to the input stream. */
-#define yyless(n) \
-	do { \
-		/* Undo effects of setting up yytext. */ \
-		int yyless_macro_arg = (n); \
-		YY_LESS_LINENO(yyless_macro_arg);\
-		*yy_cp = (yy_hold_char); \
-		YY_RESTORE_YY_MORE_OFFSET \
-		(yy_c_buf_p) = yy_cp = yy_bp + yyless_macro_arg - YY_MORE_ADJ; \
-		YY_DO_BEFORE_ACTION; /* set up yytext again */ \
-	} while ( 0 )
 
 struct yy_buffer_state {
 	FILE *yy_input_file;
@@ -831,28 +819,11 @@ static void yyensure_buffer_stack (void)
 	}
 }
 
-#ifndef YY_EXIT_FAILURE
-#define YY_EXIT_FAILURE 2
-#endif
 static void yy_fatal_error (yyconst char* msg )
 {
 	(void) fprintf( stderr, "%s\n", msg );
-	exit( YY_EXIT_FAILURE );
+	exit( 2 );
 }
-
-/* Redefine yyless() so it works in section 3 code. */
-#undef yyless
-#define yyless(n) \
-	do { \
-		/* Undo effects of setting up yytext. */ \
-		int yyless_macro_arg = (n); \
-		YY_LESS_LINENO(yyless_macro_arg);\
-		yytext[yyleng] = (yy_hold_char); \
-		(yy_c_buf_p) = yytext + yyless_macro_arg; \
-		(yy_hold_char) = *(yy_c_buf_p); \
-		*(yy_c_buf_p) = '\0'; \
-		yyleng = yyless_macro_arg; \
-	} while ( 0 )
 
 int main(int argc, char **argv)
 {
