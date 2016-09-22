@@ -56,9 +56,78 @@ void lex()
 	}
 }
 
+void match(int tk)
+{
+	if (iToken != tk) {
+		printf("exprected token: %d, got token: %d", tk, iToken);
+		exit(-1);
+	}
+	iTokenValue = 0;
+	lex();
+}
+
+int expr();
+
+int term()
+{
+	int value = 0;
+	if (TOK_LBR == iToken) {
+		match(TOK_LBR);
+		value = expr();
+		match(TOK_RBR);
+	} else {
+		value = iTokenValue;
+		match(TOK_NUM);
+	}
+	return value;
+}
+
+int factor_tail(int lvalue)
+{
+	if (TOK_MUL == iToken) {
+		match(TOK_MUL);
+		int value = lvalue * term();
+		return factor_tail(value);
+	} else if (TOK_DIV == iToken) {
+		match(TOK_DIV);
+		int value = lvalue / term();
+		return factor_tail(value);
+	} else {
+		return lvalue;
+	}
+}
+
+int factor()
+{
+	int lvalue = term();
+	return factor_tail(lvalue);
+}
+
+int expr_tail(int lvalue)
+{
+	if (TOK_ADD == iToken) {
+		match(TOK_ADD);
+		int value = lvalue + factor();
+		return expr_tail(value);
+	} else if (TOK_SUB == iToken) {
+		match(TOK_SUB);
+		int value = lvalue - factor();
+		return expr_tail(value);
+	} else {
+		return lvalue;
+	}
+}
+
+int expr()
+{
+	int lvalue = factor();
+	return expr_tail(lvalue);
+}
+
 int main()
 {
 	pchSrc = pchSrcFront = pchSrcRear = (char *)malloc(SRC_BUF_SIZE);
+	memset(pchSrc, 0, SRC_BUF_SIZE);
 	
 	while (1) {
 		if (pchSrcRear - pchSrc >= SRC_BUF_SIZE - 1) {
@@ -75,14 +144,8 @@ int main()
 				*pchSrcRear++ = c;
 			}
 		} while(1);
-		while (pchSrcFront < pchSrcRear) {
-			lex();
-			if (TOK_NUM == iToken) {
-				printf("%d %d\n", iToken, iTokenValue);
-				iTokenValue = 0;
-			}
-			else if(TOK_LF != iToken)
-				printf("%d\n", iToken);
-		}
+		
+		lex();
+		printf("= %d\n", expr());
 	}
 }
