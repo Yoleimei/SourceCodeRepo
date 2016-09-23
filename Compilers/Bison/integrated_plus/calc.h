@@ -1,15 +1,15 @@
 struct symbol {
 	char *name;
 	double value;
-	struct ast *func;
-	struct symlist *syms;
+	struct ast *func;      // 函数体
+	struct symlist *syms;  // 虚拟参数列表
 };
 
 #define NHASH 9997
 struct symbol symtab[NHASH];
 struct symbol *lookup(char*);
 
-struct symlist {
+struct symlist { // 符号列表， 作为参数列表
 	struct symbol *sym;
 	struct symlist *next;
 };
