@@ -1,284 +1,255 @@
-enum {
-	TOK_NUM = 128, // [0-9]+
-	TOK_ID,        // [A-z][A-z_0-9]*
-	TOK_CHAR,      // "char"
-	TOK_ELSE,      // "else"
-	TOK_ENUM,      // "enum"
-	TOK_IF,        // "if"
-	TOK_INT,       // "int"
-	TOK_RETURN,    // "return"
-	TOK_SIZEOF,    // "sizeof"
-	TOK_WHILE,     // "while"
-	TOK_ASSIGN,    // "="
-	TOK_COND,      // "?"
-	TOK_LOR,       // "|"
-	TOK_LAN,       // "&"
-	TOK_OR,        // "||"
-	TOK_XOR,       // "^"
-	TOK_AND,       // "&&"
-	TOK_EQ,        // "=="
-	TOK_NE,        // "!="
-	TOK_LT,        // "<"
-	TOK_GT,        // ">"
-	TOK_LE,        // "<="
-	TOK_GE,        // ">="
-	TOK_SHL,       // "<<"
-	TOK_SHR,       // ">>"
-	TOK_ADD,       // "+"
-	TOK_SUB,       // "-"
-	TOK_MUL,       // "*"
-	TOK_DIV,       // "/"
-	TOK_MOD,       // "%"
-	TOK_INC,       // "++"
-	TOK_DEC,       // "--"
-	TOK_BRAK       // "["
-// ~ , : ; ( ) ] { }
-};
+#ifndef LEXICAL_H
+	#include "lexical.h"
+#endif
 
-enum {
-	TYPE_CHAR,
-	TYPE_INT,
-	TYPE_PTR
-};
+#ifndef BASE_H
+	#include "base.h"
+#endif
 
-enum {
-	CLASS_FUN,     // user defined function
-	CLASS_SYS,     // built-in function
-	CLASS_GLO,     // global variable
-	CLASS_LOC,     // local variable
+int iToken;
+int iTokenValue;
+
+int *stCurrentId = NULL;
+int *stSymbols;
+
+char *pchSrc, *pchOldSrc;
+
+void InitLex()
+{
+	stCurrentId = stSymbols = (int *)malloc(BUF_LEN);
+	memset(stSymbols, 0, BUF_LEN);
+	
+	pchSrc = "enum char int if else while return sizeof";
+	
+	int iTokenTmp = TOK_ENUM;
+	while (iTokenTmp <= TOK_SIZEOF) {
+		lex();
+		stCurrentId[Token] = iTokenTmp++;
+	}
+	
+	pchSrc = pchOldSrc = (char *)malloc(BUF_LEN);
+	memset(pchSrc, 0, BUF_LEN);
 }
 
-enum {
-	Token,   // Id, Char, Int, ...
-	Hash,    //
-	Name,    //
-	Type,    // INT, CHAR, PTR
-	Class,   // local, global, fun, sys
-	Value,   // value or address
-	BType,   // BXxx used for global id while local id and global id are all existed
-	BClass,
-	BValue,
-	IdSize   // size of symbol unit
-};
-
-void next() {
+void lex() {
 	char *last_pos;
 	int hash;
 
-	while (token = *src++) {
-
-	   // parse token here
-	   if (token == '\n') {
-		   ++line;
-	   }
-	   else if (token == '#') {
-		   // skip macro, because we will not support it
-		   while (*src != 0 && *src != '\n') {
-			   ++src;
-		   }
-	   }
-	   else if ((token >= 'a' && token <= 'z') || (token >= 'A' && token <= 'Z') || (token == '_')) {
-
-		   // parse identifier
-		   last_pos = src - 1;
-		   hash = token;
-
-		   while ((*src >= 'a' && *src <= 'z') || (*src >= 'A' && *src <= 'Z') || (*src >= '0' && *src <= '9') || (*src == '_')) {
-			   hash = hash * 147 + *src;
-			   ++src;
-		   }
-
-		   // look for existing identifier, linear search
-		   current_id = symbols;
-		   while (current_id[Token]) {
-			   if (current_id[Hash] == hash && !memcmp((char *)current_id[Name], last_pos, src - last_pos)) {
-				   //found one, return
-				   token = current_id[Token];
-				   return;
-			   }
-			   current_id = current_id + IdSize;
-		   }
-
-		   // store new ID
-		   current_id[Name] = (int)last_pos;
-		   current_id[Hash] = hash;
-		   token = current_id[Token] = Id;
-		   return;
+	while (iToken = *pchSrc) {
+		++pchSrc;
+		
+		// parse token here
+		if (iToken == '\n') {
+			++iLine;
 		}
-		else if (token >= '0' && token <= '9') {
+		else if (iToken == '#') {
+			// skip macro, because we will not support it
+			while (*pchSrc != 0 && *pchSrc != '\n') {
+				++pchSrc;
+			}
+		}
+		else if ((iToken >= 'a' && iToken <= 'z') || (iToken >= 'A' && iToken <= 'Z') || (iToken == '_')) {
+
+			// parse identifier
+			last_pos = pchSrc - 1;
+			hash = iToken;
+
+			while ((*pchSrc >= 'a' && *pchSrc <= 'z') || (*pchSrc >= 'A' && *pchSrc <= 'Z') || (*pchSrc >= '0' && *pchSrc <= '9') || (*pchSrc == '_')) {
+				hash = hash * 147 + *pchSrc;
+				++pchSrc;
+			}
+
+			// look for existing identifier, linear search
+			stCurrentId = stSymbols;
+			while (stCurrentId[Token]) {
+				if (stCurrentId[Hash] == hash && !memcmp((char *)stCurrentId[Name], last_pos, pchSrc - last_pos)) {
+					//found one, return
+					iToken = stCurrentId[Token];
+					return;
+				}
+				stCurrentId = stCurrentId + IdSize;
+			}
+
+			// store new ID
+			stCurrentId[Name] = (int)last_pos;
+			stCurrentId[Hash] = hash;
+			iToken = stCurrentId[Token] = TOK_ID;
+			return;
+		}
+		else if (iToken >= '0' && iToken <= '9') {
 			// parse number, three kinds: dec(123) hex(0x123) oct(017)
-			token_val = token - '0';
-			if (token_val > 0) {
+			iTokenValue = iToken - '0';
+			if (iTokenValue > 0) {
 				// dec, starts with [1-9]
-				while (*src >= '0' && *src <= '9') {
-					token_val = token_val*10 + *src++ - '0';
+				while (*pchSrc >= '0' && *pchSrc <= '9') {
+					iTokenValue = iTokenValue*10 + *pchSrc++ - '0';
 				}
 			} else {
 				// starts with 0
-				if (*src == 'x' || *src == 'X') {
+				if (*pchSrc == 'x' || *pchSrc == 'X') {
 					//hex
-					token = *++src;
-					while ((token >= '0' && token <= '9') || (token >= 'a' && token <= 'f') || (token >= 'A' && token <= 'F')) {
-						token_val = token_val * 16 + (token & 15) + (token >= 'A' ? 9 : 0);
-						token = *++src;
+					iToken = *++pchSrc;
+					while ((iToken >= '0' && iToken <= '9') || (iToken >= 'a' && iToken <= 'f') || (iToken >= 'A' && iToken <= 'F')) {
+						iTokenValue = iTokenValue * 16 + (iToken & 15) + (iToken >= 'A' ? 9 : 0);
+						iToken = *++pchSrc;
 					}
 				} else {
 					// oct
-					while (*src >= '0' && *src <= '7') {
-						token_val = token_val*8 + *src++ - '0';
+					while (*pchSrc >= '0' && *pchSrc <= '7') {
+						iTokenValue = iTokenValue*8 + *pchSrc++ - '0';
 					}
 				}
 			}
 
-			token = Num;
+			iToken = TOK_NUM;
 			return;
 		}
-		else if (token == '"' || token == '\'') {
+		else if (iToken == '"' || iToken == '\'') {
 			// parse string literal, currently, the only supported escape
 			// character is '\n', store the string literal into data.
-			last_pos = data;
-			while (*src != 0 && *src != token) {
-				token_val = *src++;
-				if (token_val == '\\') {
+			last_pos = pchData;
+			while (*pchSrc != 0 && *pchSrc != iToken) {
+				iTokenValue = *pchSrc++;
+				if (iTokenValue == '\\') {
 					// escape character
-					token_val = *src++;
-					if (token_val == 'n') {
-						token_val = '\n';
+					iTokenValue = *pchSrc++;
+					if (iTokenValue == 'n') {
+						iTokenValue = '\n';
 					}
 				}
 
-				if (token == '"') {
-					*data++ = token_val;
+				if (iToken == '"') {
+					*pchData++ = iTokenValue;
 				}
 			}
 
-			src++;
-			// if it is a single character, return Num token
-			if (token == '"') {
-				token_val = (int)last_pos;
+			pchSrc++;
+			// if it is a single character, return Num iToken
+			if (iToken == '"') {
+				iTokenValue = (int)last_pos;
 			} else {
-				token = Num;
+				iToken = TOK_NUM;
 			}
 
 			return;
 		}
-		else if (token == '/') {
-			if (*src == '/') {
+		else if (iToken == '/') {
+			if (*pchSrc == '/') {
 				// skip comments
-				while (*src != 0 && *src != '\n') {
-					++src;
+				while (*pchSrc != 0 && *pchSrc != '\n') {
+					++pchSrc;
 				}
 			} else {
 				// divide operator
-				token = Div;
+				iToken = TOK_DIV;
 				return;
 			}
 		}
-		else if (token == '=') {
+		else if (iToken == '=') {
 			// parse '==' and '='
-			if (*src == '=') {
-				src ++;
-				token = Eq;
+			if (*pchSrc == '=') {
+				pchSrc ++;
+				iToken = TOK_EQ;
 			} else {
-				token = Assign;
+				iToken = TOK_ASSIGN;
 			}
 			return;
 		}
-		else if (token == '+') {
+		else if (iToken == '+') {
 			// parse '+' and '++'
-			if (*src == '+') {
-				src ++;
-				token = Inc;
+			if (*pchSrc == '+') {
+				pchSrc ++;
+				iToken = TOK_INC;
 			} else {
-				token = Add;
+				iToken = TOK_ADD;
 			}
 			return;
 		}
-		else if (token == '-') {
+		else if (iToken == '-') {
 			// parse '-' and '--'
-			if (*src == '-') {
-				src ++;
-				token = Dec;
+			if (*pchSrc == '-') {
+				pchSrc ++;
+				iToken = TOK_DEC;
 			} else {
-				token = Sub;
+				iToken = TOK_SUB;
 			}
 			return;
 		}
-		else if (token == '!') {
+		else if (iToken == '!') {
 			// parse '!='
-			if (*src == '=') {
-				src++;
-				token = Ne;
+			if (*pchSrc == '=') {
+				pchSrc++;
+				iToken = TOK_NE;
 			}
 			return;
 		}
-		else if (token == '<') {
+		else if (iToken == '<') {
 			// parse '<=', '<<' or '<'
-			if (*src == '=') {
-				src ++;
-				token = Le;
-			} else if (*src == '<') {
-				src ++;
-				token = Shl;
+			if (*pchSrc == '=') {
+				pchSrc ++;
+				iToken = TOK_LE;
+			} else if (*pchSrc == '<') {
+				pchSrc ++;
+				iToken = TOK_SHL;
 			} else {
-				token = Lt;
+				iToken = TOK_LT;
 			}
 			return;
 		}
-		else if (token == '>') {
+		else if (iToken == '>') {
 			// parse '>=', '>>' or '>'
-			if (*src == '=') {
-				src ++;
-				token = Ge;
-			} else if (*src == '>') {
-				src ++;
-				token = Shr;
+			if (*pchSrc == '=') {
+				pchSrc ++;
+				iToken = TOK_GE;
+			} else if (*pchSrc == '>') {
+				pchSrc ++;
+				iToken = TOK_SHR;
 			} else {
-				token = Gt;
+				iToken = TOK_GT;
 			}
 			return;
 		}
-		else if (token == '|') {
+		else if (iToken == '|') {
 			// parse '|' or '||'
-			if (*src == '|') {
-				src ++;
-				token = Lor;
+			if (*pchSrc == '|') {
+				pchSrc ++;
+				iToken = TOK_LOR;
 			} else {
-				token = Or;
+				iToken = TOK_OR;
 			}
 			return;
 		}
-		else if (token == '&') {
+		else if (iToken == '&') {
 			// parse '&' and '&&'
-			if (*src == '&') {
-				src ++;
-				token = Lan;
+			if (*pchSrc == '&') {
+				pchSrc ++;
+				iToken = TOK_LAN;
 			} else {
-				token = And;
+				iToken = TOK_AND;
 			}
 			return;
 		}
-		else if (token == '^') {
-			token = Xor;
+		else if (iToken == '^') {
+			iToken = TOK_XOR;
 			return;
 		}
-		else if (token == '%') {
-			token = Mod;
+		else if (iToken == '%') {
+			iToken = TOK_MOD;
 			return;
 		}
-		else if (token == '*') {
-			token = Mul;
+		else if (iToken == '*') {
+			iToken = TOK_MUL;
 			return;
 		}
-		else if (token == '[') {
-			token = Brak;
+		else if (iToken == '[') {
+			iToken = TOK_BRAK;
 			return;
 		}
-		else if (token == '?') {
-			token = Cond;
+		else if (iToken == '?') {
+			iToken = TOK_COND;
 			return;
 		}
-		else if (token == '~' || token == ';' || token == '{' || token == '}' || token == '(' || token == ')' || token == ']' || token == ',' || token == ':') {
+		else if (iToken == '~' || iToken == ';' || iToken == '{' || iToken == '}' || iToken == '(' || iToken == ')' || iToken == ']' || iToken == ',' || iToken == ':') {
 			// directly return the character as token;
 			return;
 		}
