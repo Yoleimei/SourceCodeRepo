@@ -28,7 +28,7 @@ void expression(int level)
 		if (TOK_NUM == iToken) {
 			match(TOK_NUM);
 			
-			*++text = IMM; // 立即数
+			*++text = IMM; // 数字常量
 			*++text = iTokenValue;
 			iExprType = TYPE_INT;
 		}
@@ -59,3 +59,4 @@ void expression(int level)
 		}
 	}
 }
+

@@ -18,11 +18,11 @@ enum {
 	TOK_SIZEOF,    // "sizeof"
 	TOK_ASSIGN,    // "="
 	TOK_COND,      // "?"
-	TOK_LOR,       // "|"
-	TOK_LAN,       // "&"
 	TOK_OR,        // "||"
-	TOK_XOR,       // "^"
 	TOK_AND,       // "&&"
+	TOK_LOR,       // "|"
+	TOK_XOR,       // "^"
+	TOK_LAN,       // "&"
 	TOK_EQ,        // "=="
 	TOK_NE,        // "!="
 	TOK_LT,        // "<"
@@ -78,5 +78,6 @@ extern int *stSymbols;
 
 extern void InitLex();
 extern void lex();
+extern void match(int);
 
 #endif

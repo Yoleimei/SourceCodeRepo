@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define  SRC_BUF_SIZE  1024 * 1 // 1KB
+#define  BUF_SIZE  1024 * 1 // 1KB
 
 enum eTok{
 	TOK_NUM = 128, // [0-9]+
@@ -16,6 +16,7 @@ enum eTok{
 };
 
 char *pchSrc, *pchSrcFront, *pchSrcRear;
+int *piStack, *piStackOld;
 int iToken;
 int iTokenValue = 0;
 
@@ -66,71 +67,60 @@ void match(int tk)
 	lex();
 }
 
-int expr();
-
-int term()
+void expression(int priority)
 {
-	int value = 0;
-	if (TOK_LBR == iToken) {
-		match(TOK_LBR);
-		value = expr();
-		match(TOK_RBR);
-	} else {
-		value = iTokenValue;
+	int tmp;
+
+	if (TOK_NUM == iToken) {
+		*piStack++ = iTokenValue;
 		match(TOK_NUM);
 	}
-	return value;
-}
-
-int factor_tail(int lvalue)
-{
-	if (TOK_MUL == iToken) {
-		match(TOK_MUL);
-		int value = lvalue * term();
-		return factor_tail(value);
-	} else if (TOK_DIV == iToken) {
-		match(TOK_DIV);
-		int value = lvalue / term();
-		return factor_tail(value);
-	} else {
-		return lvalue;
+	else if (TOK_LBR == iToken) {
+		match(TOK_LBR);
+		expression(TOK_ADD);
+		match(TOK_RBR);
+	} else { }
+	
+	while (iToken >= priority) {
+		if (TOK_MUL == iToken) {
+			match(TOK_MUL);
+			expression(TOK_MUL);
+			tmp = *--piStack;
+			tmp = *--piStack * tmp;
+			*piStack++ = tmp;
+		} else if (TOK_DIV == iToken) {
+			match(TOK_DIV);
+			expression(TOK_MUL);
+			tmp = *--piStack;
+			tmp = *--piStack / tmp;
+			*piStack++ = tmp;
+		} else if (TOK_ADD == iToken) {
+			match(TOK_ADD);
+			expression(TOK_MUL);
+			tmp = *--piStack;
+			tmp = *--piStack + tmp;
+			*piStack++ = tmp;
+		} else if (TOK_SUB == iToken) {
+			match(TOK_SUB);
+			expression(TOK_MUL);
+			tmp = *--piStack;
+			tmp = *--piStack - tmp;
+			*piStack++ = tmp;
+		} else {
+			break;
+		}
 	}
-}
-
-int factor()
-{
-	int lvalue = term();
-	return factor_tail(lvalue);
-}
-
-int expr_tail(int lvalue)
-{
-	if (TOK_ADD == iToken) {
-		match(TOK_ADD);
-		int value = lvalue + factor();
-		return expr_tail(value);
-	} else if (TOK_SUB == iToken) {
-		match(TOK_SUB);
-		int value = lvalue - factor();
-		return expr_tail(value);
-	} else {
-		return lvalue;
-	}
-}
-
-int expr()
-{
-	int lvalue = factor();
-	return expr_tail(lvalue);
 }
 
 int main()
 {
-	pchSrc = pchSrcFront = pchSrcRear = (char *)malloc(SRC_BUF_SIZE);
-	memset(pchSrc, 0, SRC_BUF_SIZE);
+	pchSrc = pchSrcFront = pchSrcRear = (char *)malloc(BUF_SIZE);
+	piStack = piStackOld = (int *)malloc(BUF_SIZE);
+	memset(pchSrc, 0, BUF_SIZE);
+	memset(piStack, 0, BUF_SIZE);
 	
 	while (1) {
-		if (pchSrcRear - pchSrc >= SRC_BUF_SIZE - 1) {
+		if (pchSrcRear - pchSrc >= BUF_SIZE - 1) {
 			printf("src buffer full\n");
 			exit(0);
 		}
@@ -146,6 +136,7 @@ int main()
 		} while(1);
 		
 		lex();
-		printf("= %d\n", expr());
+		expression(TOK_ADD);
+		printf("= %d\n", *--piStack);
 	}
 }

@@ -256,3 +256,12 @@ void lex() {
 	}
 	return;
 }
+
+void match(int tk)
+{
+	if (iToken != tk) {
+		printf("exprected token: %d, got token: %d", tk, iToken);
+		exit(-1);
+	}
+	lex();
+}

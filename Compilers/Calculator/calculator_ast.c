@@ -116,13 +116,14 @@ void lex()
 		case '7':
 		case '8':
 		case '9':
-			iTokenValue = iTokenValue * 10 + *pchSrcFront - '0';
-			if (*GET_SRC_POINT(pchSrcFront+1) < '0' || *GET_SRC_POINT(pchSrcFront+1) > '9') {
-				iToken = TOK_NUM;
-				pchSrcFront = GET_SRC_POINT(pchSrcFront + 1);
-				return;
+			iTokenValue = *pchSrcFront - '0';
+			++pchSrcFront;
+			while (*pchSrcFront >= '0' && *pchSrcFront <= '9') {
+				iTokenValue = iTokenValue * 10 + *pchSrcFront - '0';
+				++pchSrcFront;
 			}
-			break;
+			iToken = TOK_NUM;
+			return;
 		case '\n':
 			iToken = TOK_LF;
 			break;
@@ -139,7 +140,6 @@ void match(int tk)
 		printf("exprected token: %d, got token: %d", tk, iToken);
 		exit(-1);
 	}
-	iTokenValue = 0;
 	lex();
 }
 
