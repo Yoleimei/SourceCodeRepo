@@ -25,7 +25,7 @@ int eval()
 }
 
 /*
-foo(arg1, arg2);
+type foo(arg1, arg2);
 |       ...       |
 +-----------------+
 | arg2            |
