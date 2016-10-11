@@ -3,32 +3,46 @@
 // return -> break;
 // tailRecursive -> continue
 
-int factorialTailRecurse(int a)
+int factorialRecurse(int n)
 {
-	if (a <= 1)
+	if (n <= 1)
 		return 1;
-	
-	
-	return a * factorialTailRecurse(a-1);
+	else
+		return n * factorialRecurse(n-1);
 }
 
-int factorialLoop(int a)
+//  |
+// \|/
+
+int factorialTailRecurse(int ret, int n)
+{
+	if (n <= 1)
+		return ret;
+	else
+		return factorialTailRecurse(ret * n, n-1);
+}
+
+int factorialTailRecurseAux(int n)
 {
 	int ret = 1;
-	
-	while (true) {
-		if (a <= 1)
-			break;
-		
-		ret = a * ret;
-		a = a-1;
+	ret = factorialTailRecurse(ret, n);
+	return ret;
+}
+
+int factorialLoop(int n)
+{
+	int ret = 1;
+
+	while (n > 1) {
+		ret = ret * n;
+		n--;
 	}
-	
+
 	return ret;
 }
 
 int main()
 {
-	tailRecursive(3);
-	loop(3);
+	printf("%d\n", factorialTailRecurseAux(3));
+	printf("%d\n", factorialLoop(3));
 }
