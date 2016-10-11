@@ -11,6 +11,8 @@ extern int iLine;
 extern int *piText, *piOldText;
 extern char *pchData;
 extern int *piStack;
+extern int ax, *pc, *bp, *sp;
+extern int *idmain;
 
 extern void InitBase();
 

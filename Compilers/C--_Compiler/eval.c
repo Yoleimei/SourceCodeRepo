@@ -20,8 +20,30 @@ int eval()
 		else if (INSTRUCTION_ENT == op)  { *--sp = (int)bp; bp = sp; sp = sp - *pc++; }
 		else if (INSTRUCTION_ADJ == op)  { sp = sp + *pc++; }
 		else if (INSTRUCTION_LEV == op)  { sp = bp; bp = (int *)*sp++; pc = (int *)sp++; }
-		else if (INSTRUCTION_LEV == op)  { ax = (int)(bp + *pc++); }
+		else if (INSTRUCTION_LEA == op)  { ax = (int)(bp + *pc++); }
+		
+		else if (INSTRUCTION_OR == op) { ax = *sp++ | ax; }
+		else if (INSTRUCTION_XOR == op) { ax = *sp++ ^ ax; }
+		else if (INSTRUCTION_AND == op) { ax = *sp++ & ax; }
+		else if (INSTRUCTION_EQ == op) { ax = *sp++ == ax; }
+		else if (INSTRUCTION_NE == op) { ax = *sp++ != ax; }
+		else if (INSTRUCTION_LT == op) { ax = *sp++ < ax; }
+		else if (INSTRUCTION_LE == op) { ax = *sp++ <= ax; }
+		else if (INSTRUCTION_GT == op) { ax = *sp++ > ax; }
+		else if (INSTRUCTION_GE == op) { ax = *sp++ >= ax; }
+		else if (INSTRUCTION_SHL == op) { ax = *sp++ << ax; }
+		else if (INSTRUCTION_SHR == op) { ax = *sp++ >> ax; }
+		else if (INSTRUCTION_ADD == op) { ax = *sp++ + ax; }
+		else if (INSTRUCTION_SUB == op) { ax = *sp++ - ax; }
+		else if (INSTRUCTION_MUL == op) { ax = *sp++ * ax; }
+		else if (INSTRUCTION_DIV == op) { ax = *sp++ / ax; }
+		else if (INSTRUCTION_MOD == op) { ax = *sp++ % ax; }
+		else {
+			printf("unknown instruction: %d\n", op);
+			return -1;
+		}
 	}
+	return 0;
 }
 
 /*
