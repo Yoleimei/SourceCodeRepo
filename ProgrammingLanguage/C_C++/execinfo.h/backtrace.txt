@@ -1,0 +1,7 @@
+./a.out(_Z4dumpv+0x1f)[0x400a03]
+./a.out[0x400ace]
+./a.out(_Z6myfuncv+0x9)[0x400ad9]
+./a.out(main+0x14)[0x400aef]
+/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0xed)[0x7f2c364ad76d]
+./a.out[0x400929]
+9]
