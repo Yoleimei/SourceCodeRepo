@@ -1,0 +1,5 @@
+config PROC_YLM_TEST
+	bool "Enable ylm_test"
+	default y
+	depends on PROC_FS
+
