@@ -9,3 +9,7 @@ int add(int a, int b)
 iret
 
 main.c: 调用add.s中的_add子程序
+
+MASM is Intel Assembly
+GNU as is AT&T Assembly
+
