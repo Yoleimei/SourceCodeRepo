@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GLExtensionWrangler.h"
+
 class GLShaderProgram
 {
 public:

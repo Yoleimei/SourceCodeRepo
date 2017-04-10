@@ -1,134 +1,140 @@
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-
 #include "GLLib.h"
 
-void GLLib::Viewport(int x, int y, int width, int height)
+// typedef char         GLchar;
+// typedef int          GLint;
+// typedef unsigned int GLuint
+// typedef ptrdiff_t    GLsizeiptr
+// typedef unsigned int GLenum
+// typedef int          GLsizei;
+// typedef float        GLclampf
+// typedef unsigned int GLbitfiled
+
+void GLLib::Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
 	glViewport(x, y, width, height);
 }
 
-void GLLib::ClearColor(float red, float green, float blue, float alpha)
+void GLLib::ClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha)
 {
 	glClearColor(red, green, blue, alpha);
 }
 
-void GLLib::Clear(unsigned int mask)
+void GLLib::Clear(GLbitfield mask)
 {
 	glClear(mask);
 }
 
-unsigned int GLLib::CreateShader(unsigned int type)
+unsigned int GLLib::CreateShader(GLenum type)
 {
 	return glCreateShader(type);
 }
 
-void GLLib::DeleteShader(unsigned int shader)
+void GLLib::DeleteShader(GLuint shader)
 {
 	glDeleteShader(shader);
 }
 
-void GLLib::ShaderSource(unsigned int shader, int count, const char * const *string, const int *length) {
+void GLLib::ShaderSource(GLuint shader, GLsizei count, const GLchar * const *string, const GLint *length)
+{
 	glShaderSource(shader, count, string, length);
 }
 
-void GLLib::CompileShader(unsigned int shader)
+void GLLib::CompileShader(GLuint shader)
 {
 	glCompileShader(shader);
 }
 
-void GLLib::GetShaderiv(unsigned int shader, unsigned int pname, int *param)
+void GLLib::GetShaderiv(GLuint shader, GLenum pname, GLint *param)
 {
 	glGetShaderiv(shader, pname, param);
 }
 
-void GLLib::GetShaderInfoLog(unsigned int shader, int bufsize, int *length, char *infoLog)
+void GLLib::GetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infoLog)
 {
 	glGetShaderInfoLog(shader, bufsize, length, infoLog);
 }
 
-unsigned int GLLib::CreateProgram()
+GLuint GLLib::CreateProgram()
 {
 	return glCreateProgram();
 }
 
-void GLLib::AttachShader(unsigned int program, unsigned int shader)
+void GLLib::AttachShader(GLuint program, GLuint shader)
 {
 	glAttachShader(program, shader);
 }
 
-void GLLib::LinkProgram(unsigned int program)
+void GLLib::LinkProgram(GLuint program)
 {
 	glLinkProgram(program);
 }
 
-void GLLib::UseProgram(unsigned int program)
+void GLLib::UseProgram(GLuint program)
 {
 	glUseProgram(program);
 }
 
-void GLLib::GetProgramiv(unsigned int program, unsigned int pname, int *param)
+void GLLib::GetProgramiv(GLuint program, GLenum pname, GLint *param)
 {
 	glGetProgramiv(program, pname, param);
 }
 
-void GLLib::GetProgramInfoLog(unsigned int program, int bufsize, int *length, char *infoLog)
+void GLLib::GetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infoLog)
 {
 	glGetProgramInfoLog(program, bufsize, length, infoLog);
 }
 
-void GLLib::GenVertexArrays(int n, unsigned int *arrays)
+void GLLib::GenVertexArrays(GLsizei n, GLuint *arrays)
 {
 	glGenVertexArrays(n, arrays);
 }
 
-void GLLib::BindVertexArray(unsigned int array)
+void GLLib::BindVertexArray(GLuint array)
 {
 	glBindVertexArray(array);
 }
 
-void GLLib::DeleteVertexArrays(int n, unsigned int *arrays)
+void GLLib::DeleteVertexArrays(GLsizei n, const GLuint *arrays)
 {
 	glDeleteVertexArrays(n, arrays);
 }
 
-void GLLib::GenBuffers(int n, unsigned int *buffers)
+void GLLib::GenBuffers(GLsizei n, GLuint *buffers)
 {
 	glGenBuffers(n, buffers);
 }
 
-void GLLib::BindBuffer(unsigned int target, unsigned int buffer)
+void GLLib::BindBuffer(GLenum target, GLuint buffer)
 {
 	glBindBuffer(target, buffer);
 }
 
-void GLLib::DeleteBuffers(int n, unsigned int *buffers)
+void GLLib::DeleteBuffers(GLsizei n, const GLuint *buffers)
 {
 	glDeleteBuffers(n, buffers);
 }
 
-void GLLib::BufferData(unsigned int target, ptrdiff_t size, const void *data, unsigned int usage)
+void GLLib::BufferData(GLenum target, GLsizeiptr size, const void *data, unsigned int usage)
 {
 	glBufferData(target, size, data, usage);
 }
 
-void GLLib::VertexAttribPointer(unsigned int index, int size, unsigned int type, unsigned char normalized, int stride, const void *pointer)
+void GLLib::VertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer)
 {
 	glVertexAttribPointer(index, size, type, normalized, size, pointer);
 }
 
-void GLLib::EnableVertexAttribArray(unsigned int index)
+void GLLib::EnableVertexAttribArray(GLuint index)
 {
 	glEnableVertexAttribArray(index);
 }
 
-void GLLib::DrawArrays(unsigned int mode, int first, int count)
+void GLLib::DrawArrays(GLenum mode, GLint first, GLsizei count)
 {
 	glDrawArrays(mode, first, count);
 }
 
-void GLLib::DrawElements(unsigned int mode, int count, unsigned int type, const void *indices)
+void GLLib::DrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
 {
 	glDrawElements(mode, count, type, indices);
 }

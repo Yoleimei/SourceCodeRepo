@@ -1,40 +1,42 @@
 #pragma once
 
-typedef int ptrdiff_t;
+// GLEW
+#define GLEW_STATIC
+#include <GL/glew.h>
 
 class GLLib
 {
 public:
-	static void Viewport(int x, int y, int width, int  height);
-	static void ClearColor(float red, float green, float blue, float alpha);
-	static void Clear(unsigned int mask);
+	static void Viewport(GLint x, GLint y, GLsizei width, GLsizei height);
+	static void ClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+	static void Clear(GLbitfield mask);
 
-	static unsigned int CreateShader(unsigned int type);
-	static void DeleteShader(unsigned int shader);
-	static void ShaderSource(unsigned int shader, int count, const char * const * string, const int *length);
-	static void CompileShader(unsigned int shader);
-	static void GetShaderiv(unsigned int shader, unsigned int pname, int *param);
-	static void GetShaderInfoLog(unsigned int shader, int bufsize, int *length, char *infoLog);
+	static unsigned int CreateShader(GLenum type);
+	static void DeleteShader(GLuint shader);
+	static void ShaderSource(GLuint shader, GLsizei count, const GLchar * const *string, const GLint *length);
+	static void CompileShader(GLuint shader);
+	static void GetShaderiv(GLuint shader, GLenum pname, GLint *param);
+	static void GetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infoLog);
 
-	static unsigned int CreateProgram();
-	static void AttachShader(unsigned int program, unsigned int shader);
-	static void LinkProgram(unsigned int program);
-	static void UseProgram(unsigned int program);
-	static void GetProgramiv(unsigned int program, unsigned int pname, int *param);
-	static void GetProgramInfoLog(unsigned int program, int bufsize, int *length, char *infoLog);
+	static GLuint CreateProgram();
+	static void AttachShader(GLuint program, GLuint shader);
+	static void LinkProgram(GLuint program);
+	static void UseProgram(GLuint program);
+	static void GetProgramiv(GLuint program, GLenum pname, GLint *param);
+	static void GetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infoLog);
 
-	static void GenVertexArrays(int n, unsigned int *arrays);
-	static void BindVertexArray(unsigned int array);
-	static void DeleteVertexArrays(int n, unsigned int *arrays);
+	static void GenVertexArrays(GLsizei n, GLuint *arrays);
+	static void BindVertexArray(GLuint array);
+	static void DeleteVertexArrays(GLsizei n, const GLuint *arrays);
 
-	static void GenBuffers(int n, unsigned int *buffers);
-	static void BindBuffer(unsigned int target, unsigned int buffer);
-	static void DeleteBuffers(int n, unsigned int *buffers);
+	static void GenBuffers(GLsizei n, GLuint *buffers);
+	static void BindBuffer(GLenum target, GLuint buffer);
+	static void DeleteBuffers(GLsizei n, const GLuint *buffers);
 
-	static void BufferData(unsigned int target, ptrdiff_t size, const void *data, unsigned int usage);
-	static void VertexAttribPointer(unsigned int index, int size, unsigned int type, unsigned char normalized, int stride, const void *pointer);
-	static void EnableVertexAttribArray(unsigned int index);
+	static void BufferData(GLenum target, GLsizeiptr size, const void *data, unsigned int usage);
+	static void VertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer);
+	static void EnableVertexAttribArray(GLuint index);
 
-	static void DrawArrays(unsigned int mode, int first, int count);
-	static void DrawElements(unsigned int mode, int count, unsigned int type, const void *indices);
+	static void DrawArrays(GLenum mode, GLint first, GLsizei count);
+	static void DrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices);
 };

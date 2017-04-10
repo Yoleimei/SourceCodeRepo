@@ -1,7 +1,3 @@
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-
 #include "GLExtensionWrangler.h"
 
 #include <iostream>

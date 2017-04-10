@@ -1,9 +1,9 @@
 #pragma once
 
+#include "GLShaderProgram.h"
+
 // GLFW
 #include <GLFW/glfw3.h>
-
-#include "GLShaderProgram.h"
 
 class GLFramework
 {

@@ -1,11 +1,4 @@
-// GLEW
-#define GLEW_STATIC
-#include <GL/glew.h>
-
 #include "GLShader.h"
-
-#include "GLLib.h"
-#include "GLExtensionWrangler.h"
 
 #include <iostream>
 
