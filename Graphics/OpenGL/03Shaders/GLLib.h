@@ -4,6 +4,11 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+
 class GLLib
 {
 public:
@@ -19,6 +24,10 @@ public:
 	static void CompileShader(GLuint shader);
 	static void GetShaderiv(GLuint shader, GLenum pname, GLint *param);
 	static void GetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infoLog);
+
+	static GLint GetUniformLocation(GLuint program, const GLchar * name);
+	static void Uniform1f(GLint location, GLfloat v0);
+	static void Uniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3);
 
 	static GLuint CreateProgram();
 	static void AttachShader(GLuint program, GLuint shader);

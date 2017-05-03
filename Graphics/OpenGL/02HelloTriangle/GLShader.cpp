@@ -12,7 +12,7 @@ GLShader::~GLShader()
 	GLLib::DeleteShader(m_uiShader);
 }
 
-unsigned int GLShader::GetShader() const
+GLenum GLShader::GetShader() const
 {
 	return m_uiShader;
 }

@@ -58,6 +58,21 @@ void GLLib::GetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GL
 	glGetShaderInfoLog(shader, bufsize, length, infoLog);
 }
 
+GLint GLLib::GetUniformLocation(GLuint program, const GLchar * name)
+{
+	return glGetUniformLocation(program, name);
+}
+
+void GLLib::Uniform1f(GLint location, GLfloat v0)
+{
+	glUniform1f(location, v0);
+}
+
+void GLLib::Uniform4f(GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+{
+	glUniform4f(location, v0, v1, v2, v3);
+}
+
 GLuint GLLib::CreateProgram()
 {
 	return glCreateProgram();

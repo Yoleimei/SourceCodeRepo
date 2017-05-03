@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLExtensionWrangler.h"
+#include "GL.h"
 
 class GLShader
 {
@@ -10,8 +10,11 @@ public:
 
 	GLenum GetShader() const;
 
-	void CompileShader(const char * const *pcShaderSource);
+	bool CompileShader(const GLchar * pcFilePath);
 
 private:
 	GLenum m_uiShader;
+	std::string m_strShaderCode;
+
+	bool ReadShaderCode(const GLchar * pcFilePath);
 };

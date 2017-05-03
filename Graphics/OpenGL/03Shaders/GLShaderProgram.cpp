@@ -1,22 +1,6 @@
 #include "GLShaderProgram.h"
 #include "GLShader.h"
 
-#include <iostream>
-
-// Shaders
-const GLchar* pcVertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"void main()\n"
-"{\n"
-"gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-"}\0";
-const GLchar* pcFragmentShaderSource = "#version 330 core\n"
-"out vec4 color;\n"
-"void main()\n"
-"{\n"
-"color = vec4(1.0f, 0.0f, 0.0f, 1.0f);\n"
-"}\n\0";
-
 GLShaderProgram::GLShaderProgram()
 {
 	m_uiProgram = GLLib::CreateProgram();
@@ -36,12 +20,12 @@ void GLShaderProgram::LinkProgram()
 {
 	GLShader *cVertexShader = new GLShader(GL_VERTEX_SHADER);
 	std::cout << "VertexShader=" << cVertexShader->GetShader() << std::endl;
-	cVertexShader->CompileShader(&pcVertexShaderSource);
+	cVertexShader->CompileShader("vertex.shader");
 	std::cout << "Compile Vertex Shader success." << std::endl;
 
 	GLShader *cFragmentShader = new GLShader(GL_FRAGMENT_SHADER);
 	std::cout << "FragmentShader=" << cFragmentShader->GetShader() << std::endl;
-	cFragmentShader->CompileShader(&pcFragmentShaderSource);
+	cFragmentShader->CompileShader("fragment.shader");
 	std::cout << "Compile Fragment Shader success." << std::endl;
 
 	GLLib::AttachShader(m_uiProgram, cVertexShader->GetShader());
@@ -91,8 +75,10 @@ void GLShaderProgram::RegisterVertexArray(float *vertices, int vertexSize, unsig
 	GLLib::BindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_uiEBO);
 	GLLib::BufferData(GL_ELEMENT_ARRAY_BUFFER, indexSize, indices, GL_STATIC_DRAW);
 
-	GLLib::VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	GLLib::VertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	GLLib::EnableVertexAttribArray(0);
+	GLLib::VertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	GLLib::EnableVertexAttribArray(1);
 
 	GLLib::BindBuffer(GL_ARRAY_BUFFER, 0); // Note that this is allowed, the call to glVertexAttribPointer registered VBO as the currently bound vertex buffer object so afterwards we can safely unbind
 

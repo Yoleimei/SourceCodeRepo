@@ -1,31 +1,16 @@
 #include "GLFramework.h"
 
-#include <iostream>
-
 // Window dimensions
 const GLuint WIDTH = 800;
 const GLuint HEIGHT = 600;
 
-// Set up vertex data (and buffer(s)) and attribute pointers
-//GLfloat vertices[] = {
-//  // First triangle
-//   0.5f,  0.5f,  // Top Right
-//   0.5f, -0.5f,  // Bottom Right
-//  -0.5f,  0.5f,  // Top Left 
-//  // Second triangle
-//   0.5f, -0.5f,  // Bottom Right
-//  -0.5f, -0.5f,  // Bottom Left
-//  -0.5f,  0.5f   // Top Left
-//}; 
 GLfloat vertices[] = {
-	-0.5f, 0.0f, 0.0f,   // Left
-	0.5f, 0.0f, 0.0f,    // Right
-	0.0f, 0.5f, 0.0f,    // Top
-	0.0f, -0.5f, 0.0f    // Bottom
+	-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f, // Bottom Left,  Red
+	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom Right, Green
+	 0.0f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f  // Top,          Blue
 };
 GLuint indices[] = {  // Note that we start from 0!
-	0, 1, 2,
-	0, 1, 3
+	0, 1, 2
 };
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -154,6 +139,13 @@ void GLFramework::Render(GLShaderProgram *cShaderProgram)
 
 	// Draw our first triangle
 	cShaderProgram->UseProgram();
+
+	// Update uniform
+	GLfloat timeValue = glfwGetTime();
+	GLfloat redValue = sin(timeValue) / 2 + 0.5;
+	GLint myUniformLocation = GLLib::GetUniformLocation(cShaderProgram->GetProgram(), "myRed");
+	GLLib::Uniform1f(myUniformLocation, redValue);
+
 	cShaderProgram->BindVertexArray();
 	//GLLib::DrawArrays(GL_TRIANGLES, 0, 6);
 	GLLib::DrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

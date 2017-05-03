@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GLExtensionWrangler.h"
+#include "GL.h"
 
 class GLShaderProgram
 {
