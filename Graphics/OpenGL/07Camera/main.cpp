@@ -10,12 +10,10 @@ void glPrintfNull(const char* const, ...) { }
 int main()
 {
 	GLFramework *cFramework = new GLFramework();
-	if (!cFramework->Init()) {
-		cFramework->Terminate();
-		delete cFramework;
+	if (cFramework->Init()) {
+		cFramework->Run();
 	}
 
-	cFramework->Run();
 	cFramework->Terminate();
 	delete cFramework;
 

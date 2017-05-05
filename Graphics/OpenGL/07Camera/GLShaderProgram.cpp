@@ -1,5 +1,4 @@
 #include "GLShaderProgram.h"
-#include "GLShader.h"
 
 GLShaderProgram::GLShaderProgram()
 {
@@ -18,12 +17,12 @@ GLenum GLShaderProgram::GetProgram() const
 
 void GLShaderProgram::LinkProgram()
 {
-	GLShader *cVertexShader = new GLShader(GL_VERTEX_SHADER);
+	cVertexShader = new GLShader(GL_VERTEX_SHADER);
 	LOG_DBG("VertexShader=%d\n", cVertexShader->GetShader());
 	cVertexShader->CompileShader("vertex.shader");
 	LOG_DBG("Compile Vertex Shader success.\n");
 
-	GLShader *cFragmentShader = new GLShader(GL_FRAGMENT_SHADER);
+	cFragmentShader = new GLShader(GL_FRAGMENT_SHADER);
 	LOG_DBG("FragmentShader=%d\n", cFragmentShader->GetShader());
 	cFragmentShader->CompileShader("fragment.shader");
 	LOG_DBG("Compile Fragment Shader success.\n");

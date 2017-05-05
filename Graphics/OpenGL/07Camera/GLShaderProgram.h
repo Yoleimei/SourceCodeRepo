@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GL.h"
+#include "GLShader.h"
 
 class GLShaderProgram
 {
@@ -25,4 +26,7 @@ private:
 	GLuint m_uiVAO; // Vertex Array Object
 	GLuint m_uiVBO; // Vertex Buffer Object
 	GLuint m_uiEBO; // Element Buffer Object
+
+	GLShader *cVertexShader;
+	GLShader *cFragmentShader;
 };
