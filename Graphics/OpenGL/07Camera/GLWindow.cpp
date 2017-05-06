@@ -66,6 +66,8 @@ static bool isKeyPress[1024] = { false };
 static bool isMouseButtonPress[16] = { false };
 static double dMousePosX = 0.0;
 static double dMousePosY = 0.0;
+static int iScrollPlusCnt = 0;
+static int iScrollMinusCnt = 0;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -107,6 +109,14 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 	}
 }
 
+static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (yoffset > 0)
+		iScrollPlusCnt++;
+	else
+		iScrollMinusCnt++;
+}
+
 GLWindow::GLWindow(const char* title, bool isFullScreen)
 	: m_iWidth(WIDTH)
 	, m_iHeight(HEIGHT)
@@ -138,6 +148,7 @@ void GLWindow::Init()
 	glfwSetKeyCallback(m_sWindow, key_callback);
 	glfwSetMouseButtonCallback(m_sWindow, mouse_button_callback);
 	glfwSetCursorPosCallback(m_sWindow, cursor_pos_callback);
+	glfwSetScrollCallback(m_sWindow, scroll_callback);
 
 	// Cursor Options
 	// glfwSetInputMode(m_sWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -165,13 +176,26 @@ void GLWindow::Run()
 
 	m_cCamera = new GLCamera();
 
+	GLfloat fLastTime = glfwGetTime();
 	// Game loop
 	while (!glfwWindowShouldClose(m_sWindow))
 	{
+		GLfloat fCurrentTime = glfwGetTime();
+		GLfloat fDeltaTime = fCurrentTime - fLastTime;
+		m_cCamera->SetDeltaTime(fDeltaTime);
+
 		glfwPollEvents();
 		m_cCamera->ProcessKeyEvent(isKeyPress);
 		m_cCamera->ProcessMouseButtonEvent(isMouseButtonPress);
 		m_cCamera->ProcessMouseEvent(dMousePosX, dMousePosY);
+		if (iScrollPlusCnt > 0) {
+			m_cCamera->ProcessScollEvent(1.0f);
+			iScrollPlusCnt--;
+		}
+		if (iScrollMinusCnt > 0) {
+			m_cCamera->ProcessScollEvent(-1.0f);
+			iScrollMinusCnt--;
+		}
 
 		// Render
 		Render();
@@ -215,7 +239,7 @@ void GLWindow::Render()
 		GLuint uniViewLocation = glGetUniformLocation(m_cShaderProgram->GetProgram(), "uniView");
 		glUniformMatrix4fv(uniViewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / HEIGHT, 0.1f, 100.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(m_cCamera->GetAspect()), (float)WIDTH / HEIGHT, 0.1f, 100.0f);
 		GLuint uniProjectionLocation = glGetUniformLocation(m_cShaderProgram->GetProgram(), "uniProjection");
 		glUniformMatrix4fv(uniProjectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 		// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

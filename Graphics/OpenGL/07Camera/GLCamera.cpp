@@ -2,6 +2,9 @@
 
 const GLfloat PITCH_MAX = 89.0f;
 const GLfloat PITCH_MIN = -89.0f;
+const GLfloat ASPECT_MAX = 45.0f;
+const GLfloat ASPECT_MIN = 1.0f;
+const GLfloat WALK_PER_SECOND = 0.05f;
 
 GLCamera::GLCamera()
 {
@@ -16,8 +19,9 @@ GLCamera::GLCamera()
 	m_fCameraYaw = -90.0f;
 	m_fCameraPitch = 0.0f;
 
-	m_fCameraSpeed = 0.15f;
 	m_fCameraSensitivity = 0.2f;
+
+	m_fAspect = 45.0f;
 
 	memset(m_bIsKeyPress, 0, sizeof(m_bIsKeyPress));
 	memset(m_bIsMouseButtonPress, 0, sizeof(m_bIsMouseButtonPress));
@@ -41,6 +45,17 @@ glm::vec3 GLCamera::GetTarget()
 glm::vec3 GLCamera::GetUp()
 {
 	return m_vCameraViewUp;
+}
+
+GLfloat GLCamera::GetAspect()
+{
+	return m_fAspect;
+}
+
+void GLCamera::SetDeltaTime(GLfloat fDeltaTime)
+{
+	m_fDeltaTime = fDeltaTime;
+	m_fCameraSpeed = m_fDeltaTime * WALK_PER_SECOND;
 }
 
 void GLCamera::ProcessKeyEvent(bool *isKeyPress)
@@ -92,7 +107,13 @@ void GLCamera::ProcessMouseEvent(double xpos, double ypos)
 	else {
 		isFirstPress = true;
 	}
+}
 
+void GLCamera::ProcessScollEvent(double yoffset)
+{
+	m_fAspect -= yoffset;
+	m_fAspect = (m_fAspect > ASPECT_MAX) ? ASPECT_MAX : m_fAspect;
+	m_fAspect = (m_fAspect < ASPECT_MIN) ? ASPECT_MIN : m_fAspect;
 }
 
 void GLCamera::Move()

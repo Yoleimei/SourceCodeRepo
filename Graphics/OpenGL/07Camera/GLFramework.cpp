@@ -10,7 +10,7 @@ bool GLFramework::Init()
 		return false;
 	}
 
-	m_cWindow = new GLWindow("LearnOpenGL");
+	m_cWindow = new GLWindow("LearnOpenGL", false);
 	if ((nullptr == m_cWindow) || nullptr == m_cWindow->GetWindow()) {
 		LOG_ERR("Failed to create GLFW window\n");
 		return false;
