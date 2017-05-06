@@ -203,18 +203,11 @@ void GLWindow::Render()
 	m_cLightingShaderProgram->UseProgram();
 	m_cLightingShaderProgram->BindVertexArray();
 	// m_cLightingShaderProgram->SetTexture(uniMixValue);
-
-	GLint lightPosLoc = glGetUniformLocation(m_cLightingShaderProgram->GetProgram(), "lightPosition");
-	glUniform3f(lightPosLoc, 10.0f, 0.0f, 0.0f);
-	GLint cameraPosLoc = glGetUniformLocation(m_cLightingShaderProgram->GetProgram(), "viewPosition");
+	m_cLightingShaderProgram->SetUniform("objectColor", 1.0f, 0.5f, 0.31f);
+	m_cLightingShaderProgram->SetUniform("lightColor", 1.0f, 0.5f, 1.0f);
+	m_cLightingShaderProgram->SetUniform("lightPosition", 10.0f, 0.0f, 0.0f);
 	glm::vec3 vCameraPos = m_cCamera->GetPosition();
-	glUniform3f(cameraPosLoc, vCameraPos.x, vCameraPos.y, vCameraPos.z);
-
-	GLint objectColorLoc = glGetUniformLocation(m_cLightingShaderProgram->GetProgram(), "objectColor");
-	GLint lightColorLoc = glGetUniformLocation(m_cLightingShaderProgram->GetProgram(), "lightColor");
-	glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
-	glUniform3f(lightColorLoc, 1.0f, 0.5f, 1.0f);
-
+	m_cLightingShaderProgram->SetUniform("viewPosition", vCameraPos.x, vCameraPos.y, vCameraPos.z);
 	m_cLightingShaderProgram->RenderObjects();
 	m_cLightingShaderProgram->UnbindVertexArray();
 

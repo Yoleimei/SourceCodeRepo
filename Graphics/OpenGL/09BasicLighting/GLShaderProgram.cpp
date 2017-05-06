@@ -159,6 +159,16 @@ void GLShaderProgram::SetTexture(GLfloat uniMixValue)
 	glUniform1f(myUniformLocation, uniMixValue);
 }
 
+void GLShaderProgram::SetUniform(const GLchar *name, GLfloat v0, GLfloat v1, GLfloat v2)
+{
+	glUniform3f(glGetUniformLocation(m_uiProgram, name), v0, v1, v2);
+}
+
+void GLShaderProgram::SetUniform(const GLchar *name, GLfloat v0)
+{
+	glUniform1f(glGetUniformLocation(m_uiProgram, name), v0);
+}
+
 void GLShaderProgram::RenderObjects()
 {
 	int i = 1;

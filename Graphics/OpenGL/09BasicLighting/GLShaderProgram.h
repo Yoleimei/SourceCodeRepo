@@ -28,6 +28,8 @@ public:
 
 	void AppendObject(GLObject cObject);
 	void SetTexture(GLfloat uniMixValue);
+	void SetUniform(const GLchar *name, GLfloat v0, GLfloat v1, GLfloat v2);
+	void SetUniform(const GLchar *name, GLfloat v0);
 	void RenderObjects();
 
 private:
