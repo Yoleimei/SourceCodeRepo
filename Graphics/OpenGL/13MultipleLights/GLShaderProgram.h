@@ -28,9 +28,7 @@ public:
 	void AppendTexture(GLTexture cTexture);
 	void AppendObject(GLObject cObject);
 	void SetTexture();
-	void SetUniform(const GLchar *name, GLint v0);
-	void SetUniform(const GLchar *name, GLfloat v0);
-	void SetUniform(const GLchar *name, GLfloat v0, GLfloat v1, GLfloat v2);
+	void SetGlobalUniform(const char *name, GLUniform sUniform);
 	void RenderObjects();
 
 private:
@@ -49,4 +47,10 @@ private:
 
 	std::list<GLTexture> m_listTexture;
 	std::list<GLObject> m_listObjects;
+	std::map<std::string, GLUniform> m_mapGlobalUniform;
+
+	void SetUniform(const char *name, GLUniform sUniform);
+	void SetUniform(const GLchar *name, GLint v0);
+	void SetUniform(const GLchar *name, GLfloat v0);
+	void SetUniform(const GLchar *name, GLfloat v0, GLfloat v1, GLfloat v2);
 };

@@ -130,17 +130,6 @@ void GLWindow::Run()
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
-	for (int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
-		std::list<GLTransform> listModelTransforms;
-		listModelTransforms.push_back(GLTransform(TRANSFORM_TRANSLATE, cubePositions[i]));
-		listModelTransforms.push_back(GLTransform(TRANSFORM_ROTATE, glm::vec3(1.0f, 0.3f, 0.5f), glm::radians(20.0f * i)));
-		m_cLightingShaderProgram->AppendObject(listModelTransforms);
-	}
-
-	m_cLampShaderProgram = new GLShaderProgram(this, "vertex_lamp.shader", "fragment_lamp.shader");
-	LOG_DBG("m_cLampShaderProgram=%d\n", m_cLampShaderProgram->GetProgram());
-	m_cLampShaderProgram->RegisterVertexArray();
-
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(0.7f,  0.2f,  2.0f),
 		glm::vec3(2.3f, -3.3f, -4.0f),
@@ -148,11 +137,84 @@ void GLWindow::Run()
 		glm::vec3(0.0f,  0.0f, -3.0f)
 	};
 
+	glm::vec3 pointLightColors[] = {
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 1.0f),
+		glm::vec3(1.0f, 1.0f, 1.0f)
+	};
+
+	for (int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
+		std::list<GLTransform> listModelTransforms;
+		listModelTransforms.push_back(GLTransform(TRANSFORM_TRANSLATE, cubePositions[i]));
+		listModelTransforms.push_back(GLTransform(TRANSFORM_ROTATE, glm::vec3(1.0f, 0.3f, 0.5f), glm::radians(20.0f * i)));
+		m_cLightingShaderProgram->AppendObject(GLObject(listModelTransforms));
+	}
+
+	m_cLightingShaderProgram->SetGlobalUniform("material_diffuse", GLUniform(UNIFORM_1I, 0));
+	m_cLightingShaderProgram->SetGlobalUniform("material_specular", GLUniform(UNIFORM_1I, 1));
+	m_cLightingShaderProgram->SetGlobalUniform("material_emission", GLUniform(UNIFORM_1I, 2));
+	m_cLightingShaderProgram->SetGlobalUniform("material_shininess", GLUniform(UNIFORM_1F, 32.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("dir_light_direction", GLUniform(UNIFORM_3F, -0.2f, -1.0f, -0.3f));
+	m_cLightingShaderProgram->SetGlobalUniform("dir_light_ambient", GLUniform(UNIFORM_3F, 0.3f, 0.24f, 0.14f));
+	m_cLightingShaderProgram->SetGlobalUniform("dir_light_diffuse", GLUniform(UNIFORM_3F, 0.7f, 0.42f, 0.26f));
+	m_cLightingShaderProgram->SetGlobalUniform("dir_light_specular", GLUniform(UNIFORM_3F, 0.5f, 0.5f, 0.5f));
+
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[0]", GLUniform(UNIFORM_3F, pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[0]", GLUniform(UNIFORM_3F, pointLightColors[0].x * 0.3f, pointLightColors[0].y * 0.3f, pointLightColors[0].z * 0.3f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[0]", GLUniform(UNIFORM_3F, pointLightColors[0].x * 0.5f, pointLightColors[0].y * 0.5f, pointLightColors[0].z * 0.5f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[0]", GLUniform(UNIFORM_3F, pointLightColors[0].x * 1.0f, pointLightColors[0].y * 1.0f, pointLightColors[0].z * 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[0]", GLUniform(UNIFORM_1F, 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[0]", GLUniform(UNIFORM_1F, 0.09f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[0]", GLUniform(UNIFORM_1F, 0.032f));
+
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[1]", GLUniform(UNIFORM_3F, pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[1]", GLUniform(UNIFORM_3F, pointLightColors[1].x * 0.3f, pointLightColors[1].y * 0.3f, pointLightColors[1].z * 0.3f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[1]", GLUniform(UNIFORM_3F, pointLightColors[1].x * 0.5f, pointLightColors[1].y * 0.5f, pointLightColors[1].z * 0.5f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[1]", GLUniform(UNIFORM_3F, pointLightColors[1].x * 1.0f, pointLightColors[1].y * 1.0f, pointLightColors[1].z * 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[1]", GLUniform(UNIFORM_1F, 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[1]", GLUniform(UNIFORM_1F, 0.09f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[1]", GLUniform(UNIFORM_1F, 0.032f));
+
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[2]", GLUniform(UNIFORM_3F, pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[2]", GLUniform(UNIFORM_3F, pointLightColors[2].x * 0.3f, pointLightColors[2].y * 0.3f, pointLightColors[2].z * 0.3f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[2]", GLUniform(UNIFORM_3F, pointLightColors[2].x * 0.5f, pointLightColors[2].y * 0.5f, pointLightColors[2].z * 0.5f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[2]", GLUniform(UNIFORM_3F, pointLightColors[2].x * 1.0f, pointLightColors[2].y * 1.0f, pointLightColors[2].z * 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[2]", GLUniform(UNIFORM_1F, 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[2]", GLUniform(UNIFORM_1F, 0.09f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[2]", GLUniform(UNIFORM_1F, 0.032f));
+
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[3]", GLUniform(UNIFORM_3F, pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[3]", GLUniform(UNIFORM_3F, pointLightColors[3].x * 0.3f, pointLightColors[3].y * 0.3f, pointLightColors[3].z * 0.3f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[3]", GLUniform(UNIFORM_3F, pointLightColors[3].x * 0.5f, pointLightColors[3].y * 0.5f, pointLightColors[3].z * 0.5f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[3]", GLUniform(UNIFORM_3F, pointLightColors[3].x * 1.0f, pointLightColors[3].y * 1.0f, pointLightColors[3].z * 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[3]", GLUniform(UNIFORM_1F, 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[3]", GLUniform(UNIFORM_1F, 0.09f));
+	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[3]", GLUniform(UNIFORM_1F, 0.032f));
+
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_ambient", GLUniform(UNIFORM_3F, 0.0f, 0.0f, 0.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_diffuse", GLUniform(UNIFORM_3F, 0.8f, 0.8f, 0.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_specular", GLUniform(UNIFORM_3F, 0.8f, 0.8f, 0.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_constant", GLUniform(UNIFORM_1F, 1.0f));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_linear", GLUniform(UNIFORM_1F, 0.09f));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_quadratic", GLUniform(UNIFORM_1F, 0.032f));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_cutoff", GLUniform(UNIFORM_1F, glm::cos(glm::radians(12.5f))));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_outerCutoff", GLUniform(UNIFORM_1F, glm::cos(glm::radians(13.0f))));
+
+	m_cLampShaderProgram = new GLShaderProgram(this, "vertex_lamp.shader", "fragment_lamp.shader");
+	LOG_DBG("m_cLampShaderProgram=%d\n", m_cLampShaderProgram->GetProgram());
+	m_cLampShaderProgram->RegisterVertexArray();
+
 	for (int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++) {
 		std::list<GLTransform> listModelTransforms;
 		listModelTransforms.push_back(GLTransform(TRANSFORM_TRANSLATE, pointLightPositions[i]));
 		listModelTransforms.push_back(GLTransform(TRANSFORM_SCALE, glm::vec3(0.2f, 0.2f, 0.2f)));
-		m_cLampShaderProgram->AppendObject(listModelTransforms);
+
+		std::map<std::string, GLUniform> mapSingleUniform;
+		// mapSingleUniform.insert(std::pair<std::string, GLUniform>("uniColor", GLUniform(UNIFORM_3F, pointLightColors[i].x, pointLightColors[i].y, pointLightColors[i].z)));
+		mapSingleUniform[std::string("uniColor")] =  GLUniform(UNIFORM_3F, pointLightColors[i].x, pointLightColors[i].y, pointLightColors[i].z);
+
+		m_cLampShaderProgram->AppendObject(GLObject(listModelTransforms, mapSingleUniform));
 	}
 
 	// Game loop
@@ -225,81 +287,25 @@ GLCamera* GLWindow::GetCamera()
 void GLWindow::Render()
 {
 	// Clear the colorbuffer
-	glClearColor(0.78f, 0.93f, 0.8f, 1.0f);
+	// glClearColor(0.78f, 0.93f, 0.8f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glm::vec3 pointLightColors[] = {
-		glm::vec3(0.2f, 0.2f, 0.6f),
-		glm::vec3(0.3f, 0.3f, 0.7f),
-		glm::vec3(0.0f, 0.0f, 0.3f),
-		glm::vec3(0.4f, 0.4f, 0.4f)
-	};
+	glm::vec3 vCameraPos = m_cCamera->GetPosition();
+	glm::vec3 vCameraFront = m_cCamera->GetFront();
+	m_cLightingShaderProgram->SetGlobalUniform("viewPosition", GLUniform(UNIFORM_3F, vCameraPos.x, vCameraPos.y, vCameraPos.z));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_position", GLUniform(UNIFORM_3F, vCameraPos.x, vCameraPos.y, vCameraPos.z));
+	m_cLightingShaderProgram->SetGlobalUniform("spt_light_direction", GLUniform(UNIFORM_3F, vCameraFront.x, vCameraFront.y, vCameraFront.z));
 
 	// Draw our first triangle
 	m_cLightingShaderProgram->UseProgram();
 	m_cLightingShaderProgram->BindVertexArray();
 	m_cLightingShaderProgram->SetTexture();
-	glm::vec3 vCameraPos = m_cCamera->GetPosition();
-	glm::vec3 vCameraFront = m_cCamera->GetFront();
-	m_cLightingShaderProgram->SetUniform("viewPosition", vCameraPos.x, vCameraPos.y, vCameraPos.z);
-	m_cLightingShaderProgram->SetUniform("material_diffuse", 0);
-	m_cLightingShaderProgram->SetUniform("material_specular", 1);
-	m_cLightingShaderProgram->SetUniform("material_emission", 2);
-	m_cLightingShaderProgram->SetUniform("material_shininess", 32.0f);
-	m_cLightingShaderProgram->SetUniform("dir_light_direction", 0.0f, 0.0f, -1.0f);
-	m_cLightingShaderProgram->SetUniform("dir_light_ambient", 0.3f, 0.0f, 0.0f);
-	m_cLightingShaderProgram->SetUniform("dir_light_diffuse", 0.5f, 0.0f, 0.0f);
-	m_cLightingShaderProgram->SetUniform("dir_light_specular", 1.0f, 0.0f, 0.0f);
-
-	m_cLightingShaderProgram->SetUniform("ptr_light_position[0]", 0.7f, 0.2f, 2.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_ambient[0]", pointLightColors[0].x * 0.3f, pointLightColors[0].y * 0.3f, pointLightColors[0].z * 0.3f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_diffuse[0]", pointLightColors[0].x * 0.5f, pointLightColors[0].y * 0.5f, pointLightColors[0].z * 0.5f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_specular[0]", pointLightColors[0].x * 1.0f, pointLightColors[0].y * 1.0f, pointLightColors[0].z * 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_constant[0]", 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_linear[0]", 0.09f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_quadratic[0]", 0.032f);
-
-	m_cLightingShaderProgram->SetUniform("ptr_light_position[1]", 2.3f, -3.3f, -4.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_ambient[1]", pointLightColors[1].x * 0.3f, pointLightColors[1].y * 0.3f, pointLightColors[1].z * 0.3f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_diffuse[1]", pointLightColors[1].x * 0.5f, pointLightColors[1].y * 0.5f, pointLightColors[1].z * 0.5f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_specular[1]", pointLightColors[1].x * 1.0f, pointLightColors[1].y * 1.0f, pointLightColors[1].z * 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_constant[1]", 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_linear[1]", 0.09f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_quadratic[1]", 0.032f);
-
-	m_cLightingShaderProgram->SetUniform("ptr_light_position[2]", -4.0f, 2.0f, -2.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_ambient[2]", pointLightColors[2].x * 0.3f, pointLightColors[2].y * 0.3f, pointLightColors[2].z * 0.3f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_diffuse[2]", pointLightColors[2].x * 0.5f, pointLightColors[2].y * 0.5f, pointLightColors[2].z * 0.5f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_specular[2]", pointLightColors[2].x * 1.0f, pointLightColors[2].y * 1.0f, pointLightColors[2].z * 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_constant[2]", 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_linear[2]", 0.09f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_quadratic[2]", 0.032f);
-
-	m_cLightingShaderProgram->SetUniform("ptr_light_position[3]", 0.0f, 0.0f, -3.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_ambient[3]", pointLightColors[3].x * 0.3f, pointLightColors[3].y * 0.3f, pointLightColors[3].z * 0.3f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_diffuse[3]", pointLightColors[3].x * 0.5f, pointLightColors[3].y * 0.5f, pointLightColors[3].z * 0.5f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_specular[3]", pointLightColors[3].x * 1.0f, pointLightColors[3].y * 1.0f, pointLightColors[3].z * 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_constant[3]", 1.0f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_linear[3]", 0.09f);
-	m_cLightingShaderProgram->SetUniform("ptr_light_quadratic[3]", 0.032f);
-
-	m_cLightingShaderProgram->SetUniform("spt_light_position", vCameraPos.x, vCameraPos.y, vCameraPos.z);
-	m_cLightingShaderProgram->SetUniform("spt_light_direction", vCameraFront.x, vCameraFront.y, vCameraFront.z);
-	m_cLightingShaderProgram->SetUniform("spt_light_ambient", 0.0f, 0.0f, 0.0f);
-	m_cLightingShaderProgram->SetUniform("spt_light_diffuse", 0.8f, 0.8f, 0.0f);
-	m_cLightingShaderProgram->SetUniform("spt_light_specular", 0.8f, 0.8f, 0.0f);
-	m_cLightingShaderProgram->SetUniform("spt_light_constant", 1.0f);
-	m_cLightingShaderProgram->SetUniform("spt_light_linear", 0.09f);
-	m_cLightingShaderProgram->SetUniform("spt_light_quadratic", 0.032f);
-	m_cLightingShaderProgram->SetUniform("spt_light_cutoff", glm::cos(glm::radians(12.5f)));
-	m_cLightingShaderProgram->SetUniform("spt_light_outerCutoff", glm::cos(glm::radians(15.0f)));
-
 	m_cLightingShaderProgram->RenderObjects();
 	m_cLightingShaderProgram->UnbindVertexArray();
 
 	m_cLampShaderProgram->UseProgram();
 	m_cLampShaderProgram->BindVertexArray();
-	m_cLampShaderProgram->SetUniform("uniColor", 1.0f, 1.0f, 1.0f);
 	m_cLampShaderProgram->RenderObjects();
 	m_cLampShaderProgram->UnbindVertexArray();
 }
