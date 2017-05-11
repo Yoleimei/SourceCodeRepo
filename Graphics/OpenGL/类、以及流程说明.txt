@@ -1,0 +1,134 @@
+依赖关系
+1. 
+2. glBindBuffer, glBufferData, glEnableVertexAttribArray, glVertexAttribPointer 前后需要 glBindVertexArray(VAO|0)
+2. glDrawElements 前后需要 glBindVertexArray(VAO|0)
+3. glUniform 之前需要 glUseProgram
+
+////////////////第一阶段流程////////////////
+GLFramework::Init()
+	glfwInit
+	new GLWindow()
+		glfwCreateWindow
+		new GLCamera()
+			postion, view_front, walk_front, view_up, world_up, view_right, walk_right, yaw, pitch
+	glewInit
+	GLWindow::Init()
+		SetCallback
+		ViewPort
+GLFramework::Run()
+	GLWindow::Run()
+		new GLShaderProgram()
+			glCreateProgram
+			new GLModel()
+				vetices, indices
+			AppendTexture
+				glGenTextures, glBindTexture
+				filepath, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_MAG_FILTER, glGenerateMipmap
+				glBindTexture
+			new GLShader()
+				glCreateShader
+			glAttachShader, glLinkProgram
+		GLShaderProgram::RegisterVertexArray -- VBO/VEO的绑定&顶点数据的设置
+			VAO VBO EBO
+			GLShaderProgram::BindVertexArray()
+				glBindVertexArray(VAO)
+			glBindBuffer(VBO,EBO), glBufferData, glVertexAttribPointer, glEnableVertexAttribArray
+			glBindBuffer(VBO,0)
+			GLShaderProgram::UnbindVertexArray()
+				glBindVertexArray(0)
+		GLShaderProgram::AppendObject()
+		GLShaderProgram::SetGloalUniform() -- 不会变化的
+================================================================
+		while (!glfwWindowShouldClose(m_sWindow))
+			GLCamera::SetDeltaTime()
+			glfwPollEvents, GLCamera::ProcessEvents()
+			GLWindow::Render()
+				glClearColor, glClear
+				GLShaderProgram::SetGloalUniform() -- 时刻变化的
+				GLShaderProgram::UseProgram()
+				GLShaderProgram::BindVertexArray()
+				GLShaderProgram::SetTexture()
+					glActiveTexture, glBindTexture
+				GLShaderProgram::RenderObject()
+					SetUniform -- 针对所有 Object
+					遍历所有 Objects
+						SetUniform -- 针对单个 Object
+						SetUniform(model, view, project)
+						glDrawElements / glDrawArrays
+				GLShaderProgram::UnbindVertexArray()
+			glfwSwapBuffers
+================================================================
+		GLShaderProgram::UnregisterVertexArray()
+			glDeleteVertexArrays, glDeleteBuffers
+GLFramework::Terminate()
+	glfwTerminate
+
+
+////////////////第二阶段流程////////////////用Assimp读取模型
+GLFramework::Init()
+	glfwInit
+	new GLWindow()
+		glfwCreateWindow
+		new GLCamera()
+			postion, view_front, walk_front, view_up, world_up, view_right, walk_right, yaw, pitch
+	glewInit
+	GLWindow::Init()
+		SetCallback
+		ViewPort
+GLFramework::Run()
+	GLWindow::Run()
+		new GLShaderProgram()
+			glCreateProgram
+			new GLModel()
+				GLModel::AppendMesh
+					GLMesh::AppendVertices
+					GLMesh::AppendIndices
+					GLMesh::AppendTextures
+						glGenTextures, glBindTexture
+						filepath, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_T, GL_TEXTURE_MIN_FILTER, GL_TEXTURE_MAG_FILTER, glGenerateMipmap
+						glBindTexture
+					GLMesh::SetVertexArrayAttrib
+						VAO VBO EBO
+						GLShaderProgram::BindVertexArray()
+							glBindVertexArray(VAO)
+						glBindBuffer(VBO,EBO), glBufferData, glVertexAttribPointer, glEnableVertexAttribArray
+						glBindBuffer(VBO,0)
+						GLShaderProgram::UnbindVertexArray()
+							glBindVertexArray(0)
+			new GLShader()
+				glCreateShader
+			glAttachShader, glLinkProgram
+		GLShaderProgram::RegisterVertexArray
+		GLShaderProgram::AppendObject()
+		GLShaderProgram::SetGloalUniform() -- 不会变化的
+================================================================
+		while (!glfwWindowShouldClose(m_sWindow))
+			GLCamera::SetDeltaTime()
+			glfwPollEvents, GLCamera::ProcessEvents()
+			GLWindow::Render()
+				glClearColor, glClear
+				GLShaderProgram::SetGloalUniform() -- 时刻变化的
+				GLShaderProgram::UseProgram()
+				GLShaderProgram::BindVertexArray()
+				GLShaderProgram::SetTexture()
+					glActiveTexture, glBindTexture
+				GLShaderProgram::RenderObject()
+					SetUniform -- 针对所有 Object
+					遍历所有 Objects
+						SetUniform -- 针对单个 Object
+						SetUniform(model, view, project)
+						glDrawElements / glDrawArrays
+				GLShaderProgram::UnbindVertexArray()
+			glfwSwapBuffers
+================================================================
+		GLShaderProgram::UnregisterVertexArray()
+			glDeleteVertexArrays, glDeleteBuffers
+GLFramework::Terminate()
+	glfwTerminate
+// 不同点整理
+1. 追加 GLMesh 类
+2. 把 vertices, indices 从 GLModel 移到 GLMesh 进行管理
+3. 把 GLTexture 从 GLShaderProgram 移到 GLModel 进行管理
+4. 把 VBO/VEO的绑定&顶点数据的设置 从 GLShaderProgram 移到 GLMesh 的构造函数中
+
+
