@@ -214,4 +214,3 @@ void GLShaderProgram::SetUniform(const GLchar *name, GLfloat v0, GLfloat v1, GLf
 {
 	glUniform3f(glGetUniformLocation(m_uiProgram, name), v0, v1, v2);
 }
-

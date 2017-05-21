@@ -5,6 +5,7 @@
 GLMesh::GLMesh(GLShaderProgram *cShaderProgram, std::vector<GLVertex> vec, std::vector<GLuint> idx, std::vector<GLTexture> tex)
 {
 	m_cShaderProgram = cShaderProgram;
+
 	m_vecVertices = vec;
 	m_vecIndices = idx;
 	m_vecTextures = tex;
@@ -31,7 +32,7 @@ bool GLMesh::Init()
 	glGenBuffers(1, &m_uiEBO);
 	LOG_INFO("[%s:%d] m_uiVAO=%u, m_uiVBO=%u, m_uiEBO=%u\n", __FUNCTION__, __LINE__, m_uiVAO, m_uiVBO, m_uiEBO);
 
-	// bind Vertex Array Object 
+	// bind Vertex Array Object
 	glBindVertexArray(this->m_uiVAO);
 
 	// bind VBO
@@ -73,7 +74,7 @@ bool GLMesh::Init()
 	// glBindBuffer(GL_ARRAY_BUFFER, 0);
 	// EBO should not be unbinded
 
-	// unbind Vertex Array Object 
+	// unbind Vertex Array Object
 	glBindVertexArray(0);
 
 	return true;

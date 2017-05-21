@@ -109,7 +109,7 @@ GLMesh GLModel::ProcessMesh(aiMesh *mesh, const aiScene *scene)
 		// diffuse textures
 		std::vector<GLTexture> vecDiffuseTextures = this->LoadMaterialTextures(material, aiTextureType_DIFFUSE);
 		textures.insert(textures.end(), vecDiffuseTextures.begin(), vecDiffuseTextures.end());
-		
+
 		// specular textures
 		std::vector<GLTexture> vecSpecularTextures = this->LoadMaterialTextures(material, aiTextureType_SPECULAR);
 		textures.insert(textures.end(), vecSpecularTextures.begin(), vecSpecularTextures.end());

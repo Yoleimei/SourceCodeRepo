@@ -70,5 +70,3 @@ bool GLFramework::InitGlew()
 	}
 	return true;
 }
-
-
