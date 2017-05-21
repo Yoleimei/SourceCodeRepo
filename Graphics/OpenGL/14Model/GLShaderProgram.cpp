@@ -28,7 +28,8 @@ bool GLShaderProgram::Init()
 	bool bRet = false;
 
 	// init GLModel
-	m_cModel = new GLModel(this, "nanosuit/nanosuit.obj");
+	// m_cModel = new GLModel(this, "nanosuit/nanosuit.obj");
+	m_cModel = new GLModel(this, "cube/cube.obj");
 	if (nullptr == m_cModel) {
 		LOG_ERR("[%s:%d] m_cModel is nullptr\n", __FUNCTION__, __LINE__);
 		goto ModelError;

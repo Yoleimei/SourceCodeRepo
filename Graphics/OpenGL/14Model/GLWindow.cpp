@@ -14,7 +14,8 @@ static int iScrollMinusCnt = 0;
 static std::mutex scrollCntMutex;
 
 glm::vec3 objectPositions[] = {
-	glm::vec3(0.0f,  -10.0f,  0.0f)
+	//glm::vec3(0.0f,  -10.0f,  0.0f)
+	glm::vec3(0.0f,  -2.0f,  0.0f)
 };
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
