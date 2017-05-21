@@ -11,6 +11,11 @@ public:
 	GLMesh(GLShaderProgram *cShaderProgram, std::vector<GLVertex> vec, std::vector<GLuint> idx, std::vector<GLTexture> tex);
 	virtual ~GLMesh();
 
+	bool Init();
+
+	void SetMaterial();
+	std::map<std::string, GLUniform> GetMaterialUniform();
+
 	void Draw();
 
 private:
@@ -23,4 +28,6 @@ private:
 	std::vector<GLVertex> m_vecVertices;
 	std::vector<GLuint> m_vecIndices;
 	std::vector<GLTexture> m_vecTextures;
+
+	std::map<std::string, GLUniform> m_mapMaterialUniform;
 };

@@ -10,14 +10,24 @@ const GLfloat WALK_PER_SECOND = 0.05f;
 GLCamera::GLCamera(GLWindow *cWindow)
 {
 	m_cWindow = cWindow;
+}
 
-	m_vCameraPosition = glm::vec3(0.0f, 0.0f, 15.0f);
-	m_vCameraViewFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	m_vCameraWalkFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	m_vCameraViewUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	m_vWorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	m_vCameraViewRight = glm::normalize(glm::cross(m_vCameraViewFront, m_vWorldUp));
-	m_vCameraWalkRight = glm::normalize(glm::cross(m_vCameraWalkFront, m_vWorldUp));
+GLCamera::~GLCamera()
+{
+
+}
+
+void GLCamera::Init()
+{
+	LOG_DBG("[%s:%d]\n", __FUNCTION__, __LINE__);
+
+	m_v3CameraPosition = glm::vec3(0.0f, 0.0f, 15.0f);
+	m_v3CameraViewFront = glm::vec3(0.0f, 0.0f, -1.0f);
+	m_v3CameraWalkFront = glm::vec3(0.0f, 0.0f, -1.0f);
+	m_v3CameraViewUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_v3WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	m_v3CameraViewRight = glm::normalize(glm::cross(m_v3CameraViewFront, m_v3WorldUp));
+	m_v3CameraWalkRight = glm::normalize(glm::cross(m_v3CameraWalkFront, m_v3WorldUp));
 
 	m_fCameraYaw = -90.0f;
 	m_fCameraPitch = 0.0f;
@@ -27,29 +37,24 @@ GLCamera::GLCamera(GLWindow *cWindow)
 	m_fAspect = 45.0f;
 }
 
-GLCamera::~GLCamera()
-{
-
-}
-
 glm::vec3 GLCamera::GetPosition()
 {
-	return m_vCameraPosition;
+	return m_v3CameraPosition;
 }
 
 glm::vec3 GLCamera::GetTarget()
 {
-	return (m_vCameraPosition + m_vCameraViewFront);
+	return (m_v3CameraPosition + m_v3CameraViewFront);
 }
 
 glm::vec3 GLCamera::GetFront()
 {
-	return m_vCameraViewFront;
+	return m_v3CameraViewFront;
 }
 
 glm::vec3 GLCamera::GetUp()
 {
-	return m_vCameraViewUp;
+	return m_v3CameraViewUp;
 }
 
 GLfloat GLCamera::GetAspect()
@@ -60,13 +65,13 @@ GLfloat GLCamera::GetAspect()
 void GLCamera::SetDeltaTime()
 {
 	static bool bIsFirstFrame = true;
-	static GLfloat fLastTime = glfwGetTime();
+	static GLfloat fLastTime = (GLfloat)glfwGetTime();
 
 	if (bIsFirstFrame) {
 		bIsFirstFrame = false;
 	}
 
-	GLfloat fCurrentTime = glfwGetTime();
+	GLfloat fCurrentTime = (GLfloat)glfwGetTime();
 	GLfloat fDeltaTime = fCurrentTime - fLastTime;
 
 	m_fDeltaTime = fDeltaTime;
@@ -75,17 +80,16 @@ void GLCamera::SetDeltaTime()
 
 void GLCamera::ProcessEvents()
 {
-	GLInputData cInputData;
-	m_cWindow->GetInput(&cInputData);
+	GLInputData sInputData = m_cWindow->GetInput();
 
-	ProcessKeyEvent(cInputData.bIsKeyPress);
-	ProcessMouseEvent(cInputData.bIsMouseButtonPress, cInputData.dMousePosX, cInputData.dMousePosY);
+	ProcessKeyEvent(sInputData.bIsKeyPress);
+	ProcessMouseEvent(sInputData.bIsMouseButtonPress, sInputData.dMousePosX, sInputData.dMousePosY);
 
-	if (cInputData.iScrollPlusCnt > 0) {
+	if (sInputData.iScrollPlusCnt > 0) {
 		ProcessScollEvent(1.0f);
 		m_cWindow->DecreaseScrollPlusCnt();
 	}
-	if (cInputData.iScrollMinusCnt > 0) {
+	if (sInputData.iScrollMinusCnt > 0) {
 		ProcessScollEvent(-1.0f);
 		m_cWindow->DecreaseScrollMinusCnt();
 	}
@@ -95,16 +99,16 @@ void GLCamera::ProcessKeyEvent(bool *isKeyPress)
 {
 	// LOG_DBG("start moving! %.2lfs (%3.2lf, %3.2lf, %3.2lf)\n", glfwGetTime(), cameraPos.x, cameraPos.y, cameraPos.z);
 	if (isKeyPress[GLFW_KEY_W]) {
-		m_vCameraPosition += m_vCameraWalkFront * m_fCameraSpeed;
+		m_v3CameraPosition += m_v3CameraWalkFront * m_fCameraSpeed;
 	}
 	if (isKeyPress[GLFW_KEY_S]) {
-		m_vCameraPosition -= m_vCameraWalkFront * m_fCameraSpeed;
+		m_v3CameraPosition -= m_v3CameraWalkFront * m_fCameraSpeed;
 	}
 	if (isKeyPress[GLFW_KEY_A]) {
-		m_vCameraPosition -= m_vCameraWalkRight * m_fCameraSpeed;
+		m_v3CameraPosition -= m_v3CameraWalkRight * m_fCameraSpeed;
 	}
 	if (isKeyPress[GLFW_KEY_D]) {
-		m_vCameraPosition += m_vCameraWalkRight * m_fCameraSpeed;
+		m_v3CameraPosition += m_v3CameraWalkRight * m_fCameraSpeed;
 	}
 }
 
@@ -118,19 +122,14 @@ void GLCamera::ProcessMouseEvent(bool *isMouseButtonPress, double xpos, double y
 	static double lastY = 0;
 	if (isMouseButtonPress[GLFW_MOUSE_BUTTON_LEFT] || isMouseButtonPress[GLFW_MOUSE_BUTTON_RIGHT]) {
 		if (isFirstPress) {
-			isFirstPress == false;
-			lastX = xpos;
-			lastY = ypos;
-		}
-		if (isFirstPress) {
 			lastX = xpos;
 			lastY = ypos;
 			isFirstPress = false;
 			return;
 		}
 
-		GLfloat xoffset = (xpos - lastX) * m_fCameraSensitivity;
-		GLfloat yoffset = (lastY - ypos) * m_fCameraSensitivity;
+		GLfloat xoffset = (GLfloat)(xpos - lastX) * m_fCameraSensitivity;
+		GLfloat yoffset = (GLfloat)(lastY - ypos) * m_fCameraSensitivity;
 		lastX = xpos;
 		lastY = ypos;
 
@@ -150,7 +149,7 @@ void GLCamera::ProcessMouseEvent(bool *isMouseButtonPress, double xpos, double y
 
 void GLCamera::ProcessScollEvent(double yoffset)
 {
-	m_fAspect -= yoffset;
+	m_fAspect -= (GLfloat)yoffset;
 	m_fAspect = (m_fAspect > ASPECT_MAX) ? ASPECT_MAX : m_fAspect;
 	m_fAspect = (m_fAspect < ASPECT_MIN) ? ASPECT_MIN : m_fAspect;
 }
@@ -163,9 +162,9 @@ void GLCamera::AdjustViewAttitude()
 	front.z = sin(glm::radians(this->m_fCameraYaw)) * cos(glm::radians(this->m_fCameraPitch));
 
 	// LOG_DBG("m_vCameraViewFront %.2lfs (%3.2lf, %3.2lf, %3.2lf)\n", glfwGetTime(), front.x, front.y, front.z);
-	m_vCameraViewFront = glm::normalize(front);
-	m_vCameraViewRight = glm::normalize(glm::cross(m_vCameraViewFront, m_vWorldUp));
-	m_vCameraViewUp = glm::normalize(glm::cross(m_vCameraViewRight, m_vCameraViewFront));
+	m_v3CameraViewFront = glm::normalize(front);
+	m_v3CameraViewRight = glm::normalize(glm::cross(m_v3CameraViewFront, m_v3WorldUp));
+	m_v3CameraViewUp = glm::normalize(glm::cross(m_v3CameraViewRight, m_v3CameraViewFront));
 }
 
 void GLCamera::AdjustWalkAttitude()
@@ -176,6 +175,6 @@ void GLCamera::AdjustWalkAttitude()
 	front.z = sin(glm::radians(this->m_fCameraYaw)) * cos(glm::radians(0.0f));
 
 	// LOG_DBG("m_vCameraViewFront %.2lfs (%3.2lf, %3.2lf, %3.2lf)\n", glfwGetTime(), front.x, front.y, front.z);
-	m_vCameraWalkFront = glm::normalize(front);
-	m_vCameraWalkRight = glm::normalize(glm::cross(m_vCameraWalkFront, m_vWorldUp));
+	m_v3CameraWalkFront = glm::normalize(front);
+	m_v3CameraWalkRight = glm::normalize(glm::cross(m_v3CameraWalkFront, m_v3WorldUp));
 }

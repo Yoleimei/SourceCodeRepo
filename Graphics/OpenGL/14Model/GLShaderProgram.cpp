@@ -2,27 +2,69 @@
 #include "GLWindow.h"
 #include "GLMesh.h"
 
-GLShaderProgram::GLShaderProgram(GLWindow *cWindow, const char *cVertexShaderPath, const char *cFragmentShaderPath)
+GLShaderProgram::GLShaderProgram(GLWindow *cWindow, std::string strVertexShaderPath, std::string strFragmentShaderPath)
 {
 	m_cWindow = cWindow;
+	m_strVertexShaderPath = strVertexShaderPath;
+	m_strFramgmentShaderPath = strFragmentShaderPath;
 
 	m_uiProgram = glCreateProgram();
-	m_cModel = new GLModel(this, "nanosuit.obj");
+	LOG_INFO("[%s:%d] m_uiProgram=%u\n", __FUNCTION__, __LINE__, m_uiProgram);
+}
 
-	// AppendTexture(GLTexture("matrix.jpg", GL_REPEAT));
+GLShaderProgram::~GLShaderProgram()
+{
+	m_vecObjects.clear();
+	m_mapGlobalUniform.clear();
 
-	cVertexShader = new GLShader(GL_VERTEX_SHADER);
-	LOG_DBG("VertexShader=%d\n", cVertexShader->GetShader());
-	cVertexShader->CompileShader(cVertexShaderPath);
-	LOG_DBG("Compile Vertex Shader success.\n");
+	if (m_cModel)
+		delete m_cModel;
+}
 
-	cFragmentShader = new GLShader(GL_FRAGMENT_SHADER);
-	LOG_DBG("FragmentShader=%d\n", cFragmentShader->GetShader());
-	cFragmentShader->CompileShader(cFragmentShaderPath);
-	LOG_DBG("Compile Fragment Shader success.\n");
+bool GLShaderProgram::Init()
+{
+	LOG_DBG("[%s:%d]\n", __FUNCTION__, __LINE__);
 
-	glAttachShader(m_uiProgram, cVertexShader->GetShader());
-	glAttachShader(m_uiProgram, cFragmentShader->GetShader());
+	bool bRet = false;
+
+	// init GLModel
+	m_cModel = new GLModel(this, "nanosuit/nanosuit.obj");
+	if (nullptr == m_cModel) {
+		LOG_ERR("[%s:%d] m_cModel is nullptr\n", __FUNCTION__, __LINE__);
+		goto ModelError;
+	}
+	bool bRes = m_cModel->Init();
+	if (!bRes) {
+		LOG_ERR("[%s:%d] Init GLModel failed\n", __FUNCTION__, __LINE__);
+		goto ModelError;
+	}
+
+	// compule vertex shader
+	m_cVertexShader = new GLShader(GL_VERTEX_SHADER);
+	if (nullptr == m_cVertexShader) {
+		LOG_ERR("[%s:%d] m_cVertexShader is nullptr\n", __FUNCTION__, __LINE__);
+		goto VertexShaderError;
+	}
+	bRes = m_cVertexShader->CompileShader(m_strVertexShaderPath.c_str());
+	if (!bRes) {
+		LOG_DBG("[%s:%d] Compile Vertex Shader success.\n", __FUNCTION__, __LINE__);
+		goto VertexShaderError;
+	}
+
+	m_cFragmentShader = new GLShader(GL_FRAGMENT_SHADER);
+	if (nullptr == m_cFragmentShader) {
+		LOG_ERR("[%s:%d] m_cFragmentShader is nullptr\n", __FUNCTION__, __LINE__);
+		goto FragmentShaderError;
+	}
+	m_cFragmentShader->CompileShader(m_strFramgmentShaderPath.c_str());
+	if (!bRes) {
+		LOG_DBG("[%s:%d] Compile Fragment Shader success.\n", __FUNCTION__, __LINE__);
+		goto FragmentShaderError;
+	}
+
+	// attach shader and link program
+	glAttachShader(m_uiProgram, m_cVertexShader->GetShader());
+	glAttachShader(m_uiProgram, m_cFragmentShader->GetShader());
 	glLinkProgram(m_uiProgram);
 
 	// Check for linking errors
@@ -32,19 +74,22 @@ GLShaderProgram::GLShaderProgram(GLWindow *cWindow, const char *cVertexShaderPat
 	if (!success) {
 		glGetProgramInfoLog(m_uiProgram, 512, NULL, infoLog);
 		LOG_ERR("ERROR::SHADER::PROGRAM::LINKING_FAILED\n%s\n", infoLog);
+		goto LinkProgramError;
 	}
 
-	delete cVertexShader;
-	delete cFragmentShader;
-}
+	bRet = true;
 
-GLShaderProgram::~GLShaderProgram()
-{
-	m_listObjects.clear();
-	m_mapGlobalUniform.clear();
+LinkProgramError:
+FragmentShaderError:
+	if (m_cFragmentShader)
+	delete m_cFragmentShader;
 
-	if (m_cModel)
-		delete m_cModel;
+VertexShaderError:
+	if (m_cVertexShader)
+		delete m_cVertexShader;
+
+ModelError:
+	return bRet;
 }
 
 GLenum GLShaderProgram::GetProgram() const
@@ -57,20 +102,15 @@ void GLShaderProgram::UseProgram()
 	glUseProgram(m_uiProgram);
 }
 
-void GLShaderProgram::UnbindVertexArray()
-{
-	glBindVertexArray(0);
-}
-
 void GLShaderProgram::AppendObject(GLObject cObject)
 {
-	m_listObjects.push_back(cObject);
+	m_vecObjects.push_back(cObject);
 }
 
-void GLShaderProgram::SetGlobalUniform(const char *name, GLUniform sUniform)
+void GLShaderProgram::SetGlobalUniform(std::string name, GLUniform sUniform)
 {
 	// m_mapGlobalUniform.insert(std::pair<std::string, GLUniform>(std::string(name), sUniform));
-	m_mapGlobalUniform[std::string(name)] = sUniform;
+	m_mapGlobalUniform[name] = sUniform;
 }
 
 void GLShaderProgram::RenderObjects()
@@ -80,11 +120,11 @@ void GLShaderProgram::RenderObjects()
 			SetUniform(it->first.c_str(), it->second);
 		}
 	}
-	if (m_listObjects.size() > 0) {
-		for (auto it = m_listObjects.begin(); it != m_listObjects.end(); it++) {
-			std::map<std::string, GLUniform> listSingleUniform = it->GetSingleUniform();
-			if (listSingleUniform.size() > 0) {
-				for (auto it_uniform = listSingleUniform.begin(); it_uniform != listSingleUniform.end(); it_uniform++) {
+	if (m_vecObjects.size() > 0) {
+		for (auto it = m_vecObjects.begin(); it != m_vecObjects.end(); it++) {
+			std::map<std::string, GLUniform> mapOwnUniform = it->GetOwnUniform();
+			if (mapOwnUniform.size() > 0) {
+				for (auto it_uniform = mapOwnUniform.begin(); it_uniform != mapOwnUniform.end(); it_uniform++) {
 					SetUniform(it_uniform->first.c_str(), it_uniform->second);
 				}
 			}
@@ -120,7 +160,15 @@ void GLShaderProgram::RenderObjects()
 			glUniformMatrix4fv(uniProjectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 
 			std::vector<GLMesh> vecMeshes= m_cModel->GetMeshes();
-			for (int i = 0; i < vecMeshes.size(); i++) {
+			for (size_t i = 0; i < vecMeshes.size(); i++) {
+				vecMeshes[i].SetMaterial();
+				std::map<std::string, GLUniform> mapMaterialUniform = vecMeshes[i].GetMaterialUniform();
+				if (mapMaterialUniform.size() > 0) {
+					for (auto it_uniform = mapMaterialUniform.begin(); it_uniform != mapMaterialUniform.end(); it_uniform++) {
+						SetUniform(it_uniform->first.c_str(), it_uniform->second);
+					}
+				}
+
 				vecMeshes[i].Draw();
 			}
 		}
@@ -144,6 +192,7 @@ void GLShaderProgram::SetUniform(const char *name, GLUniform sUniform)
 	else {
 		// do nothing
 	}
+	LOG_DBG("Set Uniform: %s\n", name);
 }
 
 void GLShaderProgram::SetUniform(const GLchar *name, GLint v0)
@@ -165,3 +214,4 @@ void GLShaderProgram::SetUniform(const GLchar *name, GLfloat v0, GLfloat v1, GLf
 {
 	glUniform3f(glGetUniformLocation(m_uiProgram, name), v0, v1, v2);
 }
+

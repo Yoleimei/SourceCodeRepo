@@ -18,4 +18,7 @@ private:
 	GLFramework& operator=(const GLFramework &ref) { }
 
 	GLWindow *m_cWindow;
+
+	bool InitGlfw();
+	bool InitGlew();
 };

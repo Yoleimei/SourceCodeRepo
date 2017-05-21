@@ -13,6 +13,10 @@ static int iScrollPlusCnt = 0;
 static int iScrollMinusCnt = 0;
 static std::mutex scrollCntMutex;
 
+glm::vec3 objectPositions[] = {
+	glm::vec3(0.0f,  -10.0f,  0.0f)
+};
+
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 	// LOG_DBG("key:%d\n", key);
@@ -63,23 +67,13 @@ static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 	scrollCntMutex.unlock();
 }
 
-GLWindow::GLWindow(const char* title, bool isFullScreen)
+GLWindow::GLWindow(std::string title, bool isFullScreen)
 	: m_sWindow(nullptr)
 	, m_iWidth(WIDTH)
 	, m_iHeight(HEIGHT)
 {
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-	// glfwDefaultWindowHints();
-
-	GLFWmonitor *pcMonitor = nullptr;
-	if (isFullScreen)
-		pcMonitor = glfwGetPrimaryMonitor();
-	m_sWindow = glfwCreateWindow(WIDTH, HEIGHT, title, pcMonitor, nullptr);
-
-	m_cCamera = new GLCamera(this);
+	m_strTtile = title;
+	m_bIsFullScreen = isFullScreen;
 }
 
 GLWindow::~GLWindow()
@@ -88,134 +82,76 @@ GLWindow::~GLWindow()
 		delete m_cCamera;
 }
 
-GLFWwindow* GLWindow::GetWindow()
+void GLWindow::CreateWindow()
 {
-	return m_sWindow;
+	LOG_DBG("[%s:%d]\n", __FUNCTION__, __LINE__);
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	// glfwDefaultWindowHints();
+
+	GLFWmonitor *pcMonitor = nullptr;
+	if (m_bIsFullScreen)
+		pcMonitor = glfwGetPrimaryMonitor();
+	m_sWindow = glfwCreateWindow(WIDTH, HEIGHT, m_strTtile.c_str(), pcMonitor, nullptr);
 }
 
-void GLWindow::Init()
+bool GLWindow::Init()
 {
+	LOG_DBG("[%s:%d]\n", __FUNCTION__, __LINE__);
+
+	// set callback
 	glfwSetKeyCallback(m_sWindow, key_callback);
 	glfwSetMouseButtonCallback(m_sWindow, mouse_button_callback);
 	glfwSetCursorPosCallback(m_sWindow, cursor_pos_callback);
 	glfwSetScrollCallback(m_sWindow, scroll_callback);
 
-	// Cursor Options
+	// cursor options
 	// glfwSetInputMode(m_sWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glfwGetFramebufferSize(m_sWindow, &m_iWidth, &m_iHeight);
-	LOG_DBG("Width=%d, Height=%d\n", m_iWidth, m_iHeight);
+	LOG_INFO("[%s:%d] Width=%d, Height=%d\n", __FUNCTION__, __LINE__, m_iWidth, m_iHeight);
 	glViewport(0, 0, m_iWidth, m_iHeight);
 
-	// Setup OpenGL options
+	// setup OpenGL options
 	glEnable(GL_DEPTH_TEST);
-}
 
-void GLWindow::Run()
-{
+	// init GLCamera
+	m_cCamera = new GLCamera(this);
+	if (nullptr == m_cCamera) {
+		LOG_ERR("[%s:%d] m_cCamera is nullptr\n", __FUNCTION__, __LINE__);
+		return false;
+	}
+	m_cCamera->Init();
+
+	// init GLShaderProgram
 	m_cLightingShaderProgram = new GLShaderProgram(this, "vertex_lighting.shader", "fragment_lighting.shader");
-	LOG_DBG("m_cLightingShaderProgram=%d\n", m_cLightingShaderProgram->GetProgram());
-	m_cLightingShaderProgram->RegisterVertexArray();
+	if (nullptr == m_cLightingShaderProgram) {
+		LOG_ERR("[%s:%d] m_cLightingShaderProgram is nullptr\n", __FUNCTION__, __LINE__);
+		return false;
+	}
+	bool bRes = m_cLightingShaderProgram->Init();
+	if (!bRes) {
+		LOG_ERR("[%s:%d] Init GLShaderProgram failed\n", __FUNCTION__, __LINE__);
+		return false;
+	}
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -5.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -2.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-
-	glm::vec3 pointLightPositions[] = {
-		glm::vec3(0.7f,  0.2f,  2.0f),
-		glm::vec3(2.3f, -3.3f, -4.0f),
-		glm::vec3(-4.0f,  2.0f, -12.0f),
-		glm::vec3(0.0f,  0.0f, -3.0f)
-	};
-
-	glm::vec3 pointLightColors[] = {
-		glm::vec3(1.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 1.0f),
-		glm::vec3(1.0f, 1.0f, 1.0f)
-	};
-
-	for (int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
+	// append objects
+	for (int i = 0; i < sizeof(objectPositions) / sizeof(objectPositions[0]); i++) {
 		std::list<GLTransform> listModelTransforms;
-		listModelTransforms.push_back(GLTransform(TRANSFORM_TRANSLATE, cubePositions[i]));
+		listModelTransforms.push_back(GLTransform(TRANSFORM_TRANSLATE, objectPositions[i]));
 		listModelTransforms.push_back(GLTransform(TRANSFORM_ROTATE, glm::vec3(1.0f, 0.3f, 0.5f), glm::radians(20.0f * i)));
 		m_cLightingShaderProgram->AppendObject(GLObject(listModelTransforms));
 	}
 
-	m_cLightingShaderProgram->SetGlobalUniform("material_diffuse", GLUniform(UNIFORM_1I, 0));
-	m_cLightingShaderProgram->SetGlobalUniform("material_specular", GLUniform(UNIFORM_1I, 1));
-	m_cLightingShaderProgram->SetGlobalUniform("material_emission", GLUniform(UNIFORM_1I, 2));
-	m_cLightingShaderProgram->SetGlobalUniform("material_shininess", GLUniform(UNIFORM_1F, 32.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("dir_light_direction", GLUniform(UNIFORM_3F, -0.2f, -1.0f, -0.3f));
-	m_cLightingShaderProgram->SetGlobalUniform("dir_light_ambient", GLUniform(UNIFORM_3F, 0.3f, 0.24f, 0.14f));
-	m_cLightingShaderProgram->SetGlobalUniform("dir_light_diffuse", GLUniform(UNIFORM_3F, 0.7f, 0.42f, 0.26f));
-	m_cLightingShaderProgram->SetGlobalUniform("dir_light_specular", GLUniform(UNIFORM_3F, 0.5f, 0.5f, 0.5f));
+	return true;
+}
 
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[0]", GLUniform(UNIFORM_3F, pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[0]", GLUniform(UNIFORM_3F, pointLightColors[0].x * 0.3f, pointLightColors[0].y * 0.3f, pointLightColors[0].z * 0.3f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[0]", GLUniform(UNIFORM_3F, pointLightColors[0].x * 0.5f, pointLightColors[0].y * 0.5f, pointLightColors[0].z * 0.5f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[0]", GLUniform(UNIFORM_3F, pointLightColors[0].x * 1.0f, pointLightColors[0].y * 1.0f, pointLightColors[0].z * 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[0]", GLUniform(UNIFORM_1F, 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[0]", GLUniform(UNIFORM_1F, 0.09f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[0]", GLUniform(UNIFORM_1F, 0.032f));
-
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[1]", GLUniform(UNIFORM_3F, pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[1]", GLUniform(UNIFORM_3F, pointLightColors[1].x * 0.3f, pointLightColors[1].y * 0.3f, pointLightColors[1].z * 0.3f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[1]", GLUniform(UNIFORM_3F, pointLightColors[1].x * 0.5f, pointLightColors[1].y * 0.5f, pointLightColors[1].z * 0.5f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[1]", GLUniform(UNIFORM_3F, pointLightColors[1].x * 1.0f, pointLightColors[1].y * 1.0f, pointLightColors[1].z * 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[1]", GLUniform(UNIFORM_1F, 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[1]", GLUniform(UNIFORM_1F, 0.09f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[1]", GLUniform(UNIFORM_1F, 0.032f));
-
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[2]", GLUniform(UNIFORM_3F, pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[2]", GLUniform(UNIFORM_3F, pointLightColors[2].x * 0.3f, pointLightColors[2].y * 0.3f, pointLightColors[2].z * 0.3f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[2]", GLUniform(UNIFORM_3F, pointLightColors[2].x * 0.5f, pointLightColors[2].y * 0.5f, pointLightColors[2].z * 0.5f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[2]", GLUniform(UNIFORM_3F, pointLightColors[2].x * 1.0f, pointLightColors[2].y * 1.0f, pointLightColors[2].z * 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[2]", GLUniform(UNIFORM_1F, 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[2]", GLUniform(UNIFORM_1F, 0.09f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[2]", GLUniform(UNIFORM_1F, 0.032f));
-
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_position[3]", GLUniform(UNIFORM_3F, pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_ambient[3]", GLUniform(UNIFORM_3F, pointLightColors[3].x * 0.3f, pointLightColors[3].y * 0.3f, pointLightColors[3].z * 0.3f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_diffuse[3]", GLUniform(UNIFORM_3F, pointLightColors[3].x * 0.5f, pointLightColors[3].y * 0.5f, pointLightColors[3].z * 0.5f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_specular[3]", GLUniform(UNIFORM_3F, pointLightColors[3].x * 1.0f, pointLightColors[3].y * 1.0f, pointLightColors[3].z * 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_constant[3]", GLUniform(UNIFORM_1F, 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_linear[3]", GLUniform(UNIFORM_1F, 0.09f));
-	m_cLightingShaderProgram->SetGlobalUniform("ptr_light_quadratic[3]", GLUniform(UNIFORM_1F, 0.032f));
-
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_ambient", GLUniform(UNIFORM_3F, 0.0f, 0.0f, 0.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_diffuse", GLUniform(UNIFORM_3F, 0.8f, 0.8f, 0.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_specular", GLUniform(UNIFORM_3F, 0.8f, 0.8f, 0.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_constant", GLUniform(UNIFORM_1F, 1.0f));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_linear", GLUniform(UNIFORM_1F, 0.09f));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_quadratic", GLUniform(UNIFORM_1F, 0.032f));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_cutoff", GLUniform(UNIFORM_1F, glm::cos(glm::radians(12.5f))));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_outerCutoff", GLUniform(UNIFORM_1F, glm::cos(glm::radians(13.0f))));
-
-	m_cLampShaderProgram = new GLShaderProgram(this, "vertex_lamp.shader", "fragment_lamp.shader");
-	LOG_DBG("m_cLampShaderProgram=%d\n", m_cLampShaderProgram->GetProgram());
-	m_cLampShaderProgram->RegisterVertexArray();
-
-	for (int i = 0; i < sizeof(pointLightPositions) / sizeof(pointLightPositions[0]); i++) {
-		std::list<GLTransform> listModelTransforms;
-		listModelTransforms.push_back(GLTransform(TRANSFORM_TRANSLATE, pointLightPositions[i]));
-		listModelTransforms.push_back(GLTransform(TRANSFORM_SCALE, glm::vec3(0.2f, 0.2f, 0.2f)));
-
-		std::map<std::string, GLUniform> mapSingleUniform;
-		// mapSingleUniform.insert(std::pair<std::string, GLUniform>("uniColor", GLUniform(UNIFORM_3F, pointLightColors[i].x, pointLightColors[i].y, pointLightColors[i].z)));
-		mapSingleUniform[std::string("uniColor")] =  GLUniform(UNIFORM_3F, pointLightColors[i].x, pointLightColors[i].y, pointLightColors[i].z);
-
-		m_cLampShaderProgram->AppendObject(GLObject(listModelTransforms, mapSingleUniform));
-	}
+void GLWindow::Run()
+{
+	LOG_DBG("[%s:%d]\n", __FUNCTION__, __LINE__);
 
 	// Game loop
 	while (!glfwWindowShouldClose(m_sWindow))
@@ -230,9 +166,11 @@ void GLWindow::Run()
 
 		glfwSwapBuffers(m_sWindow);
 	}
+}
 
-	m_cLightingShaderProgram->UnregisterVertexArray();
-	m_cLampShaderProgram->UnregisterVertexArray();
+GLFWwindow* GLWindow::GetWindow()
+{
+	return m_sWindow;
 }
 
 int GLWindow::GetWidth()
@@ -265,18 +203,22 @@ void GLWindow::DecreaseScrollMinusCnt()
 	scrollCntMutex.unlock();
 }
 
-void GLWindow::GetInput(GLInputData * sInputData)
+GLInputData GLWindow::GetInput()
 {
 	scrollCntMutex.lock();
 
-	memcpy(sInputData->bIsKeyPress, isKeyPress, sizeof(sInputData->bIsKeyPress));
-	memcpy(sInputData->bIsMouseButtonPress, isMouseButtonPress, sizeof(sInputData->bIsMouseButtonPress));
-	sInputData->dMousePosX = dMousePosX;
-	sInputData->dMousePosY = dMousePosY;
-	sInputData->iScrollPlusCnt = iScrollPlusCnt;
-	sInputData->iScrollMinusCnt = iScrollMinusCnt;
+	GLInputData sInputData;
+	memset(&sInputData, 0, sizeof(sInputData));
+	memcpy(sInputData.bIsKeyPress, isKeyPress, sizeof(sInputData.bIsKeyPress));
+	memcpy(sInputData.bIsMouseButtonPress, isMouseButtonPress, sizeof(sInputData.bIsMouseButtonPress));
+	sInputData.dMousePosX = dMousePosX;
+	sInputData.dMousePosY = dMousePosY;
+	sInputData.iScrollPlusCnt = iScrollPlusCnt;
+	sInputData.iScrollMinusCnt = iScrollMinusCnt;
 
 	scrollCntMutex.unlock();
+
+	return sInputData;
 }
 
 GLCamera* GLWindow::GetCamera()
@@ -291,21 +233,7 @@ void GLWindow::Render()
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glm::vec3 vCameraPos = m_cCamera->GetPosition();
-	glm::vec3 vCameraFront = m_cCamera->GetFront();
-	m_cLightingShaderProgram->SetGlobalUniform("viewPosition", GLUniform(UNIFORM_3F, vCameraPos.x, vCameraPos.y, vCameraPos.z));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_position", GLUniform(UNIFORM_3F, vCameraPos.x, vCameraPos.y, vCameraPos.z));
-	m_cLightingShaderProgram->SetGlobalUniform("spt_light_direction", GLUniform(UNIFORM_3F, vCameraFront.x, vCameraFront.y, vCameraFront.z));
-
 	// Draw our first triangle
 	m_cLightingShaderProgram->UseProgram();
-	m_cLightingShaderProgram->BindVertexArray();
-	m_cLightingShaderProgram->SetTexture();
 	m_cLightingShaderProgram->RenderObjects();
-	m_cLightingShaderProgram->UnbindVertexArray();
-
-	m_cLampShaderProgram->UseProgram();
-	m_cLampShaderProgram->BindVertexArray();
-	m_cLampShaderProgram->RenderObjects();
-	m_cLampShaderProgram->UnbindVertexArray();
 }

@@ -5,12 +5,14 @@
 class GLTexture
 {
 public:
-	GLTexture(aiString strFilePath, aiTextureType type, GLint wrapSParam = GL_REPEAT, GLint wrapTParam = GL_REPEAT, GLint MinFilter = GL_LINEAR_MIPMAP_LINEAR, GLint MagFilter = GL_LINEAR);
+	GLTexture(std::string strFilePath, aiTextureType type, GLint wrapSParam = GL_REPEAT, GLint wrapTParam = GL_REPEAT, GLint MinFilter = GL_LINEAR_MIPMAP_LINEAR, GLint MagFilter = GL_LINEAR);
 	virtual ~GLTexture();
+
+	bool Init();
 
 	GLuint GetTextureId();
 	aiTextureType GetTextureType();
-	aiString GetTexturePath();
+	std::string GetTexturePath();
 
 	void ActiveTexture(GLenum texture);
 
@@ -19,6 +21,12 @@ public:
 
 private:
 	GLuint m_uiTexture;
+
 	aiTextureType m_eType;
-	aiString m_strPath;
+	std::string m_strPath;
+
+	GLint m_iWrapSParam;
+	GLint m_iWrapTParam;
+	GLint m_iMinFilter;
+	GLint m_iMagFilter;
 };

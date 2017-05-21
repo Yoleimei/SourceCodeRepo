@@ -1,5 +1,5 @@
 依赖关系
-1. 
+1. glewInit 之前需要 glfwMakeContextCurrent
 2. glBindBuffer, glBufferData, glEnableVertexAttribArray, glVertexAttribPointer 前后需要 glBindVertexArray(VAO|0)
 2. glDrawElements 前后需要 glBindVertexArray(VAO|0)
 3. glUniform 之前需要 glUseProgram
@@ -98,7 +98,6 @@ GLFramework::Run()
 			new GLShader()
 				glCreateShader
 			glAttachShader, glLinkProgram
-		GLShaderProgram::RegisterVertexArray
 		GLShaderProgram::AppendObject()
 		GLShaderProgram::SetGloalUniform() -- 不会变化的
 ================================================================
@@ -121,14 +120,22 @@ GLFramework::Run()
 				GLShaderProgram::UnbindVertexArray()
 			glfwSwapBuffers
 ================================================================
-		GLShaderProgram::UnregisterVertexArray()
-			glDeleteVertexArrays, glDeleteBuffers
 GLFramework::Terminate()
 	glfwTerminate
+
 // 不同点整理
 1. 追加 GLMesh 类
 2. 把 vertices, indices 从 GLModel 移到 GLMesh 进行管理
 3. 把 GLTexture 从 GLShaderProgram 移到 GLModel 进行管理
 4. 把 VBO/VEO的绑定&顶点数据的设置 从 GLShaderProgram 移到 GLMesh 的构造函数中
+5. 每一个 Mesh 都有自己的 Vertices, Normals, TextureCoords, Faces(Indices), Materials(diffuse, specular)
 
-
+// 有哪些类型的 uniform
+vertex:
+	model          每个Object 不相同  每个Mesh 相同
+	view           每个Object 相同    每个Mesh 相同
+	projection     每个Object 相同    每个Mesh 相同
+fragment:
+	material       每个Object 相同   每个Mesh 不相同
+	light          每个Object 相同   每个Mesh 相同
+	view_position  每个Object 相同   每个Mesh 相同

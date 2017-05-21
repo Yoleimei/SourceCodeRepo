@@ -16,30 +16,33 @@ struct GLInputData
 class GLWindow
 {
 public:
-	GLWindow(const char* title, bool isFullScreen = true);
+	GLWindow(std::string title, bool isFullScreen = true);
 	virtual ~GLWindow();
 
-	GLFWwindow* GetWindow();
+	void CreateWindow();
 
-	void Init();
+	bool Init();
 	void Run();
 
+	GLFWwindow* GetWindow();
 	int GetWidth();
 	int GetHeight();
 
 	void DecreaseScrollPlusCnt();
 	void DecreaseScrollMinusCnt();
-	void GetInput(GLInputData *sInputData);
+	GLInputData GetInput();
 
 	GLCamera* GetCamera();
 
 private:
 	GLFWwindow *m_sWindow;
+
+	std::string m_strTtile;
+	bool m_bIsFullScreen;
 	int m_iWidth;
 	int m_iHeight;
 
 	GLShaderProgram *m_cLightingShaderProgram;
-	GLShaderProgram *m_cLampShaderProgram;
 
 	GLCamera *m_cCamera;
 

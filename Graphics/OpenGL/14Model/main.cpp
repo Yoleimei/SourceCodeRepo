@@ -5,17 +5,24 @@
 #include "GLFramework.h"
 #include "windows.h"
 
-void glPrintfNull(const char* const, ...) { }
-
 int main()
 {
 	GLFramework *cFramework = new GLFramework();
-	if (cFramework->Init()) {
-		cFramework->Run();
-	}
+	if (nullptr != cFramework) {
+		bool bRes = cFramework->Init();
+		if (bRes) {
+			cFramework->Run();
+		}
+		else {
+			LOG_ERR("[%s:%d] Init GLFramework failed\n", __FUNCTION__, __LINE__);
+		}
 
-	cFramework->Terminate();
-	delete cFramework;
+		cFramework->Terminate();
+		delete cFramework;
+	}
+	else {
+		LOG_ERR("[%s:%d] cFramework is nullptr\n", __FUNCTION__, __LINE__);
+	}
 
 	Sleep(1000);
 	getchar();

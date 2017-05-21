@@ -11,32 +11,30 @@ class GLWindow;
 class GLShaderProgram
 {
 public:
-	GLShaderProgram(GLWindow *cWindow, const char *cVertexShaderPath, const char *cFragmentShaderPath);
+	GLShaderProgram(GLWindow *cWindow, std::string strVertexShaderPath, std::string strFragmentShaderPath);
 	virtual ~GLShaderProgram();
 
-	GLenum GetProgram() const;
+	bool Init();
 
+	GLenum GetProgram() const;
 	void UseProgram();
 	
-	void BindVertexArray();
-	void UnbindVertexArray();
-
 	void AppendObject(GLObject cObject);
-	void SetTexture();
-	void SetGlobalUniform(const char *name, GLUniform sUniform);
+	void SetGlobalUniform(std::string name, GLUniform sUniform);
 	void RenderObjects();
 
 private:
 	GLWindow *m_cWindow;
+	std::string m_strVertexShaderPath;
+	std::string m_strFramgmentShaderPath;
 
 	GLenum m_uiProgram;
 
 	GLModel *m_cModel;
-	GLShader *cVertexShader;
+	GLShader *m_cVertexShader;
+	GLShader *m_cFragmentShader;
 
-	GLShader *cFragmentShader;
-
-	std::list<GLObject> m_listObjects;
+	std::vector<GLObject> m_vecObjects;
 	std::map<std::string, GLUniform> m_mapGlobalUniform;
 
 	void SetUniform(const char *name, GLUniform sUniform);

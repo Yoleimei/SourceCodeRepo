@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstdarg>
+#include <cstring>
 
 #include <iostream>
 #include <sstream>
@@ -38,21 +39,39 @@
 
 // LOG
 #define ENABLE_ERROR
-#define ENABLE_DEBUG
+#define ENABLE_WARNING
+#define ENABLE_INFO
+// #define ENABLE_DEBUG
 
 #ifdef ENABLE_ERROR
-	#define LOG_ERR printf
+	#define LOG_ERR glPrintError
 #else
-	#define LOG_ERR glPrintfNull
+	#define LOG_ERR glPrintNull
+#endif
+
+#ifdef ENABLE_WARNING
+#define LOG_WARN glPrintWarning
+#else
+#define LOG_WARN glPrintNull
+#endif
+
+#ifdef ENABLE_INFO
+#define LOG_INFO glPrintInfo
+#else
+#define LOG_INFO glPrintNull
 #endif
 
 #ifdef ENABLE_DEBUG
-#define LOG_DBG printf
+#define LOG_DBG glPrintDebug
 #else
-#define LOG_DBG glPrintfNull
+#define LOG_DBG glPrintNull
 #endif
 
-extern void glPrintfNull(const char* const, ...);
+void glPrintNull(const char* const, ...);
+void glPrintError(const char *const, ...);
+void glPrintWarning(const char *const, ...);
+void glPrintInfo(const char *const, ...);
+void glPrintDebug(const char *const, ...);
 
 // Vertex Shader / Model
 #define GL_MODEL_USE_POSITION

@@ -10,9 +10,9 @@ public:
 	virtual ~GLObject();
 
 	std::list<GLTransform> GetModelTransforms();
-	std::map<std::string, GLUniform> GetSingleUniform();
+	std::map<std::string, GLUniform> GetOwnUniform();
 
 private:
 	std::list<GLTransform> m_listModelTransform;
-	std::map<std::string, GLUniform> m_mapSingleUniform;
+	std::map<std::string, GLUniform> m_mapOwnUniform;
 };
