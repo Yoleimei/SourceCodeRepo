@@ -1,0 +1,16 @@
+drivers/media/v4l2-core/v4l2-dev.c
+
+drivers/media/v4l2-core/v4l2-device.c
+drivers/media/v4l2-core/v4l2-subdev.c
+drivers/media/v4l2-core/v4l2-fh.c
+drivers/media/v4l2-core/v4l2-ctrls.c
+
+drivers/media/v4l2-core/videobuf2-core.c
+drivers/media/v4l2-core/videobuf2-dma-contig.c
+drivers/media/v4l2-core/videobuf2-dma-sg.c
+drivers/media/v4l2-core/videobuf2-memops.c
+drivers/media/v4l2-core/videobuf2-vmalloc.c
+drivers/media/v4l2-core/v4l2-mem2mem.c
+
+drivers/media/v4l2-core/v4l2-ioctl.c
+

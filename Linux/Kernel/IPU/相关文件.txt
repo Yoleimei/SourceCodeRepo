@@ -1,0 +1,21 @@
+(https://blog.csdn.net/yanbixing123/article/details/52290933)
+.../drivers/mxc/ipu3/                    描述
+    ipu_device.c                         IPU tasks的操作等（IPU core driver）
+    ipu_common.c                         底层的核心函数
+    ipu_capture.c                        为ipu_common.c提供函数操作
+    ipu_disp.c                           IPU显示
+    ipu_ic.c                             IC的操作函数
+    ipu_param_mem.h                      CPMEM设置的头文件，操作函数
+.../drivers/mxc/mipi/
+    mxc_mipi_csi2.c                      mipi摄像头的操作函数
+.../drivers/media/platform/mxc/
+    capture/mxc_v4l2_capture.c           为应用程序提供open，ioctl等操作函数
+    capture/v4l2-int-device.c            子系统模块注册等操作函数
+    capture/ipu_prp_enc.c                Pre-processing encoder驱动函数
+    capture/ipu_csi_enc.c                CSI设备驱动操作函数
+    capture/ipu_still.c                  静态图片捕获函数
+    capture/ipu_prp_vf_adc.c             Pre-processing view finder                                        (asynchronous) driver
+    capture/ipu_prp_vf_sdc.c             Pre-processing view finder                                        (synchronous foreground) driver
+    capture/ipu_fg_overlay_adc.c         前背景overlay异步驱动
+    capture/ipu_bg_overlay_sdb.c         后背景overlay同步驱动
+
