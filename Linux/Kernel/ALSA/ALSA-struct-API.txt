@@ -1,0 +1,29 @@
+声卡的 platform_device 的 drvdata 指向一个 snd_soc_device 结构.
+snd_soc_device 是整个 ASOC 数据结构的根本.
+3.0 取消了 snd_soc_device 结构, 直接用 snd_soc_card 取代了它
+
+struct:
+struct snd_card;
+struct snd_soc_dai_driver;
+struct snd_soc_dai;
+struct snd_soc_dai_ops
+==== Machine:
+struct snd_soc_card card;
+struct snd_codec_device;
+==== Platform:
+struct snd_soc_platform;
+struct snd_soc_platform_driver;
+==== Codec:
+struct snd_soc_codec;
+struct snd_soc_codec_driver;
+struct soc_codec_device;
+==== Platform <-> Codec:
+struct snd_soc_dai_link;
+
+API:
+snd_soc_register_codec
+devm_snd_soc_register_card
+snd_soc_register_card
+devm_snd_soc_register_component
+devm_snd_soc_register_platform
+snd_card_register

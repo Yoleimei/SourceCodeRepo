@@ -1,0 +1,233 @@
+# ls /dev/snd/
+controlC0
+controlC1
+controlC2
+pcmC0D0c
+pcmC0D0p
+pcmC1D0c
+pcmC1D0p
+pcmC1D2c
+pcmC1D2p
+pcmC2D0c
+pcmC2D0p
+timer
+
+# ls /sys/bus/platform/devices | grep sound
+sound
+sound_media
+sound_navi
+
+==== Codec ============================================================
+1. The codec driver registers the codec driver, DAI driver, and their operation functions.
+----------------------------------------------------------------
+sound/soc/codec/ak7738.c
+
+module_init(ak7738_modinit)
+ak7738_modinit
+ spi_register_driver(&ak7738_spi_driver)
+
+ak7738_spi_probe
+ snd_soc_register_codec(&spi->dev, &ak7738_driver, &ak7738_dai[0], ARRAY_SIZE(ak7738_dai))
+  snd_soc_register_dais(&codec->component, dai_drv, num_dai, false)
+
+ak7738_probe
+----------------------------------------------------------------
+sound/soc/codec/pcm175.c
+
+module_init(pcm175x_modinit)
+pcm175x_modinit
+ spi_register_driver(&pcm175x_spi_driver)
+
+pcm175x_spi_probe
+ snd_soc_register_codec(&spi->dev, &pcm175x_driver, &pcm175x_dai[0], ARRAY_SIZE(pcm175x_dai))
+  snd_soc_register_dais(&codec->component, dai_drv, num_dai, false)
+
+pcm175x_probe
+ pcm175x_init_device(pcm175x->spi)
+
+----------------------------------------------------------------
+sound/soc/codec/tef663x.c
+
+tef663x_i2c_probe
+ snd_soc_register_codec(&client->dev, &tef663x_driver, &tef663x_dai[0], ARRAY_SIZE(tef663x_dai))
+  snd_soc_register_dais(&codec->component, dai_drv, num_dai, false)
+
+tef663x_probe
+
+
+==== imx ============================================================
+2. The platform driver registers the PCM driver, CPU DAI driver and their operation functions,
+pre allocates buffers for PCM components and stes playback and capture operation as applicable.
+----------------------------------------------------------------
+sound/soc/fsl/fsl_ssi.c
+
+module_platform_driver(fsl_ssi_driver)
+
+fsl_ssi_probe
+ fsl_ssi_imx_probe(pdev, ssi_private, iomem)
+  imx_pcm_dma_init(pdev, buffer_size)
+ devm_snd_soc_register_component(&pdev->dev, &fsl_ssi_component, &ssi_private->cpu_dai_drv, 1)
+  snd_soc_register_component(dev, cmpnt_drv, dai_drv, num_dai)
+   snd_soc_register_dais(cmpnt, dai_drv, num_dai, true)
+
+----------------------------------------------------------------
+sound/soc/fsl/fsl_asrc_dma.c
+
+----------------------------------------------------------------
+sound/soc/fsl/fsl_asrc.c
+
+module_platform_driver(fsl_asrc_driver)
+
+fsl_asrc_probe
+ fsl_asrc_init(asrc_priv)
+ devm_snd_soc_register_component(&pdev->dev, &fsl_asrc_component, &fsl_asrc_dai, 1)
+  snd_soc_register_component(dev, cmpnt_drv, dai_drv, num_dai)
+   snd_soc_register_dais(cmpnt, dai_drv, num_dai, true)
+ devm_snd_soc_register_platform(&pdev->dev, &fsl_asrc_platform)   // 注册音频dma驱动
+ fsl_asrc_m2m_init(asrc_priv)
+
+
+==== imx-codec ============================================================
+3. The machine layer creates the DAI link between codes and CPU registers the sound card and PCM devices.
+----------------------------------------------------------------
+sound/soc/fsl/imx-ak7738.c
+
+module_platform_driver(imx_ak7738codec_driver)
+
+imx_ak7738codec_probe
+ devm_snd_soc_register_card(&pdev->dev, &data->card)
+
+----------------------------------------------------------------
+sound/soc/fsl/imx-pcm175x.c
+
+module_platform_driver(imx_pcm175x_driver)
+
+imx_pcm175x_probe
+ snd_soc_register_card(card)
+
+----------------------------------------------------------------
+sound/soc/fsl/imx-tef663x.c
+
+module_platform_driver(imx_tef663x_driver)
+
+imx_tef663x_probe
+ devm_snd_soc_register_card(&pdev->dev, &data->card)
+
+----------------------------------------------------------------
+sound/soc/fsl/imx-audmux.c
+
+subsys_initcall(imx_audmux_init)
+imx_audmux_init
+ platform_driver_register(&imx_audmux_driver)
+
+imx_audmux_probe
+ imx_audmux_parse_dt_defaults(pdev, pdev->dev.of_node)
+
+
+==== asoc-core ============================================================
+----------------------------------------------------------------
+sound/soc/soc-core.c
+
+module_init(snd_soc_init)
+snd_soc_init
+ platform_driver_register(&soc_driver)
+
+soc_probe
+ snd_soc_register_card(card)
+  snd_soc_instantiate_card(card)
+   soc_bind_dai_link(card, i)
+   soc_bind_aux_dev(card, i)
+   snd_soc_init_codec_cache(codec)
+   snd_card_new(card->dev, SNDRV_DEFAULT_IDX1, SNDRV_DEFAULT_STR1, card->owner, 0, &card->snd_card)
+    snd_ctl_create(card)
+     snd_device_new(card, SNDRV_DEV_CONTROL, card, &ops)
+      snd_ctl_dev_register
+       snd_register_device(SNDRV_DEVICE_TYPE_CONTROL, card, -1, &snd_ctl_f_ops, card, &card->ctl_dev)
+    snd_info_card_create(card)
+   soc_probe_link_components(card, i, order)
+    soc_probe_component(card, &platform->component)
+     snd_soc_add_component_controls(component, component->controls, component->num_controls)
+      snd_soc_add_controls(card, component->dev, controls, num_controls, component->name_prefix, component)
+       snd_ctl_add(card, snd_soc_cnew(control, data, control->name, prefix))
+        snd_ctl_new1(&template, data)
+         snd_ctl_new(&kctl, count, access, NULL)
+   soc_probe_link_dais(card, i, order)
+    soc_new_pcm(rtd, num)
+     snd_pcm_new(rtd->card->snd_card, new_name, num, playback, capture, &pcm);
+      _snd_pcm_new(card, id, device, playback_count, capture_count, false, rpcm)
+       snd_pcm_new_stream(pcm, SNDRV_PCM_STREAM_PLAYBACK, playback_count)
+       snd_pcm_new_stream(pcm, SNDRV_PCM_STREAM_CAPTURE, capture_count)
+       snd_device_new(card, SNDRV_DEV_PCM, pcm, &ops)
+     snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK, &rtd->ops)
+     snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, &rtd->ops)
+   soc_probe_aux_dev(card, i)
+   snd_card_register(card->snd_card)
+    snd_device_register_all(card)
+     __snd_device_register(dev)
+      snd_pcm_dev_register(dev)
+       snd_register_device(devtype, pcm->card, pcm->device, &snd_pcm_f_ops[cidx], pcm, &pcm->streams[cidx].dev)
+        snd_minors[minor] = preg
+
+
+==== alsa-core ============================================================
+----------------------------------------------------------------
+sound/core/sound.c
+
+subsys_initcall(alsa_sound_init)
+alsa_sound_init
+ register_chrdev(major, "alsa", &snd_fops)   -> 用户接口
+ snd_info_init()
+ snd_info_minor_register()
+
+
+================================================================
+----------------------------------------------------------------
+sound/sound_core.c
+
+subsys_initcall(init_soundcore)
+ init_oss_soundcore()
+ class_create(THIS_MODULE, "sound")
+
+
+==== strace ============================================================
+----------------------------------------------------------------
+/dev/snd/controlC0 (snd_ctl_f_ops)
+.open           = snd_ctl_open,
+.unlocked_ioctl = snd_ctl_ioctl,
+
+snd_ctl_ioctl - SNDRV_CTL_IOCTL_ELEM_WRITE
+ snd_ctl_elem_write_user(ctl, argp)
+  snd_ctl_elem_write(card, file, control)
+   snd_ctl_find_id(card, &control->id)
+   kctl->put(kctl, control) -> 定义在 codec source code 中
+
+----------------------------------------------------------------
+/dev/snd/pcmCxDxp (snd_pcm_f_ops)
+.open           = snd_pcm_playback_open,
+.unlocked_ioctl = snd_pcm_playback_ioctl,
+
+snd_pcm_playback_open
+ snd_pcm_open(file, pcm, SNDRV_PCM_STREAM_PLAYBACK)
+  snd_pcm_open_file(file, pcm, stream)
+   snd_pcm_open_substream(pcm, stream, file, &substream)
+    substream->ops->open(substream) -> soc_pcm_open
+     cpu_dai(struct snd_soc_dai)->driver->ops->startup(substream, cpu_dai) -> fsl_ssi_startup / fsl_asrc_dai_startup
+     platform(snd_soc_platform)->driver->ops->open(substream) -> fsl_asrc_dma_startup
+     codec_dai(struct snd_soc_dai)->driver->ops->startup(substream, codec_dai) -> 无
+     rtd->dai_link->ops->startup(substream) -> 无
+
+snd_pcm_playback_ioctl - SNDRV_PCM_IOCTL_HW_PARAMS
+ snd_pcm_playback_ioctl1(file, pcm_file->substream, cmd, (void __user *)arg)
+  snd_pcm_common_ioctl1(file, substream, cmd, arg)
+   snd_pcm_hw_params_user(substream, arg)
+    snd_pcm_hw_params(substream, params)
+     substream->ops->hw_params(substream, params) -> soc_pcm_hw_params
+      rtd->dai_link->ops->hw_params(substream, params)
+      soc_dai_hw_params(substream, &codec_params, codec_dai)
+      soc_dai_hw_params(substream, params, cpu_dai)
+      platform->driver->ops->hw_params(substream, params)
+
+----------------------------------------------------------------
+/dev/snd/pcmCxDxc (snd_pcm_f_ops)
+.open           = snd_pcm_capture_open,
+.unlocked_ioctl = snd_pcm_capture_ioctl,

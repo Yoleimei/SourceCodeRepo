@@ -1,1 +1,2 @@
 linux下通过V4L2驱动USB摄像头: https://blog.csdn.net/simonforfuture/article/details/78743800
+V4L2驱动框架分析学习: https://blog.csdn.net/lg1259156776/article/details/52343852

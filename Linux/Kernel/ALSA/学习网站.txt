@@ -1,0 +1,3 @@
+Linux ALSA驱动框架: https://blog.csdn.net/sinat_37817094/article/category/7691888
+Linux 音频子系统: https://blog.csdn.net/droidphone/article/category/1118446
+ALSA声卡学习笔记: https://blog.csdn.net/qingkongyeyue/article/category/6388417/1
