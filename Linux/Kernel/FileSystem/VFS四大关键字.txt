@@ -1,0 +1,98 @@
+1. file
+file对象用于描述进程怎样与一个打开的文件进行交互
+file对象是在文件打开的时候, 由进程创建的
+file对象中存了重要信息: 文件当前位置, 几个进程可能同时访问同一文件, 因此文件指针必须存放在file对象, 而非inode对象
+
+2. dentry
+dentry描述了目录(文件路径)与文件的关系树
+内核在进行路径查找时会为每一集都建立一个dentry, 比如/home/test.cpp就建立了3个dentry
+第一个是根目录 /, 第二个是 home, 第三个是 test.cpp
+
+3. inode
+在存储介质中, 每个文件对应唯一的inode, 但每个文件又可以有多个文件名(ln), 不同的dentry可以访问同一个inode
+
+4. superblock
+
+
+1. file
+include/linux/sched.h
+struct task_struct {
+...
+    struct files_struct *files;
+...
+};
+
+include/linux/fdtable.h
+struct files_struct {
+...
+    struct file __rcu * fd_array[NR_OPEN_DEFAULT];
+};
+
+2. dentry
+include/linux/fs.h
+struct file {
+...
+    struct path  f_path;
+    struct inode  *f_inode;  // file 对应的 inode
+    const struct file_operations  *f_op;  // file的操作函数
+...
+};
+
+include/linux/path.h
+struct path {
+    struct vfsmount  *mnt;  // file 所在的文件系统
+    struct dentry  *dentry;  // file 对应的 dentry
+};
+
+3. inode
+include/linux/dcache.h
+struct dentry {
+...
+    struct dentry  *d_parent;  // 指向上级目录的dentry
+    struct qstr  d_name;  // 文件名
+    struct inode  *d_inode;  // 与文件名关联的inode
+...
+    const struct dentry_operations  *d_op;  // dentry的操作函数
+    struct super_block  *d_sb;  // dentry 对应的superblock
+...
+};
+
+4. superblock
+include/linux/fs.h
+struct inode {
+    umode_t  i_mode;  // 文件类型和访问权限
+...
+    const struct inode_operations  *i_ops;  // inode的操作函数
+    struct super_block  *i_sb;  // 指向inode所在的superblock对象
+...
+    unsigned long  i_ino;  // inode编号
+    union {
+        const unsigned int  i_nlink;  // 指向该inode的硬链接数量
+        unsigned int  __i_nlink;
+    };
+...
+    blkcnt_t  i_blocks;  / 文件的快数目
+...
+    union {
+        struct hlist_head  i_dentry;  // 保存指向该inode的dentry对象
+        struct rcu_head  i_rcu;
+    };
+...
+};
+
+include/linux/fs.c
+struct super_block {
+...
+    unsigned long  s_blocksize;  // 块大小
+...
+    struct file_system_type  *s_type;  // 文件系统类型
+    const struct super_operations  *s_op;  // superblock的操作函数
+...
+    struct dentry  *s_root;  // 指向文件系统根目录对应的dentry
+...
+    struct list_head  s_inodes;  // 文件系统中所有文件的inode
+...
+    struct block_device  *s_bdev;
+...
+    void  *s_fs_info;  // 特定文件系统超级块指针
+};

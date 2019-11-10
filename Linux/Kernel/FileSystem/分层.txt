@@ -1,0 +1,14 @@
+System Call Interface
+
+Virtual File System
+
+(ext3, ext4, ...)
+
+General Block Device Layer
+
+Device Driver
+
+Physical Disk
+
+Virtual File System 对不同的文件系统进行了抽象, 提供统一的API访问接口
+General Block Device Layer 对不同物理设备及驱动进行了抽象, 形成统一的对外接口
