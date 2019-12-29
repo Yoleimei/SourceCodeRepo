@@ -103,6 +103,7 @@ Audio: PCM 48000Hz stereo 1536kbps [A: pcm_s16le, 48000 Hz, 2 channels, s16, 153
 3. alsa_aplay -D hw:1,2 -r 48000 -f S16_LE /udisk1/audio/hetangyuese48k.wav
 
 ==== alsa_amixer ============================================================
+(直接敲 alsa_amixer 的内容, 和 alsa_amixer scontents 是一样的)
 uid=0 gid=1007@nutshell:/ # alsa_amixer
 Simple mixer control 'Mic Phone Function change',0
   Capabilities: volume volume-joined
