@@ -1,0 +1,57 @@
+----------------------------------------------------------------
+arch/arm/include/asm/dma-mapping.h
+#define dma_alloc_coherent(d, s, h, f) dma_alloc_attrs(d, s, h, f, NULL)
+static inline void *dma_alloc_attrs(struct device *dev, size_t size,
+                       dma_addr_t *dma_handle, gfp_t flag,
+                       struct dma_attrs *attrs)
+{
+    struct dma_map_ops *ops = get_dma_ops(dev);
+    void *cpu_addr;
+    BUG_ON(!ops);
+
+    cpu_addr = ops->alloc(dev, size, dma_handle, flag, attrs);
+    debug_dma_alloc_coherent(dev, size, *dma_handle, cpu_addr);
+    return cpu_addr;
+}
+
+----------------------------------------------------------------
+arch/arm/mm/dma-mapping.c
+struct dma_map_ops arm_dma_ops = {
+    .alloc                  = arm_dma_alloc,
+    .free                   = arm_dma_free,
+    .mmap                   = arm_dma_mmap,
+    .get_sgtable            = arm_dma_get_sgtable,
+    .map_page               = arm_dma_map_page,
+    .unmap_page             = arm_dma_unmap_page,
+    .map_sg                 = arm_dma_map_sg,
+    .unmap_sg               = arm_dma_unmap_sg,
+    .sync_single_for_cpu    = arm_dma_sync_single_for_cpu,
+    .sync_single_for_device = arm_dma_sync_single_for_device,
+    .sync_sg_for_cpu        = arm_dma_sync_sg_for_cpu,
+    .sync_sg_for_device     = arm_dma_sync_sg_for_device,
+    .set_dma_mask           = arm_dma_set_mask,
+};
+EXPORT_SYMBOL(arm_dma_ops);
+
+arm_dma_alloc                  arch/arm/mm/dma-mapping.c
+__dma_alloc                    arch/arm/mm/dma-mapping.c
+__alloc_from_contiguous        arch/arm/mm/dma-mapping.c
+dma_alloc_from_contiguous      drivers/base/dma-contiguous.c
+cma_alloc                      mm/cma.c
+alloc_contig_range             mm/page_alloc.c
+__alloc_contig_migrate_range   mm/page_alloc.c
+migrate_pages                  mm/migrate.c
+unmap_and_move                 mm/migrate.c
+alloc_migrate_target           mm/page_isolation.c
+alloc_page                     include/linux/gfp.h
+alloc_pages                    include/linux/gfp.h
+alloc_pages_node               include/linux/gfp.h
+__alloc_pages                  include/linux/gfp.h
+__alloc_pages_nodemask         mm/page_alloc.c
+
+
+
+
+
+----------------------------------------------------------------
+cma_release                    

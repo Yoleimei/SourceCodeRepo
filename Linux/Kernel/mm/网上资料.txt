@@ -1,0 +1,2 @@
+linux内核内存管理学习: https://blog.csdn.net/goodluckwhh/article/details/9970845
+Linux内存管理: https://www.cnblogs.com/arnoldlu/category/1132616.html

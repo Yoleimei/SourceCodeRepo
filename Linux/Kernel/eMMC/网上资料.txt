@@ -1,1 +1,9 @@
-https://www.cnblogs.com/smartjourneys/category/982550.html
+eMMC基础技术: https://www.cnblogs.com/smartjourneys/category/982550.html
+eMMC驱动分析: https://blog.csdn.net/aningsk/article/details/81260816
+eMMC: https://blog.csdn.net/wangguchao/article/details/102859553
+EMMC驱动中常用命令说明及初始化顺序: https://blog.csdn.net/Deep_l_zh/article/details/82665909
+eMMC框架及其初始化: http://www.wowotech.net/filesystem/329.html
+MMC/SD/SDIO介绍: http://www.wowotech.net/basic_tech/mmc_sd_sdio_intro.html
+SD / eMMC的驱动详解: https://blog.csdn.net/junzhang1122/article/details/50175677 (好的长文)
+使用 eMMC 闪存设备的磨损估计: https://blog.csdn.net/toradexsh/article/details/100977083
+linux io过程自顶向下分析: https://my.oschina.net/fileoptions/blog/3058792/print
