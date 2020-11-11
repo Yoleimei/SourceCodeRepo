@@ -1,0 +1,125 @@
+1. Core language features
+    auto and decltype
+        auto             (since C++ 11) - 自动推导数据类型
+        decltype(auto)   (since C++ 14) - 提取变量和表达式的类型
+    defaulted and deleted functions
+        "= delete"  - 禁止使用特殊成员函数
+        "= default" - 使用特殊成员函数
+    final and override
+        final    - 不能被继承
+        override - 覆写
+    trailing return type
+        后置返回类型 (decltype 是前置的)
+    rvalue references
+        右值引用 (左值: 地址值, 可寻址; 右值: 数据值, 可读)
+        纯右值在表达式结束之后就销毁了; 但右值引用后, 右值临时值的生命周期就会和右值引用变量的周期一样长
+    move constructors and move assignment operators
+        移动构造函数和移动赋值操作
+    scoped enums
+        域化枚举
+    constexpr and literal types
+        常量表达式和字面类型
+    list initialization
+        列表初始化
+    delegating and inherited constructors
+        委托构造函数?
+    brace-or-equal initializers
+        ???
+    nullptr
+        空指针, 有类型
+    long long
+        数据类型
+    char16_t and char32_t
+        数据类型
+    type aliases
+        使用using起别名?
+    variadic templates
+        变参模板
+    generalized (non-trivial) unions
+    generalized PODs (trivial types and standard-layout types)
+    Unicode string literals
+        unicode码 (UTF-8 是 Unicode 的实现方式之一)
+    user-defined literals
+    attributes
+    lambda expressions
+        lamda 表达式
+    noexcept specifier and noexcept operator
+        noexcept - 没有异常
+    alignof and alignas
+    multithreaded memory model
+        多线程内存模型
+    thread-local storage
+        线程本地存储(线程私有资源?)
+    GC interface
+        
+    range-for (based on a Boost library)
+        vector<int > vec={1,2,3,4}; for(auto e : vec)
+    static_assert (based on a Boost library)
+        静态断言(编译时断言)
+
+2. Library features
+    Headers
+        <typeindex>
+            std::type_index - 指示数据类型的数据类型
+            std::unordered_map<std::type_index, std::string> mytype;
+            mytype[typeid(int)] = "Integer";
+            mytype[typeid(doubel)] = "Double";
+        <type_traits>
+            编译时信息
+        <chrono>
+            日期和时间库
+        <initializer_list>
+            初始化列表容器
+            auto il = { 10, 20, 30 };  // the type of il is an initializer_list
+        <tuple>
+            pair 的多参化
+        <scoped_allocator>
+            ???
+        <cstdint>
+            数据类型头文件
+        <cinttypes>
+            数据最大最小值
+        <system_error>
+            系统错误?
+        <cuchar>
+            uchar.h, 16位 和 32位 的 char
+        <array>
+        <forward_list>
+        <unordered_set>
+        <unordered_map>
+        <random>
+        <ratio>
+            分数
+        <cfenv>
+            fenv.h, 浮点数环境
+        <regex>
+            正则
+        <atomic>
+            原子
+        <thread>
+        <mutex>
+        <future>
+            异步处理
+        <condition_variable>
+            wait, notify; 类似于 pthread_cond_wait, pthread_cond_signal?
+    Library features
+        atomic operations library
+        emplace() and other use of rvalue references throughout all parts of the existing library
+            std::unique_ptr
+            std::move_iterator
+        std::initializer_list
+        stateful and scoped allocators
+        std::forward_list
+        chrono library
+        ratio library
+        new algorithms
+        Unicode conversion facets
+        thread library
+        std::exception_ptr
+        std::error_code and std::error_condition
+        iterator improvements:
+            std::begin
+            std::end
+            std::next
+            std::prev
+        Unicode conversion functions

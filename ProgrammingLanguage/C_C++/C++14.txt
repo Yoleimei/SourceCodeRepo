@@ -1,0 +1,22 @@
+1. New language features
+    variable templates
+    generic lambdas
+    lambda init-capture
+    new/delete elision
+    relaxed restrictions on constexpr functions
+    binary literals
+    digit separators
+    return type deduction for functions
+    aggregate classes with default non-static member initializers.
+
+2. New library features
+    std::make_unique
+    std::shared_timed_mutex and std::shared_lock
+    std::integer_sequence
+    std::exchange
+    std::quoted
+    and many small improvements to existing library facilities, such as
+        two-range overloads for some algorithms
+        type alias versions of type traits
+        user-defined literals for basic_string, duration and complex
+        etc.
