@@ -34,7 +34,7 @@
     type aliases
         使用using起别名?
     variadic templates
-        变参模板
+        变长参数模板
     generalized (non-trivial) unions
     generalized PODs (trivial types and standard-layout types)
     Unicode string literals
