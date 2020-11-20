@@ -9,7 +9,7 @@ doc.appendChild(ar_package_root)
 short_name_node = doc.createElement("SHORT-NAME")
 ar_package_root.appendChild(short_name_node)
 
-short_name_text.createTextNode("Application")
+short_name_text = doc.createTextNode("Application")
 short_name_node.appendChild(short_name_text)
 
 f = open("test.xml", "w")
