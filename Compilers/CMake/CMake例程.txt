@@ -1,0 +1,64 @@
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例程1: 单个源文件 main.cpp
+CMakeLists.txt:
+# CMake 最低版本号要求
+cmake_minimum_required(VERSION 3.4)
+# 项目信息
+project (Demo1)
+# 指定生成目标
+add_executable(test main.cpp)
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例程2: 同一目录, 多个源文件 main.cpp test.cpp
+CMakeLists.txt:
+# CMake 最低版本号要求
+cmake_minimum_required(VERSION 3.4)
+# 项目信息
+project (Demo2)
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_SRCS)
+# 指定生成目标
+add_executable(test ${DIR_SRCS})
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例程3: 多个目录, 多个源文件 main.cpp  test/test.cpp
+(这种情况, 需要在项目根目录 和 各目录 都编写 CMakeLists.txt 文件)
+--------------------------------
+根目录 CMakeLists.txt:
+# CMake 最低版本号要求
+cmake_minimum_required(VERSION 3.4)
+# 项目信息
+project (Demo3)
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_SRCS)
+# 添加子目录
+add_subdirectory(test)
+# 指定生成目标
+add_executable(test ${DIR_SRCS})
+# 添加链接库
+target_link_libraries(test TestLib)
+--------------------------------
+test目录 CMakeLists.txt
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_LIB_SRCS)
+# 生成链接库
+add_library(TestLib ${DIR_LIB_SRCS})
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例程4: 安装
+CMakeLists.txt:
+cmake_minimum_required (VERSION 3.4)
+project (Demo4)
+add_executable (test main.cpp)
+install (TARGETS test DESTINATION bin)
+install (FILES test.h DESTINATION include)
+--------------------------------
+cmake -S . -B _build -DCMAKE_INSTALL_PREFIX=_install
+cmake --build _build --target install -j8
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>

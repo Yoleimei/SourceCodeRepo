@@ -1,0 +1,45 @@
+TARGET : PREREQUISITES
+	COMMANDS
+
+TARGET        : 需要生成的目标文件
+PREREQUISITES : 目前的先决条件, 可以是另一个规则中的 TARGET
+COMMANDS      : 生成目标的文件的命令
+注: COMMANDS 前面必须有一个TAB制表符, 不能用空格代替
+
+.PHONY 可以定义伪目标, 伪目标一般没有生成物, 如常用的
+.PHONY clean
+clean :
+	rm -rf $(TARGET) $(OBJECT)
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例子1:
+test : main.o test.o
+	gcc main.o test.o -o test
+
+main.o : main.cpp
+	gcc -c main.c
+
+test.o : test.cpp
+	gcc -c test.cpp
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例子2:
+TARGET = test
+OBJECT = main.o test.o
+
+$(TARGET) : $(OBJECT)
+	gcc $(OBJECT) -o $(TARGET)
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+例子3:
+1. Makefile
+include test.txt
+
+2. test.txt
+test : main.o test.o
+	gcc main.o test.o -o test
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+

@@ -1,0 +1,44 @@
+在 linux 平台下使用 CMake 生成 Makefile 并编译的流程如下:
+1. 编写 CMake 配置文件 CMakeLists.txt
+2. 执行命令 cmake PATH 生成 Makefile, 其中 PATH 是 CMakeLists.txt 所在的目录
+3. 使用 make 命令进行编译
+
+cmake 后会生成:
+f CMakeCache.txt
+d CMakeFiles
+f cmake_install.cmake
+f Makefile
+
+================================================================
+CMake参数
+cmake -DCMAKE_BUILD_TYPE=Debug/Release       # 设置编译类型
+cmake -DCMAKE_C_COMPILER=gcc                 # 设置C编译器
+cmake -DCMAKE_CXX_COMPILER=g++               # 设置C++编译器
+cmake -DCMAKE_INSTALL_PREFIX=_install        # 设置安装目录
+cmake -DCMAKE_TOOLCHAIN_FILE=Toolchain.cmake # 设置交叉编译文件路径
+================================================================
+Generate a Project Buildsystem:
+cmake [<options>] <path-to-source>
+cmake [<options>] <path-to-existing-build>
+cmake [<options>] -S <path-to-source> -B <path-to-build>
+
+Build a Project:
+cmake --build <dir> [<options>] [-- <build-tool-options>]
+
+Install a Project:
+cmake --install <dir> [<options>]
+
+Open a Project:
+cmake --open <dir>
+
+Run a Script:
+cmake [{-D <var>=<value>}...] -P <cmake-script-file>
+
+Run a Command-Line Tool:
+cmake -E <command> [<options>]
+
+Run the Find-Package Tool:
+cmake --find-package [<options>]
+
+View Help:
+cmake --help[-<topic>]

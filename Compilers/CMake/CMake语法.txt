@@ -1,0 +1,138 @@
+================================================================
+1. 基本 (大小写都可以)
+
+# CMake 最低版本号要求
+cmake_minimum_required(VERSION 3.4)
+
+# 项目信息
+project(<PROJECT-NAME>
+    [LANGUAGES <language-name>...]                        # LANGUAGES C CXX
+    [VERSION <major>[.<minor>[.<patch>[.<tweak>]]]]       # VERSION "1.0.0"
+    [DESCRIPTION <project-description-string>]
+    [HOMEPAGE_URL <url-string>]
+)
+
+# 指定生成目标
+add_executable(test main.cpp) # test 是可执行文件, main.cpp 是源文件
+
+# 定义变量并赋值
+set(<variable> <value>... [PARENT_SCOPE])
+# 例: set (EXTRA_LIBS ${EXTRA_LIBS} MathFunctions)
+# 取消定义变量
+unset(<variable>)
+
+# 添加头文件路径 (-I)
+include_directories ("${PROJECT_SOURCE_DIR}/math")
+
+# 加入一个配置头文件，用于处理 CMake 对源码的设置
+# 根据 config.h.in 自动生成 config.h
+configure_file(<input> <output>
+    [COPYONLY] [ESCAPE_QUOTES] [@ONLY]
+    [NEWLINE_STYLE [UNIX|DOS|WIN32|LF|CRLF] ]
+)
+# configure_file (
+# "${PROJECT_SOURCE_DIR}/config.h.in"
+# "${PROJECT_BINARY_DIR}/config.h"
+# )
+config.h.in:
+#cmakedefine TEST_SWITCH
+================================================================
+2. 添加库
+# 生成链接库
+add_library(TestLib ${DIR_LIB_SRCS})
+
+# 添加子目录
+add_subdirectory(test)
+
+# 添加链接库
+target_link_libraries(test TestLib)
+
+# 可选选项
+option (TEST_SWITCH "Test Switch" ON)
+if (TEST_SWITCH)
+...
+endif (TEST_SWITCH)
+if (DEFINED TEST_SWITCH)
+...
+endif()
+if (NOT DEFINED TEST_SWITCH)
+...
+endif()
+================================================================
+3. 安装、测试、系统自检
+# 指定 MathFunctions 库的安装路径
+install (TARGETS MathFunctions DESTINATION bin)
+install (FILES MathFunctions.h DESTINATION include)
+install (FILES "${PROJECT_BINARY_DIR}/config.h" DESTINATION include)
+================================================================
+4. 文件生成器
+================================================================
+5. cpack生成安装包
+CMakeLists.txt:
+# build a CPack driven installer package
+include (InstallRequiredSystemLibraries)
+set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set (CPACK_PACKAGE_VERSION_MAJOR "${Tutorial_VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${Tutorial_VERSION_MINOR}")
+include (CPack)
+shell 打包:
+cpack --config CPackConfig.cmake
+生成 xxx.sh xxx.tar.gz
+shell 构建:
+cpack --config CPackSourceConfig.cmake
+================================================================
+7. 流程和循环
+if (xxx)
+...
+elseif (yyy)
+...
+endif(xxx)
+if (xxx)
+else (xxx)
+endif (xxx)
+
+foreach (loop_var arg1 arg2)
+...
+endforeach (loop_var)
+# foreach (i 0 1)
+#     message (STATUS "current is ${i}")
+# endforeach(i)
+foreach (loop_var RANGE total)
+endforeach (loop_var)
+# foreach (i RANGE 3)
+#     message (STATUS "current is ${i}")
+# endforeach (i)
+foreach (loop_var RANGE start stop [step])
+endforeach (loop_var)
+foreach (loop_var IN [LISTS [list1 [...]]] )
+endforeach (loop_var)
+
+while (condition)
+...
+endwhile (condition)
+================================================================
+
+# 记录message
+General messages:
+message([<mode>] "message text" ...)
+Reporting checks:
+message(<checkState> "message text" ...)
+# mode:
+# FATAL_ERROR / SEND_ERROR / WARNING / AUTHOR_WARNING / DESCRIPTION / (none) or NOTICE / STATUS / VERBOSE / DEBUG / TRACE
+# 一般用 STATUS? (Incidental information)
+# checkState:
+# CHECK_START / CHECK_PASS / CHECK_FAIL
+
+# 从其他项目查找并加载设置
+find_package(<PackageName> [version] [EXACT] [QUIET] [MODULE]
+    [REQUIRED] [[COMPONENTS] [components...]]
+    [OPTIONAL_COMPONENTS components...]
+    [NO_POLICY_SCOPE])
+# 一般用 find_package(<PackageName> REQUIRED)
+
+# 添加宏 (-D)
+add_definitions(-DFOO -DBAR ...)
+
+# 查找当前目录下的所有源文件
+# 并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_SRCS)
