@@ -1,0 +1,37 @@
+1. DMA channels
+DMA channels: 一个 DMA controller 同时进行DMA传输的个数
+但这个 channel 只是逻辑上的通道; 物理上的通道很可能只有一个. (分时复用?)
+
+2. DMA request lines
+DMA控制器 和 设备 之间, 会有物理连接线(DMA Request, DRQ), 用来通知是否可以开始传输.
+memory设备除外.
+
+3. 传输参数
+transfer size: 传输的字节数
+transfer width: 传输的位宽, 一个时钟周期内传输的bit数
+burst size: DMA控制器自身的buffer大小
+
+4. scatter-gather
+一般情况下, DMA传输只能处理物理上连续的buffer.
+但在有些场景下, 需要将一些非连续的buffer拷贝到一个连续的buffer中 (scatter-gather).
+
+5. Slave-DMA API 和 Async TX API
+DMA传输分为4类: memory to memory, memory to device, device to memory, device to device.
+Slave-DMA API: memory to device, device to memory, device to device
+Async TX API: memory to memory
+
+6. DMA 地址
+可作为DMA地址的内存:
+    1. 通过伙伴系统的接口 (__get_free_page*()等)
+    2. kmalloc 或 kmem_cache_alloc() 这样的通用内存分配的物理地址连续的内存
+    3. 驱动中定义的全局变量, 但要小心的进行 cacheline 的对齐, 并且要处理 CPU 和 DMA controller 之间的操作同步, 以避免cache coherence问题
+    4. 块设备I/O子系统 和 网络子系统 在分配buffer的时候, 会确保可以进行 DMA 操作
+最好不作为DMA地址的内存:
+    1. 使用 vmalloc() 分配的内存, 因为 vmalloc 分配的 page frame 是不连续的, 而且得到的虚拟地址跟物理地址没有线性关系, 需要遍历页表查找
+    2. 驱动编译成模块时, 其虚拟地址是在加载模块时通过vmalloc分配的
+    3. 通过 kmap 接口返回的内存, 类似于 vmalloc
+    
+
+
+问题:
+1. 设置给 DMA 控制器的必须是硬件地址?
